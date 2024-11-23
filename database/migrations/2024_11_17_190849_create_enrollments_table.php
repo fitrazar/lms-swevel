@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('participant_id')->constrained()->onDelete('cascade');
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
-            $table->enum('status', ['pending', 'active'])->default('pending');
+            $table->enum('status', ['inactive', 'active'])->default('inactive');
             $table->timestamps();
         });
     }

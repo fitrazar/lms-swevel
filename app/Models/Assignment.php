@@ -10,12 +10,12 @@ class Assignment extends Model
     protected $guarded = ['id'];
 
     /**
-     * Get all of the submissions for the Assignment
+     * Get all of the results for the Assignment
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function submissions(): HasMany
+    public function results(): HasMany
     {
-        return $this->hasMany(Submission::class, 'assignment_id');
+        return $this->hasMany(Result::class, 'assignment_id');
     }
 }

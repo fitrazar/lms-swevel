@@ -9,7 +9,18 @@ class Result extends Model
 {
     protected $guarded = ['id'];
 
-    protected $with = ['quiz', 'participant'];
+    protected $with = ['quiz', 'participant', 'assignment'];
+
+
+    /**
+     * Get the assignment that owns the Submission
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function assignment(): BelongsTo
+    {
+        return $this->belongsTo(Assignment::class, foreignKey: 'assignment_id');
+    }
 
     /**
      * Get the quiz that owns the Result

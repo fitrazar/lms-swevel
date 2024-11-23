@@ -12,10 +12,12 @@ return new class extends Migration {
     {
         Schema::create('results', function (Blueprint $table) {
             $table->id();
-            $table->foreignId(column: 'quiz_id')->constrained()->onDelete('cascade');
+            $table->foreignId(column: 'assignment_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId(column: 'quiz_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId(column: 'participant_id')->constrained()->onDelete('cascade');
             $table->string(column: 'option_text')->comment('point jawaban');
-            $table->decimal(column: 'score', total: 5, places: 2);
+            $table->decimal(column: 'score', total: 5, places: 2)->nullable();
+            $table->string(column: 'file_url')->nullable();
             $table->text(column: 'feedback')->nullable();
             $table->dateTime(column: 'graded_at')->nullable();
             $table->boolean(column: 'is_late')->default(0);
