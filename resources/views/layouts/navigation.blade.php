@@ -89,4 +89,13 @@
         <i class="fa-solid fa-house" class="h-5 w-5"></i>
         <span class="btm-nav-label text-xs">Beranda</span>
     </a>
+    <a href="#" class="{{ Request::is('/course') ? 'active' : '' }}">
+        <i class="fa-solid fa-book" class="h-5 w-5"></i>
+        <span class="btm-nav-label text-xs">Courses</span>
+    </a>
+
+    <a href="#" class="{{ Request::is('/kontak') ? 'active' : '' }}">
+        <i class="fa-solid fa-address-book" class="h-5 w-5"></i>
+        <span class="btm-nav-label text-xs">kontak</span>
+    </a>
 </div>
