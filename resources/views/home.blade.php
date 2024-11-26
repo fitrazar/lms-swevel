@@ -32,134 +32,160 @@
                 </div>
             </div>
 
-            <div class="container mt-3">
-                <hr>
-                <h1 class="text-3xl font-extrabold text-center my-2">Latest Course</h1>
-                <div class="grid grid-cols-1 lg:grid-cols-3">
-                  @foreach ($latestCourse as $course)
-                  <div class="card glass w-96  mx-auto my-5">
-                    <figure>
-                      <img
-                      src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-                      alt="card!" />
-                    </figure>
-                    <div class="card-body">
-                      <h2 class="card-title text-bold">{{$course->title}}</h2>
-                      <p>{{$course->description}}</p>
-                      <p><i class="fa-solid fa-calendar-days"></i> &nbsp;start date : {{$course->start_date}}</p>
-                      <p><i class="fa-solid fa-book"></i>&nbsp;{{$course->duration}} topic</p>
-                      <span class="badge badge-error gap-2">Technology</span>
-                      <span class="badge badge-info gap-2">Laravel</span>
-                      <div class="card-actions justify-end">
-                        <button class="btn btn-primary">Learn now!</button>
-                      </div>
-                    </div>
-                  </div>
-                  @endforeach
-                </div>
-                <div class="flex justify-center mb-10 mt-5">
-                <button class="btn btn-primary">
-                  <i class="fa-solid fa-search mr-2"></i>Lihat Semua
-                </button>
-              </div>
-            </div>  
+            <div class="py-12">
+                <h2 class="font-bold text-center md:text-3xl text-lg">Latest Course</h2>
 
-            <div class="container px-auto">
-              <hr>
-              <div class="text-3xl font-extrabold text-center my-2">
-                <h1>Our Teams</h1>
-              </div>
-
-              <div class="grid content-center lg:grid-flow-col sm:grid-flow-row gap-3 ">
-                <div class="card bg-base-100 w-100 shadow-xl  mx-auto">
-                  <div class="card-body items-center text-center">
-                    <div class="avatar">
-                      <div class="mask mask-squircle w-24">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                      </div>
-                    </div>
-                    <h2 class="card-title">Muhammad Fitra Fajar</h2>
-                    <p>CEO | Project Lead</p>
-                    <div class="card-actions">
-                      <button class="btn btn-primary"><i class="fa-brands fa-facebook"></i></button>
-                      <button class="btn btn-primary"><i class="fa-brands fa-instagram"></i></button>
-                      <button class="btn btn-primary"><i class="fa-brands fa-linkedin"></i></button>
-                    </div>
-                  </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 grid-cols-1 gap-6 p-4">
+                    @forelse ($latestCourse as $course)
+                        <x-card.card-image title="{{ $course->title }}"
+                            image="{{ $course->image ? 'storage/course/' . $course->image : 'assets/images/no-image.png' }}"
+                            class="static">
+                            <p>{{ $course->excerpt }}</p>
+                            <p class="font-bold"><span class="badge badge-primary">{{ $course->duration }}</span></p>
+                            <div class="card-actions md:justify-end justify-start items-center">
+                                <div class="badge badge-outline">{{ $course->start_date }}</div>
+                            </div>
+                            <a href="{{ url('/course' . $course->slug) }}" class="mt-3">
+                                <x-button.primary-button type="submit" class="btn-md text-base-100 w-full">Learn
+                                    Now</x-button.primary-button>
+                            </a>
+                        </x-card.card-image>
+                    @empty
+                        <x-card.card-default class="static md:col-span-2 lg:col-span-4 col-span-1">
+                            <div class="flex flex-col w-full border-opacity-50">
+                                <div class="grid h-20 card bg-base-300 rounded-box place-items-center">Data Tidak
+                                    Ditemukan
+                                </div>
+                            </div>
+                        </x-card.card-default>
+                    @endforelse
                 </div>
-
-                <div class="card bg-base-100 w-100 shadow-xl  mx-auto">
-                  <div class="card-body items-center text-center">
-                    <div class="avatar">
-                      <div class="mask mask-squircle w-24">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                      </div>
-                    </div>
-                    <h2 class="card-title">Khairul Fanani</h2>
-                    <p>Back End Dev</p>
-                    <div class="card-actions">
-                      <button class="btn btn-primary"><i class="fa-brands fa-facebook"></i></button>
-                      <button class="btn btn-primary"><i class="fa-brands fa-instagram"></i></button>
-                      <button class="btn btn-primary"><i class="fa-brands fa-linkedin"></i></button>
-                    </div>
-                  </div>
+                <div class="mt-3 flex justify-center">
+                    <a href="{{ url('/course') }}">
+                        <x-button.primary-button class="ms-3" type="button">
+                            {{ __('Lihat Semua') }}
+                        </x-button.primary-button>
+                    </a>
                 </div>
-
-                <div class="card bg-base-100 w-100 shadow-xl  mx-auto">
-                  <div class="card-body items-center text-center">
-                    <div class="avatar">
-                      <div class="mask mask-squircle w-24">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                      </div>
-                    </div>
-                    <h2 class="card-title">Dheny Cahyono</h2>
-                    <p>Support System</p>
-                    <div class="card-actions">
-                      <button class="btn btn-primary"><i class="fa-brands fa-facebook"></i></button>
-                      <button class="btn btn-primary"><i class="fa-brands fa-instagram"></i></button>
-                      <button class="btn btn-primary"><i class="fa-brands fa-linkedin"></i></button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card bg-base-100 w-100 shadow-xl  mx-auto">
-                  <div class="card-body items-center text-center">
-                    <div class="avatar">
-                      <div class="mask mask-squircle w-24">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                      </div>
-                    </div>
-                    <h2 class="card-title">Muhammad Renaldy Saputra</h2>
-                    <p>Front End Dev</p>
-                    <div class="card-actions">
-                      <button class="btn btn-primary"><i class="fa-brands fa-facebook"></i></button>
-                      <button class="btn btn-primary"><i class="fa-brands fa-instagram"></i></button>
-                      <button class="btn btn-primary"><i class="fa-brands fa-linkedin"></i></button>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="card bg-base-100 w-100 shadow-xl  mx-auto">
-                  <div class="card-body items-center text-center">
-                    <div class="avatar">
-                      <div class="mask mask-squircle w-24">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                      </div>
-                    </div>
-                    <h2 class="card-title">EL DEROXVILON</h2>
-                    <p>System Analyst</p>
-                    <div class="card-actions">
-                      <button class="btn btn-primary"><i class="fa-brands fa-facebook"></i></button>
-                      <button class="btn btn-primary"><i class="fa-brands fa-instagram"></i></button>
-                      <button class="btn btn-primary"><i class="fa-brands fa-linkedin"></i></button>
-                    </div>
-                  </div>
-                </div>
-
-              </div>    
             </div>
-        
-        {{--  --}}
+
+            <div class="py-12">
+                <h2 class="font-bold text-center md:text-3xl text-lg">Team</h2>
+                <p class="sm:text-lg text-center">Great team behind the quality content we
+                    make.
+                </p>
+
+                <ul role="list"
+                    class="mt-10 mx-auto grid content-center grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 md:gap-x-6 lg:max-w-5xl lg:gap-x-8 lg:gap-y-12 xl:grid-cols-3 lg:grid-cols-3">
+                    <li>
+                        <div class="space-y-4 card bg-base-100 shadow p-4">
+                            <img class="mx-auto h-20 w-20 shadow border rounded-full lg:h-24 lg:w-24 object-cover"
+                                src="{{ asset('assets/images/male.png') }}" alt="Muhammad Fitra Fajar">
+                            <div class="space-y-2">
+                                <div class="text-xs font-medium lg:text-sm text-center">
+                                    <h1 class="font-bold text-lg">
+                                        Muhammad Fitra Fajar</h1>
+                                    <p class="text-sm font-normal">Project Leader</p>
+                                    <div class="flex justify-center gap-4 mt-4">
+                                        <a href="#" class="btn btn-primary btn-sm"><i
+                                                class="fa-brands fa-facebook"></i></a>
+                                        <a href="#" class="btn btn-primary btn-sm"><i
+                                                class="fa-brands fa-instagram"></i></a>
+                                        <a href="#" class="btn btn-primary btn-sm"><i
+                                                class="fa-brands fa-linkedin"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="space-y-4 card bg-base-100 shadow p-4">
+                            <img class="mx-auto h-20 w-20 shadow border rounded-full lg:h-24 lg:w-24 object-cover"
+                                src="{{ asset('assets/images/male.png') }}" alt="Dheny Cahyono">
+                            <div class="space-y-2">
+                                <div class="text-xs font-medium lg:text-sm text-center">
+                                    <h1 class="font-bold text-lg">
+                                        Dheny Cahyono</h1>
+                                    <p class="text-sm font-normal">Backend Developer</p>
+                                    <div class="flex justify-center gap-4 mt-4">
+                                        <a href="#" class="btn btn-primary btn-sm"><i
+                                                class="fa-brands fa-facebook"></i></a>
+                                        <a href="#" class="btn btn-primary btn-sm"><i
+                                                class="fa-brands fa-instagram"></i></a>
+                                        <a href="#" class="btn btn-primary btn-sm"><i
+                                                class="fa-brands fa-linkedin"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="space-y-4 card bg-base-100 shadow p-4">
+                            <img class="mx-auto h-20 w-20 shadow border rounded-full lg:h-24 lg:w-24 object-cover"
+                                src="{{ asset('assets/images/male.png') }}" alt="Khairul Fanani">
+                            <div class="space-y-2">
+                                <div class="text-xs font-medium lg:text-sm text-center">
+                                    <h1 class="font-bold text-lg">
+                                        Khairul Fanani</h1>
+                                    <p class="text-sm font-normal">Frontend Developer</p>
+                                    <div class="flex justify-center gap-4 mt-4">
+                                        <a href="#" class="btn btn-primary btn-sm"><i
+                                                class="fa-brands fa-facebook"></i></a>
+                                        <a href="#" class="btn btn-primary btn-sm"><i
+                                                class="fa-brands fa-instagram"></i></a>
+                                        <a href="#" class="btn btn-primary btn-sm"><i
+                                                class="fa-brands fa-linkedin"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="space-y-4 card bg-base-100 shadow p-4">
+                            <img class="mx-auto h-20 w-20 shadow border rounded-full lg:h-24 lg:w-24 object-cover"
+                                src="{{ asset('assets/images/male.png') }}" alt="Muhammad Renaldy Saputra">
+                            <div class="space-y-2">
+                                <div class="text-xs font-medium lg:text-sm text-center">
+                                    <h1 class="font-bold text-lg">
+                                        Muhammad Renaldy Saputra</h1>
+                                    <p class="text-sm font-normal">System Analyst</p>
+                                    <div class="flex justify-center gap-4 mt-4">
+                                        <a href="#" class="btn btn-primary btn-sm"><i
+                                                class="fa-brands fa-facebook"></i></a>
+                                        <a href="#" class="btn btn-primary btn-sm"><i
+                                                class="fa-brands fa-instagram"></i></a>
+                                        <a href="#" class="btn btn-primary btn-sm"><i
+                                                class="fa-brands fa-linkedin"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="space-y-4 card bg-base-100 shadow p-4">
+                            <img class="mx-auto h-20 w-20 shadow border rounded-full lg:h-24 lg:w-24 object-cover"
+                                src="{{ asset('assets/images/male.png') }}" alt="El Deroxvilon">
+                            <div class="space-y-2">
+                                <div class="text-xs font-medium lg:text-sm text-center">
+                                    <h1 class="font-bold text-lg">
+                                        El Deroxvilon</h1>
+                                    <p class="text-sm font-normal">Backend Developer</p>
+                                    <div class="flex justify-center gap-4 mt-4">
+                                        <a href="#" class="btn btn-primary btn-sm"><i
+                                                class="fa-brands fa-facebook"></i></a>
+                                        <a href="#" class="btn btn-primary btn-sm"><i
+                                                class="fa-brands fa-instagram"></i></a>
+                                        <a href="#" class="btn btn-primary btn-sm"><i
+                                                class="fa-brands fa-linkedin"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            {{--  --}}
         </div>
     </div>
 </x-guest-layout>
