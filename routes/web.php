@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\CourseDetailController;
+use App\Http\Controllers\CourseController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DhenyController;
@@ -10,7 +10,7 @@ use App\Http\Controllers\Admin\ParticipantController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/dheny', [DhenyController::class, 'index'])->name("view.dheny");
-Route::get('/course/{course:slug}', [CourseDetailController::class, 'show'])->name('CourseDetailController.show');
+Route::get('/course/{course}', [CourseController::class, 'show'])->name('course.show');
 
 Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');

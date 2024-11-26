@@ -6,14 +6,14 @@ use App\Models\Course;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Constraint\Count;
 
-class CourseDetailController extends Controller
+class CourseController extends Controller
 {
-    public function  show(Course $course)
+    public function show(Course $course)
     {
         if (!$course) {
             abort(404, 'Course not found');
         }
 
-        return view("CourseDetailController", compact("course"));
-    } 
+        return view("course-detail", compact("course"));
+    }
 }
