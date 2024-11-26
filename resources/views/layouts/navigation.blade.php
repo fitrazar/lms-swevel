@@ -4,15 +4,21 @@
         <span class="font-extrabold">{{ $appSetting->name }}</span>
     </div>
     <div class="navbar-center hidden lg:flex">
-        <ul class="menu menu-horizontal px-1 flex gap-4  md:gap-6 ">
+        <ul class="menu menu-horizontal px-1">
             @auth
-                <li>
-
-                </li>
+                @hasrole('author')
+                    <li>
+                        <details>
+                            <summary>Master Data</summary>
+                            <ul class="p-2 z-10">
+                                <li><a href="{{ route('dashboard.admin.participant.index') }}">Data Peserta</a></li>
+                                <li><a href="#">Data Mentor</a></li>
+                                <li><a href="#">Data Kursus</a></li>
+                            </ul>
+                        </details>
+                    </li>
+                @endrole
             @else
-                <li><a href="{{route("home")}}">Beranda</a></li>
-                <li><a href="#">Courses</a></li>
-                <li><a href="#">Kontak</a></li>
             @endauth
         </ul>
     </div>
