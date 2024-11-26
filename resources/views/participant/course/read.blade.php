@@ -3,7 +3,7 @@
 <x-app-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if (!auth()->user()->participant?->enrolls?->where('course_id')->first())
+            @if (!auth()->user()->participant?->enrolls?->where('course_id', $course->id)->where('status', 'active')->first())
                 <x-card.card-default class="static">
                     <x-alert.warning message="Kamu belum bisa akses menu ini." />
                 </x-card.card-default>
