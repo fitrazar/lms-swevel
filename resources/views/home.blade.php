@@ -45,7 +45,7 @@
                             <div class="card-actions md:justify-end justify-start items-center">
                                 <div class="badge badge-outline">{{ $course->start_date }}</div>
                             </div>
-                            <a href="{{ url('/course' . $course->slug) }}" class="mt-3">
+                            <a href="{{ url('/course/' . $course->slug) }}" class="mt-3">
                                 <x-button.primary-button type="submit" class="btn-md text-base-100 w-full">Learn
                                     Now</x-button.primary-button>
                             </a>
