@@ -4,7 +4,10 @@
         <span class="font-extrabold">{{ $appSetting->name }}</span>
     </div>
     <div class="navbar-center hidden lg:flex">
-        <ul class="menu menu-horizontal px-1 flex gap-4  md:gap-6 ">
+        <ul class="menu menu-horizontal px-1 flex gap-4">
+            <li><a href="{{ route('home') }}">Beranda</a></li>
+            <li><a href="#">Kursus</a></li>
+            <li><a href="{{ route('contact') }}">Kontak Kami</a></li>
             @auth
                 @hasrole('author')
                     <li>
@@ -19,10 +22,8 @@
                     </li>
                 @endrole
             @else
-                <li><a href="{{ route('home') }}">Beranda</a></li>
-                <li><a href="#">Kursus</a></li>
-                <li><a href="{{ route('contact') }}">Kontak Kami</a></li>
             @endauth
+
         </ul>
     </div>
     <div class="navbar-end mr-10">
