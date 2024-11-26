@@ -31,24 +31,11 @@
                             :value="old('photo', $participant->photo)" />
                         <x-input.input-error :messages="$errors->get('photo')" class="mt-2" />
                     </div>
-
-                    <div class="mt-4">
-                        <x-input.input-label for="email" :value="__('Email')" />
-                        <x-input.text-input id="email" class="mt-1 w-full" type="email" name="email"
-                            :value="old('email', $participant->email)" required autofocus autocomplete="email" />
-                        <x-input.input-error :messages="$errors->get('email')" class="mt-2" />
-                    </div>
                     <div class="mt-4">
                         <x-input.input-label for="name" :value="__('Nama Siswa')" />
                         <x-input.text-input id="name" class="mt-1 w-full" type="text" name="name"
                             :value="old('name', $participant->name)" required autofocus autocomplete="name" />
                         <x-input.input-error :messages="$errors->get('name')" class="mt-2" />
-                    </div>
-                    <div class="mt-4">
-                        <x-input.input-label for="class" :value="__('Kelas')" />
-                        <x-input.text-input id="class" class="mt-1 w-full" type="text" name="class"
-                            :value="old('class', $participant->class)" required autofocus autocomplete="class" />
-                        <x-input.input-error :messages="$errors->get('class')" class="mt-2" />
                     </div>
 
                     <div class="mt-4">

@@ -40,12 +40,12 @@ class ParticipantController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'email' => 'required|numeric|unique:users,email',
-            'name' => 'required|string',
+            'email' => 'required|email|unique:users,email',
+            'name' => 'required|string|max:75',
             'gender' => 'required|in:Laki - Laki,Perempuan',
             'phone' => 'required|numeric',
             'photo' => 'nullable|image|max:4098',
-            'password' => 'required',
+            'password' => 'required|min:8',
         ]);
 
         if ($request->hasFile('photo')) {
@@ -61,7 +61,13 @@ class ParticipantController extends Controller
         $user->save();
         $validatedData['user_id'] = $user->id;
 
-        Participant::create($validatedData);
+        Participant::create([
+            'user_id' => $validatedData['user_id'],
+            'name' => $validatedData['name'],
+            'gender' => $validatedData['gender'],
+            'phone' => $validatedData['phone'],
+            'photo' => $validatedData['photo'],
+        ]);
 
         return redirect()->route('dashboard.admin.participant.index')->with('success', 'Peserta Berhasil Ditambahkan!');
     }
@@ -80,7 +86,6 @@ class ParticipantController extends Controller
     public function update(Request $request, Participant $participant)
     {
         $rules = [
-            'email' => 'required|numeric|unique:users,email,' . $participant->id,
             'name' => 'required|string',
             'gender' => 'required|in:Laki - Laki,Perempuan',
             'phone' => 'required|numeric',
@@ -99,7 +104,12 @@ class ParticipantController extends Controller
         }
 
 
-        Participant::findOrFail($participant->id)->update($validatedData);
+        Participant::findOrFail($participant->id)->update([
+            'name' => $validatedData['name'],
+            'gender' => $validatedData['gender'],
+            'phone' => $validatedData['phone'],
+            'photo' => $validatedData['photo'],
+        ]);
 
         return redirect()->route('dashboard.admin.participant.index')->with('success', 'Peserta Berhasil Diupdate');
     }

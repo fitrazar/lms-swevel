@@ -20,7 +20,7 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::name('admin.')->middleware(['role:author'])->group(function () {
-        Route::resource('/participant', ParticipantController::class);
+        Route::resource('/participant', ParticipantController::class)->except('show');
     });
 });
 

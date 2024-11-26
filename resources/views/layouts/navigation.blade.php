@@ -19,6 +19,9 @@
                     </li>
                 @endrole
             @else
+                <li><a href="{{ route('home') }}">Beranda</a></li>
+                <li><a href="#">Courses</a></li>
+                <li><a href="#">Kontak</a></li>
             @endauth
         </ul>
     </div>
