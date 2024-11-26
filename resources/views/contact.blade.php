@@ -20,11 +20,12 @@
                 </svg>
 
                 <div class="hero-content flex-col lg:flex-row-reverse">
-                    <img src="{{ asset('assets/images/contact-illustration.png') }}" class="max-w-sm rounded-lg" />
+                    {{-- <img src="{{ asset('assets/images/contact-illustration.png') }}" class="max-w-sm rounded-lg" /> --}}
                     <div>
                         <h1 class="text-5xl font-extrabold">Kontak Kami</h1>
                         <p class="py-6">
-                            Kami siap membantu Anda dengan layanan yang Anda butuhkan. Silakan hubungi kami untuk informasi lebih lanjut.
+                            Kami siap membantu Anda dengan layanan yang Anda butuhkan. Silakan hubungi kami untuk
+                            informasi lebih lanjut.
                         </p>
                     </div>
                 </div>
@@ -36,14 +37,11 @@
                         <h2 class="text-center mb-4">Lokasi Kami</h2>
                         <div class="row d-flex">
                             <div class="col-md-12">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3981.969067461469!2d98.6718324757091!3d3.5945659502516536!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x303131c416b88825%3A0xc035ba4fa455d423!2sDeliPark%20Mall!5e0!3m2!1sid!2sid!4v1732607065385!5m2!1sid!2sid" 
-                                width="100%" 
-                                height="450" 
-                                style="border:0;" 
-                                allowfullscreen="" 
-                                loading="lazy" 
-                                referrerpolicy="no-referrer-when-downgrade">
-                            </iframe>
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3981.969067461469!2d98.6718324757091!3d3.5945659502516536!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x303131c416b88825%3A0xc035ba4fa455d423!2sDeliPark%20Mall!5e0!3m2!1sid!2sid!4v1732607065385!5m2!1sid!2sid"
+                                    width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade">
+                                </iframe>
                             </div>
                         </div>
                     </div>
@@ -59,19 +57,21 @@
                             <div class="text-center">
                                 <i class="fa-solid fa-envelope text-4xl"></i>
                                 <h3 class="font-bold text-lg mt-2">Email</h3>
-                                <p><a href="mailto:info@swewelmedia.com">info@swewelmedia.com</a></p>
+                                <p><a
+                                        href="mailto:{{ $appSetting->email ?? '-' }}">{{ $appSetting->email ?? 'author@gmail.com' }}</a>
+                                </p>
                             </div>
 
                             <div class="text-center">
                                 <i class="fa-solid fa-phone-alt text-4xl"></i>
                                 <h3 class="font-bold text-lg mt-2">Telepon</h3>
-                                <p><a href="tel:+6281234567890">+62 812-3243-7756</a></p>
+                                <p><a href="tel:+{{ $appSetting->phone }}">+{{ $appSetting->phone }}</a></p>
                             </div>
 
                             <div class="text-center">
                                 <i class="fa-solid fa-map-marker-alt text-4xl"></i>
                                 <h3 class="font-bold text-lg mt-2">Alamat</h3>
-                                <p>Jalan Putri Hijau No. 123, Medan, Indonesia</p>
+                                <p>{{ $appSetting->address }}</p>
                             </div>
                         </div>
                     </x-card.card-default>
