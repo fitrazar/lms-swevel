@@ -59,15 +59,15 @@
 
     <x-slot name="script">
         <script>
-            function openDeleteModal(id) {
+            function openDeleteModal(slug) {
                 confirmDelete.onclick = function() {
-                    performDelete(id);
+                    performDelete(slug);
                 };
                 deleteModal.showModal();
             }
 
-            function performDelete(id) {
-                fetch(`/dashboard/course/${id}`, {
+            function performDelete(slug) {
+                fetch(`/dashboard/course/${slug}`, {
                         method: 'DELETE',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -151,7 +151,7 @@
                                     <a href="{{ url('/dashboard/course/${full.slug}/edit') }}">
                                         <x-button.info-button type="button" class="btn-sm text-white"><i class="fa-regular fa-pen-to-square"></i>Edit</x-button.info-button>
                                     </a>
-                                    <x-button.danger-button class="btn-sm text-white" onclick="openDeleteModal(${full.slug})">
+                                    <x-button.danger-button class="btn-sm text-white" onclick="openDeleteModal('${full.slug}')">
                                         <i class="fa-regular fa-trash-can"></i>Hapus
                                     </x-button.danger-button>
                                 </div>
