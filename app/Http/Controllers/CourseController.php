@@ -20,7 +20,7 @@ class CourseController extends Controller
             }
         ])->findOrFail($course->id);
 
-        return view("course-detail", compact("course"));
+        return view("participant.course.show", compact("course"));
     }
 
     public function store(Request $request)
@@ -75,6 +75,6 @@ class CourseController extends Controller
             ]);
         }
 
-        return view('course-read', compact('course', 'currentTopic', 'prevTopic', 'nextTopic'));
+        return view('participant.course.read', compact('course', 'currentTopic', 'prevTopic', 'nextTopic'));
     }
 }
