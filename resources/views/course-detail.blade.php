@@ -1,53 +1,155 @@
 @section('title', 'Detail Kursus ' . $course->title)
-
+@if (auth()->user() && auth()->user()->roles->pluck('name')[0] != 'participant')
+    {{ abort(403) }}
+@endif
 <x-guest-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="container mx-auto grid">
+            <div class="breadcrumbs text-sm p-2">
+                <ul>
+                    <li><a href="{{ route('home') }}">Beranda</a></li>
+                    <li><a href="#">Kursus</a></li>
+                    <li>{{ $course->title }}</li>
+                </ul>
+            </div>
 
-
-                <div class="hero bg-base-200 min-h-screen">
-                    <div class="hero-content flex-col">
-                        <img src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
-                            class="max-w-sm rounded-lg shadow-2xl" />
-                        <div>
-                            <h1 class="text-5xl font-bold">{{ $course->title }}</h1>
-                            <p class="py-6">{!! $course->description !!}</p>
-                            <p class="mt-3"><i class="fa-solid fa-calendar-days"></i>&nbsp;Start date :
-                                {{ $course->start_date }}</p>
-                            <p class=""><i class="fa-solid fa-calendar-days"></i>&nbsp;End date :
-                                {{ $course->end_date }}</p>
-                            <p>intructors &nbsp;
-                                @foreach ($course->instructors as $instructor)
-                                    <span class="badge badge-primary">
-                                        {{ $instructor->name }}
-                                    </span>
-                                @endforeach
-                            </p>
-
-                            <button class="mt-3 btn btn-primary">Full access</button>
+            <div class="grid md:grid-cols-3 grid-cols-1 gap-4">
+                <div class="mt-3 col-span-2 p-2">
+                    @if (session()->has('success'))
+                        <x-alert.success :message="session('success')" />
+                    @endif
+                    <h1 class="font-bold md:text-xl text-lg">{{ $course->title }}</h1>
+                    <x-card.card-default class="static">
+                        <img src="{{ $course->cover ? asset('storage/course/' . $course->cover) : asset('assets/images/no-image.png') }}"
+                            alt="{{ $course->title }}" class="w-full rounded">
+                        <div class="md:flex justify-between items-center">
+                            <div>
+                                <i class="fa-solid fa-calendar-days hidden md:inline"></i>
+                                <div class="badge badge-outline">{{ $course->start_date }}
+                                </div>
+                                <span>-</span>
+                                <div class="badge badge-outline">{{ $course->end_date }}
+                                </div>
+                            </div>
+                            <div>
+                                <i class="fa-solid fa-book-open hidden md:inline"></i>
+                                <div class="badge badge-outline">{{ $course->topics->count() }} Pembahasan
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </x-card.card-default>
+                    <x-card.card-default class="static mt-5">
+                        <h2 class="font-bold text-lg">Deskripsi</h2>
+                        {!! $course->description !!}
+
+                        Mentor
+                        @foreach ($course->instructors as $instructor)
+                            <div class="badge badge-primary font-bold">{{ $instructor->name }}</div>
+                        @endforeach
+
+
+                        @guest
+                            <a href="{{ route('login') }}" class="mt-3">
+                                <x-button.primary-button type="submit"
+                                    class="btn-md text-base-100 w-full">Login</x-button.primary-button>
+                            </a>
+                        @else
+                            @if (auth()->user()->roles->pluck('name')[0] == 'participant')
+                                @if (auth()->user()->participant->enrolls->where('course_id', $course->id)->first())
+                                    <a href="{{ url('/course/' . $course->slug . '/read/' . $course->topics[0]->slug) }}">
+                                        <x-button.primary-button type="button"
+                                            class="btn-md text-base-100 w-full">Lihat</x-button.primary-button>
+                                    </a>
+                                @else
+                                    <x-button.primary-button type="button" onclick="formRegister.showModal()"
+                                        class="btn-md text-base-100 w-full">Daftar
+                                        Sekarang</x-button.primary-button>
+                                @endif
+                            @else
+                                <a href="{{ route('login') }}" class="mt-3">
+                                    <x-button.primary-button type="submit"
+                                        class="btn-md text-base-100 w-full">Login</x-button.primary-button>
+                                </a>
+                            @endif
+                        @endguest
+
+                    </x-card.card-default>
                 </div>
 
-                <div class="card mt-6 grid-row bg-base-200 p-8">
-                    <div class="card">
-                        <h1>Overview</h1>
-                    </div>
-                    <details class="collapse">
-                        <summary class="collapse-title text-xl font-medium ml-3 mt-3">Topic for this course</summary>
-                        <div class="collapse-content border border-sky-500 p-8">
-                            @forelse ($course->topics as $topic)
-                                <h1>{{ $topic->title }}</h1>
-                            @empty
-                                <h2>Belum ada topik yang ditambah</h2>
-                            @endforelse
+                <div>
+                    <x-card.card-default class="static mt-5" title="Pembahasan">
+                        <div class="flex w-full flex-col mt-3">
+                            @foreach ($course->topics as $topic)
+                                <div class="cursor-pointer">
+                                    @if (!auth()->user()->participant?->enrolls?->where('course_id', $course->id)->first())
+                                        <i class="fa-solid fa-lock"></i>
+                                    @else
+                                        <i class="fa-solid fa-lock-open"></i>
+                                    @endif
+                                    Bab {{ $topic->order }} :
+                                    {{ $topic->title }}
+                                </div>
+                                <div class="divider"></div>
+                            @endforeach
                         </div>
-                    </details>
+
+                        @guest
+                            <a href="{{ route('login') }}" class="mt-3">
+                                <x-button.primary-button type="submit"
+                                    class="btn-md text-base-100 w-full">Login</x-button.primary-button>
+                            </a>
+                        @else
+                            @if (auth()->user()->roles->pluck('name')[0] == 'participant')
+                                @if (auth()->user()->participant->enrolls->where('course_id', $course->id)->first())
+                                    <a href="{{ url('/course/' . $course->slug . '/read/' . $course->topics[0]->slug) }}">
+                                        <x-button.primary-button type="button"
+                                            class="btn-md text-base-100 w-full mt-4">Lihat</x-button.primary-button>
+                                    </a>
+                                @else
+                                    <x-button.primary-button type="button" onclick="formRegister.showModal()"
+                                        class="btn-md text-base-100 w-full mt-4">Daftar
+                                        Sekarang</x-button.primary-button>
+                                @endif
+                            @else
+                                <a href="{{ route('login') }}" class="mt-3">
+                                    <x-button.primary-button type="submit"
+                                        class="btn-md text-base-100 w-full">Login</x-button.primary-button>
+                                </a>
+                            @endif
+                        @endguest
+                    </x-card.card-default>
                 </div>
 
-                {{-- div template --}}
             </div>
         </div>
     </div>
+    <x-modal.basic id="formRegister" title="Form Persetujuan">
+        <x-form action="{{ route('course.store') }}">
+            @csrf
+            <div class="grid md:grid-cols-2 grid-cols-1 gap-4">
+                <x-input.text-input id="course_id" type="hidden" name="course_id" :value="$course->id" />
+                <div class="mt-4 col-span-2">
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <input type="checkbox" class="checkbox mr-3" name="agreement" id="agreement" />
+                            <span class="label-text">Saya menyetujui persayaratan pendaftaran ini dan dapat
+                                saya
+                                pertanggung jawabkan jika saya melakukan kesalahan atau tidak menyelesaikan kursus
+                                tepat
+                                waktu.</span>
+                        </label>
+                    </div>
+                </div>
+
+                <x-button.primary-button type="submit" class="col-span-2 mt-3">
+                    {{ __('Daftar') }}
+                </x-button.primary-button>
+            </div>
+        </x-form>
+        <div class="modal-action w-full">
+            <form method="dialog">
+                <button class="btn w-full">Tutup</button>
+            </form>
+        </div>
+    </x-modal.basic>
 </x-guest-layout>
