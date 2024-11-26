@@ -6,12 +6,14 @@ use App\Http\Controllers\DhenyController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\InstructorController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/dheny', [DhenyController::class, 'index'])->name("view.dheny");
+Route::get('/contact', [ContactController::class, 'index'])->name("contact");
 Route::get('/course/{course}', [CourseController::class, 'show'])->name('course.show');
 
 Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(function () {

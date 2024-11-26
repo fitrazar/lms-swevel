@@ -21,7 +21,7 @@
             @else
                 <li><a href="{{ route('home') }}">Beranda</a></li>
                 <li><a href="#">Kursus</a></li>
-                <li><a href="#">Kontak</a></li>
+                <li><a href="{{ route('contact') }}">Kontak Kami</a></li>
             @endauth
         </ul>
     </div>
