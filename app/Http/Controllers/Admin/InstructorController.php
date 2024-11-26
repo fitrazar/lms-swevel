@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
-use App\Models\Participant;
+use App\Models\Instructor;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
-class ParticipantController extends Controller
+class InstructorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,13 +17,13 @@ class ParticipantController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $participants = Participant::all();
+            $instructors = Instructor::all();
 
 
-            return DataTables::of($participants)->make();
+            return DataTables::of($instructors)->make();
         }
 
-        return view('admin.participant.index');
+        return view('admin.instructor.index');
     }
 
     /**
@@ -31,7 +31,7 @@ class ParticipantController extends Controller
      */
     public function create()
     {
-        return view('admin.participant.create');
+        return view('admin.instructor.create');
     }
 
     /**
@@ -50,18 +50,18 @@ class ParticipantController extends Controller
 
         if ($request->hasFile('photo')) {
             $validatedData['photo'] = time() . '.' . $request->file('photo')->getClientOriginalExtension();
-            $request->file('photo')->storeAs('participant/photo', $validatedData['photo']);
+            $request->file('photo')->storeAs('instructor/photo', $validatedData['photo']);
         }
 
         $user = new User([
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
-        $user->assignRole('participant');
+        $user->assignRole('instructor');
         $user->save();
         $validatedData['user_id'] = $user->id;
 
-        Participant::create([
+        Instructor::create([
             'user_id' => $validatedData['user_id'],
             'name' => $validatedData['name'],
             'gender' => $validatedData['gender'],
@@ -69,21 +69,21 @@ class ParticipantController extends Controller
             'photo' => $validatedData['photo'],
         ]);
 
-        return redirect()->route('dashboard.admin.participant.index')->with('success', 'Peserta Berhasil Ditambahkan!');
+        return redirect()->route('dashboard.admin.instructor.index')->with('success', 'Mentor Berhasil Ditambahkan!');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Participant $participant)
+    public function edit(Instructor $instructor)
     {
-        return view('admin.participant.edit', compact(var_name: 'participant'));
+        return view('admin.instructor.edit', compact(var_name: 'instructor'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Participant $participant)
+    public function update(Request $request, Instructor $instructor)
     {
         $rules = [
             'name' => 'required|string',
@@ -95,7 +95,7 @@ class ParticipantController extends Controller
         $validatedData = $request->validate($rules);
         $validatedData['photo'] = $request->oldImage;
         if ($request->file('photo')) {
-            $path = 'participant/photo';
+            $path = 'instructor/photo';
             if ($request->oldImage) {
                 Storage::delete($path . '/' . $request->oldImage);
             }
@@ -104,30 +104,27 @@ class ParticipantController extends Controller
         }
 
 
-        Participant::findOrFail($participant->id)->update([
+        Instructor::findOrFail($instructor->id)->update([
             'name' => $validatedData['name'],
             'gender' => $validatedData['gender'],
             'phone' => $validatedData['phone'],
             'photo' => $validatedData['photo'],
         ]);
 
-        return redirect()->route('dashboard.admin.participant.index')->with('success', 'Peserta Berhasil Diupdate');
+        return redirect()->route('dashboard.admin.instructor.index')->with('success', 'Mentor Berhasil Diupdate');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Participant $participant)
+    public function destroy(Instructor $instructor)
     {
-        if ($participant->photo) {
-            Storage::delete('participant/photo/' . $participant->photo);
+        if ($instructor->photo) {
+            Storage::delete('instructor/photo/' . $instructor->photo);
         }
-        $participant->user->delete();
-        Participant::destroy($participant->id);
+        $instructor->user->delete();
+        Instructor::destroy($instructor->id);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Peserta berhasil dihapus.'
-        ]);
+        return redirect()->route('dashboard.admin.instructor.index')->with('success', 'Mentor Berhasil Dihapus!');
     }
 }

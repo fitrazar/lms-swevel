@@ -12,15 +12,15 @@
                             class="max-w-sm rounded-lg shadow-2xl" />
                         <div>
                             <h1 class="text-5xl font-bold">{{ $course->title }}</h1>
-                            <p class="py-6">{{ $course->description }}</p>
+                            <p class="py-6">{!! $course->description !!}</p>
                             <p class="mt-3"><i class="fa-solid fa-calendar-days"></i>&nbsp;Start date :
                                 {{ $course->start_date }}</p>
                             <p class=""><i class="fa-solid fa-calendar-days"></i>&nbsp;End date :
                                 {{ $course->end_date }}</p>
                             <p>intructors &nbsp;
-                                @foreach ($course->instructors as $intructor)
+                                @foreach ($course->instructors as $instructor)
                                     <span class="badge badge-primary">
-                                        {{ $intructor->name }}
+                                        {{ $instructor->name }}
                                     </span>
                                 @endforeach
                             </p>
