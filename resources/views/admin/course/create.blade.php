@@ -48,12 +48,34 @@
                         <x-input.input-error :messages="$errors->get('instructors')" class="mt-2" />
                     </div>
 
+                    <div class="mt-4">
+                        <x-input.input-label for="start_date" :value="__('Tanggal Mulai')" />
+                        <x-input.text-input id="start_date" class="mt-1 w-full" type="date" name="start_date"
+                            :value="old('start_date')" required autofocus autocomplete="start_date" />
+                        <x-input.input-error :messages="$errors->get('start_date')" class="mt-2" />
+                    </div>
+
+                    <div class="mt-4">
+                        <x-input.input-label for="end_date" :value="__('Tanggal Selesai')" />
+                        <x-input.text-input id="end_date" class="mt-1 w-full" type="date" name="end_date"
+                            :value="old('end_date')" required autofocus autocomplete="end_date" />
+                        <x-input.input-error :messages="$errors->get('end_date')" class="mt-2" />
+                    </div>
+
+                    <div class="mt-4">
+                        <x-input.input-label for="duration" :value="__('Total Durasi')" />
+                        <x-input.text-input id="duration" class="mt-1 w-full" type="number" name="duration"
+                            :value="old('duration')" placeholder="900" />
+                        <x-input.input-error :messages="$errors->get('duration')" class="mt-2" />
+                    </div>
+
                     <div class="mt-4 col-span-2">
                         <x-input.input-label for="summernote" :value="__('Deksripsi')" />
                         <x-input.text-area id="summernote" class="mt-1 w-full" type="text" name="description"
                             :value="old('description')" required autofocus autocomplete="description" />
                         <x-input.input-error :messages="$errors->get('description')" class="mt-2" />
                     </div>
+
 
                     <div class="col-span-2">
                         <x-button.primary-button type="submit">
