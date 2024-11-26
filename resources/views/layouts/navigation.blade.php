@@ -19,11 +19,17 @@
                     </li>
                 @endrole
             @else
-                <li><a href="{{ route('home') }}">Beranda</a></li>
-                <li><a href="#">Kursus</a></li>
-                <li><a href="{{ route('contact') }}">Kontak Kami</a></li>
-            @endauth
-        </ul>
+                @endauth
+                <li>
+                        <details>
+                            <summary>Beranda</summary>
+                            <ul class="p-2 z-10">
+                                <li><a href="{{ route('home') }}">Halaman Utama</a></li>
+                                <li><a href="{{ route('contact') }}">Kontak Kami</a></li>
+                            </ul>
+                        </details>
+                    </li>
+                
     </div>
     <div class="navbar-end mr-10">
         <div class="dropdown dropdown-end">
