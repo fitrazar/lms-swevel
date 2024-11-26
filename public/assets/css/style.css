@@ -1,0 +1,27 @@
+.note-editor.note-airframe .note-editing-area,
+.note-editor.note-frame .note-editing-area {
+    background-color: white !important;
+}
+
+.note-editable ul {
+    list-style: disc !important;
+    list-style-position: inside !important;
+}
+
+.note-editable ol {
+    list-style: decimal !important;
+    list-style-position: inside !important;
+}
+
+/*.note-editable li {*/
+/*  list-style: style; */
+/*}*/
+
+/*.note-editor.note-frame .note-editing-area .note-editable {*/
+/*    padding: 25px;*/
+/*}*/
+
+.editor {
+    font-size: 18px;
+    margin-left: 24.4rem;
+}

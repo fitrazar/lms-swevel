@@ -13,7 +13,7 @@
                             <ul class="p-2 z-10">
                                 <li><a href="{{ route('dashboard.admin.participant.index') }}">Data Peserta</a></li>
                                 <li><a href="{{ route('dashboard.admin.instructor.index') }}">Data Mentor</a></li>
-                                <li><a href="#">Data Kursus</a></li>
+                                <li><a href="{{ route('dashboard.admin.course.index') }}">Data Kursus</a></li>
                             </ul>
                         </details>
                     </li>
