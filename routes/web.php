@@ -4,9 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DhenyController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Admin\MaterialController;
 use App\Http\Controllers\Admin\InstructorController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
@@ -29,6 +30,8 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::resource('/participant', ParticipantController::class)->except('show');
         Route::resource('/instructor', controller: InstructorController::class)->except('show');
         Route::resource('/course', AdminCourseController::class)->except('show');
+        Route::resource('/material', MaterialController::class)->except('show');
+        Route::get('/material/{course}/create', [MaterialController::class, 'createWithCourse'])->name('course.createWithCourse');
     });
 });
 
