@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             InstructorSeeder::class,
             ParticipantSeeder::class,
             SettingSeeder::class,
+            CourseSeeder::class,
         ]);
     }
 }
