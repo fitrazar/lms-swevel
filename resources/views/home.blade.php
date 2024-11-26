@@ -45,14 +45,15 @@
                     </figure>
                     <div class="card-body">
                       <h2 class="card-title text-bold">{{$course->title}}</h2>
-                      <p>{{$course->description}}</p>
-                      <p><i class="fa-solid fa-calendar-days"></i> &nbsp;start date : {{$course->start_date}}</p>
-                      <p><i class="fa-solid fa-book"></i>&nbsp;{{$course->duration}} topic</p>
-                      <span class="badge badge-error gap-2">Technology</span>
-                      <span class="badge badge-info gap-2">Laravel</span>
+                      <p>{{$course->excerpt}}</p>
+                     
                       <div class="card-actions justify-end">
-                        <button class="btn btn-primary">Learn now!</button>
-                      </div>
+                        <p><i class="fa-solid fa-calendar-days"></i> &nbsp;start date : {{$course->start_date}}</p>
+                        <p><i class="fa-solid fa-book"></i>&nbsp;{{$course->duration}} topic</p>
+                        <span class="badge badge-error gap-2">Technology</span>
+                        <span class="badge badge-info gap-2">Laravel</span>
+                        <a href="{{ route('CourseDetailController.show', ['course' => $course->slug]) }}" class="btn btn-primary">View Course</a>
+                    </div>
                     </div>
                   </div>
                   @endforeach

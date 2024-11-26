@@ -4,12 +4,14 @@
         <span class="font-extrabold">{{ $appSetting->name }}</span>
     </div>
     <div class="navbar-center hidden lg:flex">
-        <ul class="menu menu-horizontal px-1">
+        <ul class="menu menu-horizontal px-1 flex gap-4  md:gap-6 ">
             @auth
                 <li>
-
                 </li>
             @else
+                <li>Beranda</li>
+                <li>Courses</li>
+                <li>Kontak</li>
             @endauth
         </ul>
     </div>
