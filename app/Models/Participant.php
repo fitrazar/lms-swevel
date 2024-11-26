@@ -46,30 +46,30 @@ class Participant extends Model
     /**
      * Get the result associated with the participant
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function result(): HasOne
+    public function results(): HasMany
     {
-        return $this->hasOne(Result::class, 'participant_id');
-    }
-
-    /**
-     * Get the submission associated with the participant
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function submission(): HasOne
-    {
-        return $this->hasOne(Submission::class, 'participant_id');
+        return $this->hasMany(Result::class, 'participant_id');
     }
 
     /**
      * Get the quiz associated with the participant
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function quiz(): HasOne
+    public function quizzes(): HasMany
     {
-        return $this->hasOne(Result::class, 'participant_id');
+        return $this->hasMany(Quiz::class, 'participant_id');
+    }
+
+    /**
+     * Get the reports associated with the participant
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function reports(): HasMany
+    {
+        return $this->hasMany(Report::class, 'participant_id');
     }
 }

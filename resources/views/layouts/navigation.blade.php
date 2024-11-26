@@ -7,6 +7,7 @@
         <ul class="menu menu-horizontal px-1 flex gap-4  md:gap-6 ">
             @auth
                 <li>
+
                 </li>
             @else
                 <li><a href="{{route("home")}}">Beranda</a></li>
@@ -30,6 +31,11 @@
                     </div>
                 </div>
                 <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li>
+                        <a href="{{ route('dashboard.index') }}">
+                            {{ __('Dashboard') }}
+                        </a>
+                    </li>
                     <li>
                         <a href="{{ route('dashboard.profile.edit') }}">
                             {{ __('Profile') }}
@@ -60,7 +66,7 @@
                     </li>
                     <li>
                         <a href="{{ route('register') }}">
-                            {{ __('Daftar') }}
+                            {{ __('Register') }}
                         </a>
                     </li>
                 </ul>
@@ -93,11 +99,11 @@
     </a>
     <a href="#" class="{{ Request::is('/course') ? 'active' : '' }}">
         <i class="fa-solid fa-book" class="h-5 w-5"></i>
-        <span class="btm-nav-label text-xs">Courses</span>
+        <span class="btm-nav-label text-xs">Kursus</span>
     </a>
 
-    <a href="#" class="{{ Request::is('/kontak') ? 'active' : '' }}">
+    <a href="#" class="{{ Request::is('/contact') ? 'active' : '' }}">
         <i class="fa-solid fa-address-book" class="h-5 w-5"></i>
-        <span class="btm-nav-label text-xs">kontak</span>
+        <span class="btm-nav-label text-xs">Kontak</span>
     </a>
 </div>

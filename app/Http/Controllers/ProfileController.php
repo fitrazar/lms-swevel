@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use App\Models\Instructor;
+use App\Models\Participant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
+use App\Http\Requests\ProfileUpdateRequest;
 
 class ProfileController extends Controller
 {
@@ -26,13 +29,34 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $role = $user->roles->pluck('name')[0];
+        $validatedData = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($role == 'instructor') {
+            if ($request->hasFile('photo')) {
+                $path = 'instructor/photo/' . Auth::user()->name;
+                if ($user->photo) {
+                    Storage::delete($path . '/' . $user->photo);
+                }
+                $validatedData['photo'] = time() . '.' . $request->file('photo')->getClientOriginalExtension();
+                $request->file('photo')->storeAs($path, $validatedData['photo']);
+            }
+
+            Instructor::where('user_id', $user->id)->update($validatedData);
+
+        } else {
+            if ($request->hasFile('photo')) {
+                $path = 'participant/photo/' . Auth::user()->name;
+                if ($user->photo) {
+                    Storage::delete($path . '/' . $user->photo);
+                }
+                $validatedData['photo'] = time() . '.' . $request->file('photo')->getClientOriginalExtension();
+                $request->file('photo')->storeAs($path, $validatedData['photo']);
+            }
+
+            Participant::where('user_id', $user->id)->update($validatedData);
         }
-
-        $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
