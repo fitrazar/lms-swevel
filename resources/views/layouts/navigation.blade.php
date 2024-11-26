@@ -9,9 +9,9 @@
                 <li>
                 </li>
             @else
-                <li>Beranda</li>
-                <li>Courses</li>
-                <li>Kontak</li>
+                <li><a href="{{route("home")}}">Beranda</a></li>
+                <li><a href="#">Courses</a></li>
+                <li><a href="#">Kontak</a></li>
             @endauth
         </ul>
     </div>
