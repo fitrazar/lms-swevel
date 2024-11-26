@@ -46,11 +46,13 @@
                             {{ __('Dashboard') }}
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ route('dashboard.profile.edit') }}">
-                            {{ __('Profile') }}
-                        </a>
-                    </li>
+                    @hasanyrole('participant|instructor')
+                        <li>
+                            <a href="{{ route('dashboard.profile.edit') }}">
+                                {{ __('Profile') }}
+                            </a>
+                        </li>
+                    @endhasanyrole
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <li>
