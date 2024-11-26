@@ -1,4 +1,4 @@
-@section('title', 'Edit Data Siswa')
+@section('title', 'Edit Data Peserta')
 
 <x-app-layout>
 
