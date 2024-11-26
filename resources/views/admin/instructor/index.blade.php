@@ -1,4 +1,4 @@
-@section('title', 'Data Peserta')
+@section('title', 'Data Mentor')
 
 <x-app-layout>
 
@@ -10,7 +10,7 @@
                 @endif
 
                 <div class="flex justify-start space-x-4">
-                    <a href="{{ route('dashboard.admin.participant.create') }}">
+                    <a href="{{ route('dashboard.admin.instructor.create') }}">
                         <x-button.primary-button>
                             <i class="fa-solid fa-plus"></i>
                             Tambah Data
@@ -19,7 +19,7 @@
 
                 </div>
                 <div class="relative overflow-x-auto mt-5">
-                    <table id="participants" class="table">
+                    <table id="instructors" class="table">
                         <thead>
                             <tr>
                                 <th scope="col" class="px-6 py-3">
@@ -29,7 +29,7 @@
                                     Email
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Nama Peserta
+                                    Nama Mentor
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Jenis Kelamin
@@ -64,7 +64,7 @@
             }
 
             function performDelete(id) {
-                fetch(`/dashboard/participant/${id}`, {
+                fetch(`/dashboard/instructor/${id}`, {
                         method: 'DELETE',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -74,7 +74,7 @@
                     .then(data => {
                         if (data.success) {
                             deleteModal.close();
-                            $('#participants').DataTable().ajax.reload();
+                            $('#instructors').DataTable().ajax.reload();
                             const alertContainer = document.createElement('div');
                             alertContainer.innerHTML = `
                             <x-alert.success message=${data.message} />
@@ -95,7 +95,7 @@
             $(document).ready(function() {
 
 
-                let dataTable = $('#participants').DataTable({
+                let dataTable = $('#instructors').DataTable({
                     buttons: [
                         // 'copy', 'excel', 'csv', 'pdf', 'print',
                         'colvis'
@@ -106,7 +106,7 @@
                     },
                     serverSide: true,
                     ajax: {
-                        url: '{{ route('dashboard.admin.participant.index') }}',
+                        url: '{{ route('dashboard.admin.instructor.index') }}',
                     },
                     columns: [{
                             data: null,
@@ -137,7 +137,7 @@
                             render: function(data, type, full, meta) {
                                 return `
                                 <div class="flex justify-center gap-2 w-full flex-wrap">
-                                    <a href="{{ url('/dashboard/participant/${full.id}/edit') }}">
+                                    <a href="{{ url('/dashboard/instructor/${full.id}/edit') }}">
                                         <x-button.info-button type="button" class="btn-sm text-white"><i class="fa-regular fa-pen-to-square"></i>Edit</x-button.info-button>
                                     </a>
                                     <x-button.danger-button class="btn-sm text-white" onclick="openDeleteModal(${full.id})">

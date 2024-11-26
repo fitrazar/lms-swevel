@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\InstructorController;
 use App\Http\Controllers\CourseController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -21,6 +22,7 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
 
     Route::name('admin.')->middleware(['role:author'])->group(function () {
         Route::resource('/participant', ParticipantController::class)->except('show');
+        Route::resource('/instructor', InstructorController::class)->except('show');
     });
 });
 

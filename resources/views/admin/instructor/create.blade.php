@@ -1,18 +1,18 @@
-@section('title', 'Tambah Data Peserta')
+@section('title', 'Tambah Data Mentor')
 
 <x-app-layout>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <x-card.card-default class="static">
-                <a href="{{ route('dashboard.admin.participant.index') }}">
+                <a href="{{ route('dashboard.admin.instructor.index') }}">
                     <x-button.info-button>
                         <i class="fa-solid fa-arrow-left"></i>
                         Kembali
                     </x-button.info-button>
                 </a>
 
-                <x-form action="{{ route('dashboard.admin.participant.store') }}" class="md:grid md:grid-cols-2 gap-4"
+                <x-form action="{{ route('dashboard.admin.instructor.store') }}" class="md:grid md:grid-cols-2 gap-4"
                     enctype="multipart/form-data">
                     @csrf
 
@@ -31,7 +31,7 @@
                         <x-input.input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
                     <div class="mt-4">
-                        <x-input.input-label for="name" :value="__('Nama Peserta')" />
+                        <x-input.input-label for="name" :value="__('Nama Mentor')" />
                         <x-input.text-input id="name" class="mt-1 w-full" type="text" name="name"
                             :value="old('name')" required autofocus autocomplete="name" />
                         <x-input.input-error :messages="$errors->get('name')" class="mt-2" />

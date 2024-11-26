@@ -125,6 +125,9 @@ class InstructorController extends Controller
         $instructor->user->delete();
         Instructor::destroy($instructor->id);
 
-        return redirect()->route('dashboard.admin.instructor.index')->with('success', 'Mentor Berhasil Dihapus!');
+        return response()->json([
+            'success' => true,
+            'message' => 'Mentor berhasil dihapus.'
+        ]);
     }
 }
