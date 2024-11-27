@@ -44,20 +44,33 @@
                                 <span class="badge badge-primary">{{ $course->duration }}</span>
                             </p>
                             <div class="card-actions justify-end mt-3">
-                                <div class="badge badge-outline">{{ $course->start_date }}</div>
+                                @if (now()->lte($course->start_date))
+                                    <div class="badge badge-outline">Belum Dibuka</div>
+                                @else
+                                    <div class="badge badge-outline">{{ $course->start_date }}</div>
+                                    <span>-</span>
+                                    <div class="badge badge-outline">{{ $course->end_date }}</div>
+                                @endif
                             </div>
-                            <a href="{{ url('/course/' . $course->slug) }}" class="mt-4 block">
-                                <x-button.primary-button class="btn-md text-base-100 w-full">
-                                    Learn Now
-                                </x-button.primary-button>
-                            </a>
+                            @if (now()->lte($course->start_date))
+                                <x-button.primary-button class="btn-md text-base-100 w-full" disabled="disabled">Learn
+                                    Now</x-button.primary-button>
+                            @else
+                                <a href="{{ url('/course/' . $course->slug) }}" class="mt-4 block">
+                                    <x-button.primary-button class="btn-md text-base-100 w-full">
+                                        Learn Now
+                                    </x-button.primary-button>
+                                </a>
+                            @endif
                         </x-card.card-image>
                     @empty
-                        <div></div>
-                        <div class="col-span-full text-center text-gray-500 ">
-                            No courses found.
-                        </div>
-                        <div></div>
+                        <x-card.card-default class="static md:col-span-2 lg:col-span-3 col-span-1">
+                            <div class="flex flex-col w-full border-opacity-50">
+                                <div class="grid h-20 card bg-base-300 rounded-box place-items-center">Data Tidak
+                                    Ditemukan
+                                </div>
+                            </div>
+                        </x-card.card-default>
                     @endforelse
                 </div>
             </div>
