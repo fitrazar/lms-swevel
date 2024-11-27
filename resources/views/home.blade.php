@@ -147,7 +147,7 @@
                             <div class="space-y-2">
                                 <div class="text-xs font-medium lg:text-sm text-center">
                                     <h1 class="font-bold text-lg">
-                                        Muhammad Renaldy Saputra</h1>
+                                         Renaldy Saputra</h1>
                                     <p class="text-sm font-normal">System Analyst</p>
                                     <div class="flex justify-center gap-4 mt-4">
                                         <a href="#" class="btn btn-primary btn-sm"><i
