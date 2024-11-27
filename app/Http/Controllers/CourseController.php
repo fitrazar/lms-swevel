@@ -12,6 +12,20 @@ use PHPUnit\Framework\Constraint\Count;
 
 class CourseController extends Controller
 {
+    public function index(Request $request)
+    {
+        $search = $request->input('search');
+
+        $courses = Course::query()
+            ->when($search, function ($query, $search) {
+                return $query->where('title', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->paginate(9);
+        return view('participant.course.index', compact('courses', 'search'));
+    }
+
+
     public function show(Course $course)
     {
         $course = Course::with([
@@ -19,8 +33,9 @@ class CourseController extends Controller
                 $query->orderBy('order', 'asc');
             }
         ])->findOrFail($course->id);
+        $courses = Course::latest()->take(5)->get();
 
-        return view("participant.course.show", compact("course"));
+        return view("participant.course.show", compact("course", "courses"));
     }
 
     public function store(Request $request)
