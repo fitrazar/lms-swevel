@@ -62,7 +62,7 @@
                     @endforelse
                 </div>
                 <div class="mt-3 flex justify-center">
-                    <a href="{{ url('/course') }}">
+                    <a href="{{ url('/course/all') }}">
                         <x-button.primary-button class="ms-3" type="button">
                             {{ __('Lihat Semua') }}
                         </x-button.primary-button>
