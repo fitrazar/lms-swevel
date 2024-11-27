@@ -1,4 +1,4 @@
-@section('title', 'Beranda')
+@section('title', 'Kursus')
 
 <x-guest-layout>
     <div class="py-8">
@@ -14,8 +14,8 @@
                         d="M235.233 402.609 57.541 321.573.83 631.05l234.404-228.441 320.018 145.945c-65.036-115.261-134.286-322.756 109.01-230.655C968.382 433.026 1031 651.247 1092.23 459.36c48.98-153.51-34.51-321.107-82.37-385.717L810.952 324.222 648.261.088 235.233 402.609Z">
                     </path>
                     <defs>
-                        <linearGradient id="gradient" x1="1220.59" x2="-85.053"
-                            y1="432.766" y2="638.714" gradientUnits="userSpaceOnUse">
+                        <linearGradient id="gradient" x1="1220.59" x2="-85.053" y1="432.766" y2="638.714"
+                            gradientUnits="userSpaceOnUse">
                             <stop stop-color="#4F46E5"></stop>
                             <stop offset="1" stop-color="#80CAFF"></stop>
                         </linearGradient>
@@ -24,18 +24,19 @@
             </div>
 
             {{-- Search Bar --}}
-            <form method="GET" action="{{ route('course.index') }}" class="mb-8 relative z-10">
+            <x-form method="GET" action="{{ route('course.index') }}" class="mb-8 relative">
                 <div class="flex items-center space-x-4">
-                    <input type="text" name="search" value="{{ request('search') }}"
-                        class="input input-bordered w-full" placeholder="Search courses...">
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <x-input.text-input type="search" name="search" placeholder="Cari Kursus..." :value="$search"
+                        class="w-full" />
+
+                    <x-button.primary-button type="submit">Cari</x-button.primary-button>
                 </div>
-            </form>
+            </x-form>
 
             {{-- List Courses --}}
             <div class="py-8 mt-1"> <!-- Tambahkan kelas mt-8 untuk margin atas -->
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 gap-6 p-4">
-                    @forelse ($latestCourse as $course)
+                    @forelse ($courses as $course)
                         <x-card.card-image title="{{ $course->title }}"
                             image="{{ $course->cover ? 'storage/course/' . $course->cover : 'assets/images/no-image.png' }}">
                             <p>{{ $course->excerpt }}</p>
@@ -63,9 +64,9 @@
 
             {{-- Teks Hasil Pagination di Atas --}}
             <div class="mt-6 text-center">
-                <p class="text-sm text-gray-500">
-                    {{ $latestCourse->links('pagination::tailwind') }}
-                </p>
+                <div class="join">
+                    {{ $courses->appends(['search' => $search])->links() }}
+                </div>
             </div>
         </div>
     </div>

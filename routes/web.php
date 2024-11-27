@@ -14,9 +14,9 @@ use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/dheny', [DhenyController::class, 'index'])->name("view.dheny");
-Route::get('/course/all', [CourseController::class, 'index'])->name('course.index');
 Route::get('/contact', [ContactController::class, 'index'])->name("contact");
 
+Route::get('/course', [CourseController::class, 'index'])->name('course.index');
 Route::get('/course/{course}', [CourseController::class, 'show'])->name('course.show');
 Route::post('/course', [CourseController::class, 'store'])->name('course.store');
 Route::get('/course/{course}/read/{topic}', [CourseController::class, 'read'])->name('course.read');

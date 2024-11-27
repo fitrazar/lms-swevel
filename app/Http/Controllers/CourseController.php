@@ -16,13 +16,13 @@ class CourseController extends Controller
     {
         $search = $request->input('search');
 
-        $latestCourse = Course::query()
+        $courses = Course::query()
             ->when($search, function ($query, $search) {
                 return $query->where('title', 'like', "%{$search}%");
             })
-            ->orderBy('created_at', 'desc')
-            ->paginate(3);
-        return view('participant.course.index', compact('latestCourse', 'search'));
+            ->latest()
+            ->paginate(9);
+        return view('participant.course.index', compact('courses', 'search'));
     }
 
 
