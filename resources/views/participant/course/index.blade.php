@@ -41,7 +41,7 @@
                             image="{{ $course->cover ? 'storage/course/' . $course->cover : 'assets/images/no-image.png' }}">
                             <p>{{ $course->excerpt }}</p>
                             <p class="font-bold mt-2">Total Duration:
-                                <span class="badge badge-primary">{{ $course->duration }}</span>
+                                <span class="badge badge-primary">{{ $course->duration }} Menit</span>
                             </p>
                             <div class="card-actions justify-end mt-3">
                                 @if (now()->lte($course->start_date))

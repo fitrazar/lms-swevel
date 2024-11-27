@@ -41,8 +41,8 @@
                             image="{{ $course->cover ? 'storage/course/' . $course->cover : 'assets/images/no-image.png' }}"
                             class="static">
                             <p>{{ $course->excerpt }}</p>
-                            <p class="font-bold">Total Durasi <span
-                                    class="badge badge-primary">{{ $course->duration }}</span></p>
+                            <p class="font-bold">Total Durasi <span class="badge badge-primary">{{ $course->duration }}
+                                    Menit</span></p>
                             <div class="card-actions md:justify-end justify-start items-center">
                                 @if (now()->lte($course->start_date))
                                     <div class="badge badge-outline">Belum Dibuka</div>
@@ -74,7 +74,7 @@
                     @endforelse
                 </div>
                 <div class="mt-3 flex justify-center">
-                    <a href="{{ url('/course/all') }}">
+                    <a href="{{ url('/course') }}">
                         <x-button.primary-button class="ms-3" type="button">
                             {{ __('Lihat Semua') }}
                         </x-button.primary-button>
