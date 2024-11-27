@@ -33,8 +33,9 @@ class CourseController extends Controller
                 $query->orderBy('order', 'asc');
             }
         ])->findOrFail($course->id);
+        $courses = Course::latest()->take(5)->get();
 
-        return view("participant.course.show", compact("course"));
+        return view("participant.course.show", compact("course", "courses"));
     }
 
     public function store(Request $request)
