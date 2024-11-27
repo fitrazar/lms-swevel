@@ -6,27 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <meta name="title" content="{{ $__env->yieldContent('title') }}" />
-    <meta name="description"
-        content="{{ !empty(trim($__env->yieldContent('description'))) ? $__env->yieldContent('description') : $appSetting->description }}" />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="{{ config('app.url') }}" />
-    <meta property="og:title" content="{{ $__env->yieldContent('title') }}" />
-    <meta property="og:description"
-        content="{{ !empty(trim($__env->yieldContent('description'))) ? $__env->yieldContent('description') : $appSetting->description }}" />
-    <meta property="og:image"
-        content="{{ !empty(trim($__env->yieldContent('image'))) ? $__env->yieldContent('image') : asset('assets/images/logo.png') }}" />
-
-
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="{{ config('app.url') }}" />
-    <meta property="twitter:title" content="{{ $__env->yieldContent('title') }}" />
-    <meta property="twitter:description"
-        content="{{ !empty(trim($__env->yieldContent('description'))) ? $__env->yieldContent('description') : $appSetting->description }}" />
-    <meta property="twitter:image"
-        content="{{ !empty(trim($__env->yieldContent('image'))) ? $__env->yieldContent('image') : asset('assets/images/logo.png') }}" />
-
     <title>@yield('title', config('app.name', 'Laravel')) - {{ config('app.name', 'Laravel') }}</title>
     <link rel="shortcut icon" href="{{ asset('assets/images/logo.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ asset('assets/vendors/fontawesome/css/fontawesome.css') }}">
