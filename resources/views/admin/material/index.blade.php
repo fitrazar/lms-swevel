@@ -1,4 +1,4 @@
-@section('title', 'Data Peserta')
+@section('title', 'Data Materi')
 
 <x-app-layout>
 
@@ -10,7 +10,7 @@
                 @endif
 
                 <div class="flex justify-start space-x-4">
-                    <a href="{{ route('dashboard.admin.participant.create') }}">
+                    <a href="{{ route('dashboard.admin.material.create') }}">
                         <x-button.primary-button>
                             <i class="fa-solid fa-plus"></i>
                             Tambah Data
@@ -18,22 +18,36 @@
                     </a>
 
                 </div>
+
+                <div class="flex justify-start space-x-4">
+                    <div class="mt-4">
+                        <x-input.select-input id="kursus" class="select2 mt-1 w-full" type="text" name="kursus">
+                            <option value="" disabled selected>Pilih Nama Kursus</option>
+                            <option value="All">Semua</option>
+                            @foreach ($courses as $course)
+                                <option value="{{ $course->id }}">{{ $course->title }}
+                                </option>
+                            @endforeach
+                        </x-input.select-input>
+                    </div>
+                </div>
+
                 <div class="relative overflow-x-auto mt-5">
-                    <table id="participants" class="table">
+                    <table id="materials" class="table">
                         <thead>
                             <tr>
                                 <th scope="col" class="px-6 py-3">
                                     No
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Email
+                                    Nama Kursus
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Nama Peserta
+                                    Judul Topik
                                 </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Jenis Kelamin
-                                </th>
+                                {{-- <th scope="col" class="px-6 py-3">
+                                    Materi
+                                </th> --}}
                                 <th scope="col" class="px-6 py-3">
                                     Action
                                 </th>
@@ -64,7 +78,7 @@
             }
 
             function performDelete(id) {
-                fetch(`/dashboard/participant/${id}`, {
+                fetch(`/dashboard/material/${id}`, {
                         method: 'DELETE',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -74,7 +88,7 @@
                     .then(data => {
                         if (data.success) {
                             deleteModal.close();
-                            $('#participants').DataTable().ajax.reload();
+                            $('#materials').DataTable().ajax.reload();
                             const alertContainer = document.createElement('div');
                             alertContainer.innerHTML = `
                             <x-alert.success message=${data.message} />
@@ -94,8 +108,7 @@
 
             $(document).ready(function() {
 
-
-                let dataTable = $('#participants').DataTable({
+                let dataTable = $('#materials').DataTable({
                     buttons: [
                         // 'copy', 'excel', 'csv', 'pdf', 'print',
                         'colvis'
@@ -106,7 +119,10 @@
                     },
                     serverSide: true,
                     ajax: {
-                        url: '{{ route('dashboard.admin.participant.index') }}',
+                        url: '{{ route('dashboard.admin.material.index') }}',
+                        data: function(d) {
+                            d.kursus = $('#kursus').val();
+                        }
                     },
                     columns: [{
                             data: null,
@@ -118,17 +134,40 @@
                             }
                         },
                         {
-                            data: 'user.email',
-                            name: 'user.email'
+                            data: 'topic.course.title',
+                            name: 'topic.course.title',
+                            orderable: false,
+                            searchable: true,
                         },
                         {
-                            data: 'name',
-                            name: 'name'
+                            data: 'topic.title',
+                            name: 'topic.title',
+                            orderable: false,
+                            searchable: true,
                         },
-                        {
-                            data: 'gender',
-                            name: 'gender'
-                        },
+                        // {
+                        //     data: null,
+                        //     render: function(data) {
+                        //         function stripHtml(html) {
+                        //             var div = document.createElement("div");
+                        //             div.innerHTML = html;
+                        //             return div.textContent || div.innerText || "";
+                        //         }
+
+                        //         function truncateText(text, wordLimit) {
+                        //             const words = text.split(" ");
+                        //             return words.slice(0, wordLimit).join(" ") + (words.length >
+                        //                 wordLimit ? "..." : "");
+                        //         }
+
+                        //         const cleanText = stripHtml(data.content);
+                        //         const truncatedText = truncateText(cleanText, 20);
+
+                        //         return truncatedText;
+                        //     },
+                        //     orderable: false,
+                        //     searchable: false,
+                        // },
                         {
                             data: 'action',
                             name: 'action',
@@ -136,8 +175,8 @@
                             searchable: false,
                             render: function(data, type, full, meta) {
                                 return `
-                                <div class="flex justify-center gap-2 w-full flex-wrap">
-                                    <a href="{{ url('/dashboard/participant/${full.id}/edit') }}">
+                               <div class="flex justify-center gap-2 w-full flex-wrap">
+                                    <a href="{{ url('/dashboard/material/${full.id}/edit') }}">
                                         <x-button.info-button type="button" class="btn-sm text-white"><i class="fa-regular fa-pen-to-square"></i>Edit</x-button.info-button>
                                     </a>
                                     <x-button.danger-button class="btn-sm text-white" onclick="openDeleteModal(${full.id})">
@@ -148,6 +187,9 @@
                             }
                         },
                     ]
+                });
+                $('#kursus').change(function() {
+                    dataTable.ajax.reload();
                 });
             });
         </script>

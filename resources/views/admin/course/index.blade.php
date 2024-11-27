@@ -1,4 +1,4 @@
-@section('title', 'Data Peserta')
+@section('title', 'Data Kursus')
 
 <x-app-layout>
 
@@ -10,7 +10,7 @@
                 @endif
 
                 <div class="flex justify-start space-x-4">
-                    <a href="{{ route('dashboard.admin.participant.create') }}">
+                    <a href="{{ route('dashboard.admin.course.create') }}">
                         <x-button.primary-button>
                             <i class="fa-solid fa-plus"></i>
                             Tambah Data
@@ -19,20 +19,23 @@
 
                 </div>
                 <div class="relative overflow-x-auto mt-5">
-                    <table id="participants" class="table">
+                    <table id="courses" class="table">
                         <thead>
                             <tr>
                                 <th scope="col" class="px-6 py-3">
                                     No
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Email
+                                    Cover
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Nama Peserta
+                                    Judul Kursus
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Jenis Kelamin
+                                    Tanggal Mulai
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Tanggal Selesai
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Action
@@ -56,15 +59,15 @@
 
     <x-slot name="script">
         <script>
-            function openDeleteModal(id) {
+            function openDeleteModal(slug) {
                 confirmDelete.onclick = function() {
-                    performDelete(id);
+                    performDelete(slug);
                 };
                 deleteModal.showModal();
             }
 
-            function performDelete(id) {
-                fetch(`/dashboard/participant/${id}`, {
+            function performDelete(slug) {
+                fetch(`/dashboard/course/${slug}`, {
                         method: 'DELETE',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -74,7 +77,7 @@
                     .then(data => {
                         if (data.success) {
                             deleteModal.close();
-                            $('#participants').DataTable().ajax.reload();
+                            $('#courses').DataTable().ajax.reload();
                             const alertContainer = document.createElement('div');
                             alertContainer.innerHTML = `
                             <x-alert.success message=${data.message} />
@@ -95,7 +98,7 @@
             $(document).ready(function() {
 
 
-                let dataTable = $('#participants').DataTable({
+                let dataTable = $('#courses').DataTable({
                     buttons: [
                         // 'copy', 'excel', 'csv', 'pdf', 'print',
                         'colvis'
@@ -106,7 +109,7 @@
                     },
                     serverSide: true,
                     ajax: {
-                        url: '{{ route('dashboard.admin.participant.index') }}',
+                        url: '{{ route('dashboard.admin.course.index') }}',
                     },
                     columns: [{
                             data: null,
@@ -118,16 +121,24 @@
                             }
                         },
                         {
-                            data: 'user.email',
-                            name: 'user.email'
+                            data: null,
+                            render: function(data, type, full, meta) {
+                                return `<img src="{{ asset('storage/course/${full.cover}') }}" class="w-14 h-14" />`
+                            },
+                            orderable: false,
+                            searchable: false,
                         },
                         {
-                            data: 'name',
-                            name: 'name'
+                            data: 'title',
+                            name: 'title'
                         },
                         {
-                            data: 'gender',
-                            name: 'gender'
+                            data: 'start_date',
+                            name: 'start_date'
+                        },
+                        {
+                            data: 'end_date',
+                            name: 'end_date'
                         },
                         {
                             data: 'action',
@@ -137,10 +148,13 @@
                             render: function(data, type, full, meta) {
                                 return `
                                 <div class="flex justify-center gap-2 w-full flex-wrap">
-                                    <a href="{{ url('/dashboard/participant/${full.id}/edit') }}">
+                                    <a href="{{ url('/dashboard/material/${full.slug}/create') }}">
+                                        <x-button.success-button type="button" class="btn-sm text-white"><i class="fa-solid fa-receipt"></i>+ Materi</x-button.success-button>
+                                    </a>
+                                    <a href="{{ url('/dashboard/course/${full.slug}/edit') }}">
                                         <x-button.info-button type="button" class="btn-sm text-white"><i class="fa-regular fa-pen-to-square"></i>Edit</x-button.info-button>
                                     </a>
-                                    <x-button.danger-button class="btn-sm text-white" onclick="openDeleteModal(${full.id})">
+                                    <x-button.danger-button class="btn-sm text-white" onclick="openDeleteModal('${full.slug}')">
                                         <i class="fa-regular fa-trash-can"></i>Hapus
                                     </x-button.danger-button>
                                 </div>
