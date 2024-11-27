@@ -54,6 +54,13 @@
                             @foreach ($course->instructors as $instructor)
                                 <div class="badge badge-primary font-bold">{{ $instructor->name }}</div>
                             @endforeach
+                            <div class="divider"></div>
+                            <h2 class="font-bold text-lg">Cara Pendaftaran</h2>
+                            <ul>
+                                <li>Klik tombol Daftar Sekarang</li>
+                                <li>Pada modal yang terbuka, silahkan anda ceklis persyaratan dan persetujuannya</li>
+                                <li>Tunggu akun di aktifkan oleh pihak admin</li>
+                            </ul>
 
 
                             @guest
