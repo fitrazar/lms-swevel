@@ -35,20 +35,33 @@
             <div class="py-12">
                 <h2 class="font-bold text-center md:text-3xl text-lg">Latest Course</h2>
 
-                <div class="grid md:grid-cols-2 lg:grid-cols-4 grid-cols-1 gap-6 p-4">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 gap-6 p-4">
                     @forelse ($latestCourse as $course)
                         <x-card.card-image title="{{ $course->title }}"
-                            image="{{ $course->image ? 'storage/course/' . $course->image : 'assets/images/no-image.png' }}"
+                            image="{{ $course->cover ? 'storage/course/' . $course->cover : 'assets/images/no-image.png' }}"
                             class="static">
                             <p>{{ $course->excerpt }}</p>
-                            <p class="font-bold"><span class="badge badge-primary">{{ $course->duration }}</span></p>
+                            <p class="font-bold">Total Durasi <span class="badge badge-primary">{{ $course->duration }}
+                                    Menit</span></p>
                             <div class="card-actions md:justify-end justify-start items-center">
-                                <div class="badge badge-outline">{{ $course->start_date }}</div>
+                                @if (now()->lte($course->start_date))
+                                    <div class="badge badge-outline">Belum Dibuka</div>
+                                @else
+                                    <div class="badge badge-outline">{{ $course->start_date }}</div>
+                                    <span>-</span>
+                                    <div class="badge badge-outline">{{ $course->end_date }}</div>
+                                @endif
                             </div>
-                            <a href="{{ url('/course/' . $course->slug) }}" class="mt-3">
-                                <x-button.primary-button type="submit" class="btn-md text-base-100 w-full">Learn
+                            @if (now()->lte($course->start_date))
+                                <x-button.primary-button class="btn-md text-base-100 w-full" disabled="disabled">Learn
                                     Now</x-button.primary-button>
-                            </a>
+                            @else
+                                <a href="{{ url('/course/' . $course->slug) }}" class="mt-4 block">
+                                    <x-button.primary-button class="btn-md text-base-100 w-full">
+                                        Learn Now
+                                    </x-button.primary-button>
+                                </a>
+                            @endif
                         </x-card.card-image>
                     @empty
                         <x-card.card-default class="static md:col-span-2 lg:col-span-4 col-span-1">

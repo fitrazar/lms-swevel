@@ -4,7 +4,10 @@
         <span class="font-extrabold">{{ $appSetting->name }}</span>
     </div>
     <div class="navbar-center hidden lg:flex">
-        <ul class="menu menu-horizontal px-1 flex gap-4  md:gap-6 ">
+        <ul class="menu menu-horizontal px-1 flex gap-4">
+            <li><a href="{{ route('home') }}">Beranda</a></li>
+            <li><a href="{{ route('course.index') }}">Kursus</a></li>
+            <li><a href="{{ route('contact') }}">Kontak Kami</a></li>
             @auth
                 @hasrole('author')
                     <li>
@@ -14,22 +17,15 @@
                                 <li><a href="{{ route('dashboard.admin.participant.index') }}">Data Peserta</a></li>
                                 <li><a href="{{ route('dashboard.admin.instructor.index') }}">Data Mentor</a></li>
                                 <li><a href="{{ route('dashboard.admin.course.index') }}">Data Kursus</a></li>
+                                <li><a href="{{ route('dashboard.admin.material.index') }}">Data Materi</a></li>
                             </ul>
                         </details>
                     </li>
                 @endrole
             @else
-                @endauth
-                <li>
-                        <details>
-                            <summary>Beranda</summary>
-                            <ul class="p-2 z-10">
-                                <li><a href="{{ route('home') }}">Halaman Utama</a></li>
-                                <li><a href="{{ route('contact') }}">Kontak Kami</a></li>
-                            </ul>
-                        </details>
-                    </li>
                 
+            @endauth
+        </ul>
     </div>
     <div class="navbar-end mr-10">
         <div class="dropdown dropdown-end">
@@ -51,11 +47,13 @@
                             {{ __('Dashboard') }}
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ route('dashboard.profile.edit') }}">
-                            {{ __('Profile') }}
-                        </a>
-                    </li>
+                    @hasanyrole('participant|instructor')
+                        <li>
+                            <a href="{{ route('dashboard.profile.edit') }}">
+                                {{ __('Profile') }}
+                            </a>
+                        </li>
+                    @endhasanyrole
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <li>

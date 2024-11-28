@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Topic extends Model
 {
+    protected $guarded = ['id'];
+
     protected $with = ['course'];
 
     /**

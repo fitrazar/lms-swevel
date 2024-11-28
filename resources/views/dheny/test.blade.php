@@ -59,6 +59,15 @@
         </div>
       </div>
 
+                  {{-- Search Bar --}}
+                  <form method="GET" action="{{ route('course.index') }}" class="mb-8">
+                    <div class="flex items-center space-x-4">
+                        <input type="text" name="search" value="{{ request('search') }}"
+                            class="input input-bordered w-full" placeholder="Search courses...">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </form>
+
     <div id="hello"
     class="hero min-h-screen"
     style="background-image: url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp);">
