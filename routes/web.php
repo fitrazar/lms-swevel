@@ -20,6 +20,8 @@ Route::get('/course', [CourseController::class, 'index'])->name('course.index');
 Route::get('/course/{course}', [CourseController::class, 'show'])->name('course.show');
 Route::post('/course', [CourseController::class, 'store'])->name('course.store');
 Route::get('/course/{course}/read/{topic}', [CourseController::class, 'read'])->name('course.read');
+Route::post('/course/{course}/read/done', [CourseController::class, 'completed'])->name('course.done');
+
 
 Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
