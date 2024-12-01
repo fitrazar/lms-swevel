@@ -37,12 +37,15 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::resource('/participant', ParticipantController::class)->except('show');
         Route::resource('/instructor', controller: InstructorController::class)->except('show');
         Route::resource('/course', AdminCourseController::class)->except('show');
+    });
+
+    Route::middleware(['role:author|instructor'])->group(function () {
         Route::resource('/material', MaterialController::class)->except('show');
         Route::get('/material/{course}/create', [MaterialController::class, 'createWithCourse'])->name('course.createWithCourse');
     });
 
-    Route::name('instructor.')->middleware(['role:author'])->group(function () {
-        Route::get('/course', [InstructorCourseController::class, 'index'])->name('course.index');
+    Route::name('instructor.')->middleware(['role:instructor'])->group(function () {
+        Route::get('/instructor/course', [InstructorCourseController::class, 'index'])->name('course.index');
     });
 });
 

@@ -10,7 +10,7 @@
                 @endif
 
                 <div class="flex justify-start space-x-4">
-                    <a href="{{ route('dashboard.admin.material.create') }}">
+                    <a href="{{ route('dashboard.material.create') }}">
                         <x-button.primary-button>
                             <i class="fa-solid fa-plus"></i>
                             Tambah Data
@@ -119,7 +119,7 @@
                     },
                     serverSide: true,
                     ajax: {
-                        url: '{{ route('dashboard.admin.material.index') }}',
+                        url: '{{ route('dashboard.material.index') }}',
                         data: function(d) {
                             d.kursus = $('#kursus').val();
                         }
