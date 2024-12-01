@@ -8,7 +8,7 @@
             <div class="breadcrumbs text-sm p-2">
                 <ul>
                     <li><a href="{{ route('home') }}">Beranda</a></li>
-                    <li><a href="#">Kursus</a></li>
+                    <li><a href="{{ route('course.index') }}">Kursus</a></li>
                     <li>{{ $course->title }}</li>
                 </ul>
             </div>

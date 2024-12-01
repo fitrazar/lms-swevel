@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\MaterialController;
 use App\Http\Controllers\Admin\InstructorController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
+use App\Http\Controllers\Instructor\CourseController as InstructorCourseController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/dheny', [DhenyController::class, 'index'])->name("view.dheny");
@@ -38,6 +39,10 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::resource('/course', AdminCourseController::class)->except('show');
         Route::resource('/material', MaterialController::class)->except('show');
         Route::get('/material/{course}/create', [MaterialController::class, 'createWithCourse'])->name('course.createWithCourse');
+    });
+
+    Route::name('instructor.')->middleware(['role:author'])->group(function () {
+        Route::get('/course', [InstructorCourseController::class, 'index'])->name('course.index');
     });
 });
 
