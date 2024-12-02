@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\QuizController;
 use App\Http\Controllers\Admin\MaterialController;
 use App\Http\Controllers\Admin\AssignmentController;
+use App\Http\Controllers\Admin\EnrollmentController;
 use App\Http\Controllers\Admin\InstructorController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
@@ -46,6 +47,11 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::get('/material/{course}/create', [MaterialController::class, 'createWithCourse'])->name('course.createWithCourse');
         Route::resource('/assignment', AssignmentController::class)->except('show');
         Route::resource('/quiz', QuizController::class)->except('show');
+        Route::get('/enrollment', [EnrollmentController::class, 'index'])->name('enrollment.index');
+        Route::put('/enrollment/{enrollment}', [EnrollmentController::class, 'update'])->name('enrollment.update');
+        Route::put('/enrollment/{enrollment}', [EnrollmentController::class, 'update'])->name('enrollment.update');
+        Route::post('/enrollment', [EnrollmentController::class, 'updateAll'])->name('enrollment.updateAll');
+        Route::delete('/enrollment/{enrollment}', [EnrollmentController::class, 'destroy'])->name('enrollment.destroy');
     });
 
     Route::name('instructor.')->middleware(['role:instructor'])->group(function () {
