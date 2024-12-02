@@ -8,6 +8,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\MaterialController;
+use App\Http\Controllers\Admin\AssignmentController;
 use App\Http\Controllers\Admin\InstructorController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
@@ -42,6 +43,7 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
     Route::middleware(['role:author|instructor'])->group(function () {
         Route::resource('/material', MaterialController::class)->except('show');
         Route::get('/material/{course}/create', [MaterialController::class, 'createWithCourse'])->name('course.createWithCourse');
+        Route::resource('/assignment', AssignmentController::class)->except('show');
     });
 
     Route::name('instructor.')->middleware(['role:instructor'])->group(function () {

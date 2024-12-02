@@ -93,7 +93,7 @@ class MaterialController extends Controller
             'type' => $validatedData['type'],
         ]);
 
-        return redirect()->route('dashboard.admin.material.index')->with('success', 'Materi Berhasil Ditambahkan!');
+        return redirect()->route('dashboard.material.index')->with('success', 'Materi Berhasil Ditambahkan!');
     }
 
     /**
@@ -146,7 +146,7 @@ class MaterialController extends Controller
             'type' => $validatedData['type'],
         ]);
 
-        return redirect()->route('dashboard.admin.material.index')->with('success', 'Materi Berhasil Diupdate!');
+        return redirect()->route('dashboard.material.index')->with('success', 'Materi Berhasil Diupdate!');
     }
 
     /**

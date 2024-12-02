@@ -18,6 +18,7 @@
                                 <li><a href="{{ route('dashboard.admin.instructor.index') }}">Data Mentor</a></li>
                                 <li><a href="{{ route('dashboard.admin.course.index') }}">Data Kursus</a></li>
                                 <li><a href="{{ route('dashboard.material.index') }}">Data Materi</a></li>
+                                <li><a href="{{ route('dashboard.assignment.index') }}">Data Tugas</a></li>
                             </ul>
                         </details>
                     </li>
@@ -31,6 +32,7 @@
                             <ul class="p-2 z-10">
                                 <li><a href="{{ route('dashboard.instructor.course.index') }}">Data Kursus</a></li>
                                 <li><a href="{{ route('dashboard.material.index') }}">Data Materi</a></li>
+                                <li><a href="{{ route('dashboard.assignment.index') }}">Data Tugas</a></li>
                             </ul>
                         </details>
                     </li>

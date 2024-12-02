@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('topic_id')->constrained()->onDelete('cascade');
             $table->text('content');
-            $table->enum('type', ['document', 'video', 'assigment', 'quiz'])->default('document');
+            $table->enum('type', ['document', 'video', 'assignment', 'quiz'])->default('document');
             $table->timestamps();
         });
     }
