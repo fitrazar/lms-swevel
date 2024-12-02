@@ -17,7 +17,15 @@ class AssignmentController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $assignments = Assignment::all();
+            if (Auth::user()->roles->pluck('name')[0] == 'author') {
+                $assignments = Assignment::all();
+            } else {
+                $assignments = Assignment::whereHas('material.topic.course', function ($query) {
+                    $query->where('instructor_id', Auth::user()->instructor->id);
+                })
+                    ->with('material.topic.course')
+                    ->get();
+            }
 
             return DataTables::of($assignments)->make();
         }

@@ -7,6 +7,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\QuizController;
 use App\Http\Controllers\Admin\MaterialController;
 use App\Http\Controllers\Admin\AssignmentController;
 use App\Http\Controllers\Admin\InstructorController;
@@ -44,6 +45,7 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::resource('/material', MaterialController::class)->except('show');
         Route::get('/material/{course}/create', [MaterialController::class, 'createWithCourse'])->name('course.createWithCourse');
         Route::resource('/assignment', AssignmentController::class)->except('show');
+        Route::resource('/quiz', QuizController::class)->except('show');
     });
 
     Route::name('instructor.')->middleware(['role:instructor'])->group(function () {
