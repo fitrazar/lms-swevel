@@ -19,5 +19,17 @@ class TopicSeeder extends Seeder
             'slug' => 'pendahuluan',
             'order' => 1,
         ]);
+        Topic::create([
+            'course_id' => 1,
+            'title' => 'Tugas',
+            'slug' => 'tugas',
+            'order' => 2,
+        ]);
+        Topic::create([
+            'course_id' => 1,
+            'title' => 'Kuis',
+            'slug' => 'kuis',
+            'order' => 3,
+        ]);
     }
 }
