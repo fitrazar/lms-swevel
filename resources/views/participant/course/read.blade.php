@@ -46,12 +46,26 @@
                                     class="btn-sm text-base-100">Selanjutnya</x-button.primary-button>
                             </a>
                         @else
-                            <a href="{{ url('/course/' . $course->slug . '/read/' . $prevTopic->slug) }}"
+                            <div class="flex justify-start gap-4">
+                                <a href="{{ url('/course/' . $course->slug . '/read/' . $prevTopic->slug) }}"
+                                    class="block mt-6">
+                                    <x-button.primary-button type="button"
+                                        class="btn-sm text-base-100">Kembali</x-button.primary-button>
+                                </a>
+                                <a href="javascript:void(0);"
+                                    onclick="markAsDone('{{ route('course.done', ['course' => $course->id]) }}')"
+                                    class="block mt-6">
+                                    <x-button.primary-button type="button"
+                                        class="btn-sm text-base-100">Selesai</x-button.primary-button>
+                                </a>
+
+                            </div>
+                            {{-- <a href="{{ url('/course/' . $course->slug . '/read/' . $prevTopic->slug) }}"
                                 class="block mt-6">
                                 <x-button.primary-button type="button"
                                     class="btn-sm text-base-100">Kembali</x-button.primary-button>
                             </a>
-                            <p class="block mt-6">Kamu telah menyelesaikan semua topik.</p>
+                            <p class="block mt-6">Kamu telah menyelesaikan semua topik.</p> --}}
                         @endif
                     </div>
                 </div>
@@ -59,4 +73,24 @@
         </div>
     </div>
 
+    <x-slot name="script">
+        <script>
+            function markAsDone(url) {
+                axios.post(url, {}, {
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    })
+                    .then(response => {
+                        if (response.data.success) {
+                            alert(response.data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        alert('Terjadi kesalahan, coba lagi.');
+                    });
+            }
+        </script>
+    </x-slot>
 </x-app-layout>

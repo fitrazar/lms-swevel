@@ -18,10 +18,10 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $coruses = Course::all();
+            $courses = Course::all();
 
 
-            return DataTables::of($coruses)->make();
+            return DataTables::of($courses)->make();
         }
 
         return view('admin.course.index');

@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Topic;
 use App\Models\Course;
 use App\Models\Material;
+use App\Models\Instructor;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class MaterialController extends Controller
@@ -17,7 +19,13 @@ class MaterialController extends Controller
      */
     public function index(Request $request)
     {
-        $courses = Course::orderBy('title')->get();
+        if (Auth::user()->roles->pluck('name')[0] == 'author') {
+            $courses = Course::orderBy('title')->get();
+        } else {
+            $courses = Instructor::with('courses')
+                ->find(Auth::user()->instructor->id)
+                ->courses ?? collect();
+        }
 
         if ($request->ajax()) {
             $materials = Material::query();
@@ -41,7 +49,14 @@ class MaterialController extends Controller
      */
     public function create()
     {
-        $courses = Course::with('topics')->latest()->get();
+        $courses = null;
+        if (Auth::user()->roles->pluck('name')[0] == 'author') {
+            $courses = Course::with('topics')->latest()->get();
+        } else {
+            $courses = Instructor::with('courses.topics')
+                ->find(Auth::user()->instructor->id)
+                ->courses ?? collect();
+        }
 
         return view('admin.material.create', compact('courses'));
     }
@@ -78,7 +93,7 @@ class MaterialController extends Controller
             'type' => $validatedData['type'],
         ]);
 
-        return redirect()->route('dashboard.admin.material.index')->with('success', 'Materi Berhasil Ditambahkan!');
+        return redirect()->route('dashboard.material.index')->with('success', 'Materi Berhasil Ditambahkan!');
     }
 
     /**
@@ -86,7 +101,14 @@ class MaterialController extends Controller
      */
     public function edit(Material $material)
     {
-        $courses = Course::with('topics')->get();
+        $courses = null;
+        if (Auth::user()->roles->pluck('name')[0] == 'author') {
+            $courses = Course::with('topics')->get();
+        } else {
+            $courses = Instructor::with('courses.topics')
+                ->find(Auth::user()->instructor->id)
+                ->courses ?? collect();
+        }
         $usedOrders = $material->topic->course->topics->pluck('order')->toArray();
 
         return view('admin.material.edit', compact('material', 'courses', 'usedOrders'));
@@ -124,7 +146,7 @@ class MaterialController extends Controller
             'type' => $validatedData['type'],
         ]);
 
-        return redirect()->route('dashboard.admin.material.index')->with('success', 'Materi Berhasil Diupdate!');
+        return redirect()->route('dashboard.material.index')->with('success', 'Materi Berhasil Diupdate!');
     }
 
     /**
@@ -143,7 +165,15 @@ class MaterialController extends Controller
 
     public function createWithCourse(Course $course)
     {
-        $courses = Course::with('topics')->latest()->get();
+        $courses = null;
+        if (Auth::user()->roles->pluck('name')[0] == 'author') {
+            $courses = Course::with('topics')->latest()->get();
+        } else {
+            $courses = Instructor::with('courses.topics')
+                ->find(Auth::user()->instructor->id)
+                ->courses ?? collect();
+
+        }
 
         return view('admin.material.createWithCourse', compact('course', 'courses'));
     }

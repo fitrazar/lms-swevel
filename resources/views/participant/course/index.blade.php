@@ -47,9 +47,8 @@
                                 @if (now()->lte($course->start_date))
                                     <div class="badge badge-outline">Belum Dibuka</div>
                                 @else
-                                    <div class="badge badge-outline">{{ $course->start_date }}</div>
-                                    <span>-</span>
-                                    <div class="badge badge-outline">{{ $course->end_date }}</div>
+                                    <div class="badge badge-outline">Terakhir diupdate</div>
+                                    <div class="badge badge-outline">{{ $course->updated_at->diffForHumans() }}</div>
                                 @endif
                             </div>
                             @if (now()->lte($course->start_date))

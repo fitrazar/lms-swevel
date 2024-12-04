@@ -17,10 +17,30 @@
                                 <li><a href="{{ route('dashboard.admin.participant.index') }}">Data Peserta</a></li>
                                 <li><a href="{{ route('dashboard.admin.instructor.index') }}">Data Mentor</a></li>
                                 <li><a href="{{ route('dashboard.admin.course.index') }}">Data Kursus</a></li>
-                                <li><a href="{{ route('dashboard.admin.material.index') }}">Data Materi</a></li>
+                                <li><a href="{{ route('dashboard.enrollment.index') }}">Data Pendaftaran</a></li>
+                                <li><a href="{{ route('dashboard.material.index') }}">Data Materi</a></li>
+                                <li><a href="{{ route('dashboard.assignment.index') }}">Data Tugas</a></li>
+                                <li><a href="{{ route('dashboard.quiz.index') }}">Data Kuis</a></li>
                             </ul>
                         </details>
                     </li>
+                @endrole
+                @hasanyrole('author|instructor')
+                @endhasanyrole
+                @hasrole('instructor')
+                    <li>
+                        <details>
+                            <summary>Master Data</summary>
+                            <ul class="p-2 z-10">
+                                <li><a href="{{ route('dashboard.instructor.course.index') }}">Data Kursus</a></li>
+                                <li><a href="{{ route('dashboard.enrollment.index') }}">Data Pendaftaran</a></li>
+                                <li><a href="{{ route('dashboard.material.index') }}">Data Materi</a></li>
+                                <li><a href="{{ route('dashboard.assignment.index') }}">Data Tugas</a></li>
+                                <li><a href="{{ route('dashboard.quiz.index') }}">Data Kuis</a></li>
+                            </ul>
+                        </details>
+                    </li>
+
                 @endrole
             @else
             @endauth

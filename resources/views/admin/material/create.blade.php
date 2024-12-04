@@ -4,7 +4,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <x-card.card-default class="static">
-                <a href="{{ route('dashboard.admin.material.index') }}">
+                <a href="{{ route('dashboard.material.index') }}">
                     <x-button.info-button>
                         <i class="fa-solid fa-arrow-left"></i>
                         Kembali
@@ -12,7 +12,7 @@
                 </a>
 
 
-                <x-form action="{{ route('dashboard.admin.material.store') }}" class="md:grid md:grid-cols-2 gap-4"
+                <x-form action="{{ route('dashboard.material.store') }}" class="md:grid md:grid-cols-2 gap-4"
                     enctype="multipart/form-data">
                     @csrf
 

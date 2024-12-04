@@ -1,4 +1,4 @@
-@section('title', 'Data Materi')
+@section('title', 'Data Tugas')
 
 <x-app-layout>
 
@@ -10,7 +10,7 @@
                 @endif
 
                 <div class="flex justify-start space-x-4">
-                    <a href="{{ route('dashboard.material.create') }}">
+                    <a href="{{ route('dashboard.assignment.create') }}">
                         <x-button.primary-button>
                             <i class="fa-solid fa-plus"></i>
                             Tambah Data
@@ -19,35 +19,25 @@
 
                 </div>
 
-                <div class="flex justify-start space-x-4">
-                    <div class="mt-4">
-                        <x-input.select-input id="kursus" class="select2 mt-1 w-full" type="text" name="kursus">
-                            <option value="" disabled selected>Pilih Nama Kursus</option>
-                            <option value="All">Semua</option>
-                            @foreach ($courses as $course)
-                                <option value="{{ $course->id }}">{{ $course->title }}
-                                </option>
-                            @endforeach
-                        </x-input.select-input>
-                    </div>
-                </div>
-
                 <div class="relative overflow-x-auto mt-5">
-                    <table id="materials" class="table">
+                    <table id="assignments" class="table">
                         <thead>
                             <tr>
                                 <th scope="col" class="px-6 py-3">
                                     No
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Nama Kursus
+                                    Kursus
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Judul Topik
+                                    Nama Topik
                                 </th>
-                                {{-- <th scope="col" class="px-6 py-3">
-                                    Materi
-                                </th> --}}
+                                <th scope="col" class="px-6 py-3">
+                                    Judul Tugas
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Batas Pengerjaan
+                                </th>
                                 <th scope="col" class="px-6 py-3">
                                     Action
                                 </th>
@@ -78,7 +68,7 @@
             }
 
             function performDelete(id) {
-                fetch(`/dashboard/material/${id}`, {
+                fetch(`/dashboard/assignment/${id}`, {
                         method: 'DELETE',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -88,7 +78,7 @@
                     .then(data => {
                         if (data.success) {
                             deleteModal.close();
-                            $('#materials').DataTable().ajax.reload();
+                            $('#assignments').DataTable().ajax.reload();
                             const alertContainer = document.createElement('div');
                             alertContainer.innerHTML = `
                             <x-alert.success message=${data.message} />
@@ -108,7 +98,7 @@
 
             $(document).ready(function() {
 
-                let dataTable = $('#materials').DataTable({
+                let dataTable = $('#assignments').DataTable({
                     buttons: [
                         // 'copy', 'excel', 'csv', 'pdf', 'print',
                         'colvis'
@@ -119,10 +109,7 @@
                     },
                     serverSide: true,
                     ajax: {
-                        url: '{{ route('dashboard.material.index') }}',
-                        data: function(d) {
-                            d.kursus = $('#kursus').val();
-                        }
+                        url: '{{ route('dashboard.assignment.index') }}',
                     },
                     columns: [{
                             data: null,
@@ -134,40 +121,30 @@
                             }
                         },
                         {
-                            data: 'topic.course.title',
-                            name: 'topic.course.title',
+                            data: 'material.topic.course.title',
+                            name: 'material.topic.course.title',
                             orderable: false,
                             searchable: true,
                         },
                         {
-                            data: 'topic.title',
-                            name: 'topic.title',
+                            data: 'material.topic.title',
+                            name: 'material.topic.title',
                             orderable: false,
                             searchable: true,
                         },
-                        // {
-                        //     data: null,
-                        //     render: function(data) {
-                        //         function stripHtml(html) {
-                        //             var div = document.createElement("div");
-                        //             div.innerHTML = html;
-                        //             return div.textContent || div.innerText || "";
-                        //         }
+                        {
+                            data: 'title',
+                            name: 'title',
+                            orderable: true,
+                            searchable: true,
+                        },
+                        {
+                            data: 'due_date',
+                            name: 'due_date',
+                            orderable: true,
+                            searchable: true,
+                        },
 
-                        //         function truncateText(text, wordLimit) {
-                        //             const words = text.split(" ");
-                        //             return words.slice(0, wordLimit).join(" ") + (words.length >
-                        //                 wordLimit ? "..." : "");
-                        //         }
-
-                        //         const cleanText = stripHtml(data.content);
-                        //         const truncatedText = truncateText(cleanText, 20);
-
-                        //         return truncatedText;
-                        //     },
-                        //     orderable: false,
-                        //     searchable: false,
-                        // },
                         {
                             data: 'action',
                             name: 'action',
@@ -176,7 +153,7 @@
                             render: function(data, type, full, meta) {
                                 return `
                                <div class="flex justify-center gap-2 w-full flex-wrap">
-                                    <a href="{{ url('/dashboard/material/${full.id}/edit') }}">
+                                    <a href="{{ url('/dashboard/assignment/${full.id}/edit') }}">
                                         <x-button.info-button type="button" class="btn-sm text-white"><i class="fa-regular fa-pen-to-square"></i>Edit</x-button.info-button>
                                     </a>
                                     <x-button.danger-button class="btn-sm text-white" onclick="openDeleteModal(${full.id})">
@@ -187,9 +164,6 @@
                             }
                         },
                     ]
-                });
-                $('#kursus').change(function() {
-                    dataTable.ajax.reload();
                 });
             });
         </script>

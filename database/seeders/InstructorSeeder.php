@@ -13,7 +13,7 @@ class InstructorSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 1; $i < 10; $i++) {
+        for ($i = 2; $i < 11; $i++) {
             DB::table('instructors')->insert([
                 'user_id' => $i,
                 'name' => fake()->unique()->firstName() . ' ' . fake()->unique()->lastName(),

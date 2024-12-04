@@ -92,4 +92,30 @@ class CourseController extends Controller
 
         return view('participant.course.read', compact('course', 'currentTopic', 'prevTopic', 'nextTopic'));
     }
+
+    public function completed(Course $course)
+    {
+        $userId = Auth::user()->participant->id;
+
+        $progress = Progress::where('participant_id', $userId)
+            ->where('course_id', $course->id)
+            ->first();
+
+        if ($progress) {
+            $progress->update(['is_completed' => 1]);
+        } else {
+            Progress::create([
+                'participant_id' => $userId,
+                'course_id' => $course->id,
+                'is_completed' => 1,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Progress berhasil diselesaikan.',
+        ]);
+    }
+
+
 }
