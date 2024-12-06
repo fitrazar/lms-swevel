@@ -19,10 +19,10 @@ return new class extends Migration {
             $table->string('phone');
             $table->string('address');
             $table->text('map')->nullable();
-            $table->json('socmed')->nullable();
+            $table->json('social_media')->nullable();
             $table->string('email')->nullable();
-            $table->date('open_date');
-            $table->date('close_date');
+            $table->date('open_date')->nullable();
+            $table->date('close_date')->nullable();
             $table->timestamps();
         });
     }

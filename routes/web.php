@@ -8,6 +8,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\QuizController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\MaterialController;
 use App\Http\Controllers\Admin\AssignmentController;
 use App\Http\Controllers\Admin\EnrollmentController;
@@ -40,6 +41,9 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::resource('/participant', ParticipantController::class)->except('show');
         Route::resource('/instructor', controller: InstructorController::class)->except('show');
         Route::resource('/course', AdminCourseController::class)->except('show');
+        Route::resource('/course', AdminCourseController::class)->except('show');
+        Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
+        Route::post('/setting', [SettingController::class, 'store'])->name('setting.store');
     });
 
     Route::middleware(['role:author|instructor'])->group(function () {

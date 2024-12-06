@@ -2,14 +2,14 @@
     <aside>
         <div class="avatar">
             <div class="w-24 rounded">
-                <img src="{{ asset('storage/' . $appSetting->logo) }}" alt="{{ $appSetting->alias }}">
+                <img src="{{ asset('storage/' . $appSetting?->logo) }}" alt="{{ $appSetting?->alias }}">
             </div>
         </div>
 
         <p>
-            {{ $appSetting->name }}
+            {{ $appSetting?->name ?? 'TIM 9' }}
             <br />
-            {{ $appSetting->motto }}
+            {{ $appSetting->description ?? 'lorem ipsum' }}
         </p>
     </aside>
     <nav>
@@ -18,12 +18,19 @@
     </nav>
     <nav>
         <h6 class="footer-title">Media Sosial</h6>
-        <a class="link link-hover" href="{{ $appSetting->instagram }}" target="_blank">Instagram</a>
-        <a class="link link-hover" href="{{ $appSetting->facebook }}" target="_blank">Facebook</a>
+        @if ($appSetting?->social_media)
+            @foreach (json_decode($appSetting->social_media, true) as $socialMedia)
+                <a class="link link-hover" href="{{ $socialMedia['link'] }}"
+                    target="_blank">{{ $socialMedia['platform'] }}</a>
+            @endforeach
+        @else
+            <a class="link link-hover" href="#" target="_blank">Instagram</a>
+            <a class="link link-hover" href="#" target="_blank">Facebook</a>
+        @endif
     </nav>
     <nav>
         <h6 class="footer-title">Kontak</h6>
-        <a class="link link-hover" href="https://wa.me/{{ $appSetting->phone }}" target="_blank">WhatsApp</a>
+        <a class="link link-hover" href="https://wa.me/{{ $appSetting->phone ?? '#' }}" target="_blank">WhatsApp</a>
         <a class="link link-hover">{{ $appSetting->address }}</a>
     </nav>
 </footer>

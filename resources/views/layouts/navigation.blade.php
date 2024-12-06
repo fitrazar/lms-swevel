@@ -24,6 +24,7 @@
                             </ul>
                         </details>
                     </li>
+                    <li><a href="{{ route('dashboard.admin.setting.index') }}">Pengaturan</a></li>
                 @endrole
                 @hasanyrole('author|instructor')
                 @endhasanyrole
