@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Question extends Model
+class QuizAttempt extends Model
 {
     protected $guarded = ['id'];
 
-    protected $with = ['quiz'];
+    protected $with = ['quiz', 'participant'];
 
     /**
-     * Get the quiz that owns the Question
+     * Get the quiz that owns the QuizAttempt
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -23,22 +23,22 @@ class Question extends Model
     }
 
     /**
-     * Get the Option associated with the Question
+     * Get the participant that owns the QuizAttempt
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function options(): HasMany
+    public function participant(): BelongsTo
     {
-        return $this->hasMany(Option::class, 'question_id');
+        return $this->belongsTo(Participant::class, foreignKey: 'participant_id');
     }
 
     /**
-     * Get the QuestionAnswers associated with the Question
+     * Get all of the QuestionAnswers for the QuizAttempt
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function questionAnswers(): HasMany
     {
-        return $this->hasMany(QuestionAnswer::class, 'question_id');
+        return $this->hasMany(QuestionAnswer::class, 'quiz_attempt_id');
     }
 }
