@@ -38,7 +38,7 @@
                         <x-input.input-error :messages="$errors->get('title')" class="mt-2" />
                     </div>
 
-                    <div class="mt-4">
+                    {{-- <div class="mt-4">
                         <x-input.input-label for="start_time" :value="__('Tanggal Mulai')" />
                         <x-input.text-input id="start_time" class="mt-1 w-full" type="datetime-local" name="start_time"
                             :value="old('start_time', $quiz->start_time)" required autofocus autocomplete="start_time" />
@@ -49,6 +49,12 @@
                         <x-input.text-input id="end_time" class="mt-1 w-full" type="datetime-local" name="end_time"
                             :value="old('end_time', $quiz->end_time)" required autofocus autocomplete="end_time" />
                         <x-input.input-error :messages="$errors->get('end_time')" class="mt-2" />
+                    </div> --}}
+                    <div class="mt-4">
+                        <x-input.input-label for="duration" :value="__('Durasi')" />
+                        <x-input.text-input id="duration" class="mt-1 w-full" type="number" name="duration"
+                            :value="old('duration', $quiz->duration)" required autofocus autocomplete="duration" disabled />
+                        <x-input.input-error :messages="$errors->get('duration')" class="mt-2" />
                     </div>
 
                     <div class="mt-4 col-span-2">
@@ -68,7 +74,7 @@
         </div>
     </div>
 
-    <x-slot name="script">
+    {{-- <x-slot name="script">
         <script>
             $(document).ready(function() {
 
@@ -90,5 +96,5 @@
 
             });
         </script>
-    </x-slot>
+    </x-slot> --}}
 </x-app-layout>

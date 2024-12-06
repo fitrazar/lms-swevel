@@ -13,7 +13,7 @@ class CourseSeeder extends Seeder
      */
     public function run(): void
     {
-        Course::create([
+        $course = Course::create([
             'title' => 'Web Developer',
             'slug' => 'web-developer',
             'description' => collect(fake()->paragraphs(mt_rand(5, 10)))
@@ -26,5 +26,7 @@ class CourseSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        $course->instructors()->attach(3);
     }
 }

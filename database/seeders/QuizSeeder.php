@@ -19,8 +19,7 @@ class QuizSeeder extends Seeder
             'description' => collect(fake()->paragraphs(mt_rand(5, 10)))
                 ->map(fn($p) => "<p>$p</p>")
                 ->implode(''),
-            'start_time' => now(),
-            'end_time' => now()->addHours(value: 1),
+            'duration' => 60,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

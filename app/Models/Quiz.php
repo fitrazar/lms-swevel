@@ -31,4 +31,24 @@ class Quiz extends Model
     {
         return $this->hasMany(Result::class, 'quiz_id');
     }
+
+    /**
+     * Get all of the Questions for the Quiz
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function questions(): HasMany
+    {
+        return $this->hasMany(Question::class, 'quiz_id');
+    }
+
+    /**
+     * Get all of the QuizAttempts for the Quiz
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function quizAttempts(): HasMany
+    {
+        return $this->hasMany(QuizAttempt::class, 'quiz_id');
+    }
 }
