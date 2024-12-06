@@ -153,6 +153,9 @@
                             render: function(data, type, full, meta) {
                                 return `
                                <div class="flex justify-center gap-2 w-full flex-wrap">
+                                    <a href="{{ url('/dashboard/question/${full.id}/create') }}">
+                                        <x-button.success-button type="button" class="btn-sm text-white"><i class="fa-solid fa-receipt"></i>+ Pertanyaan</x-button.success-button>
+                                    </a>
                                     <a href="{{ url('/dashboard/quiz/${full.id}/edit') }}">
                                         <x-button.info-button type="button" class="btn-sm text-white"><i class="fa-regular fa-pen-to-square"></i>Edit</x-button.info-button>
                                     </a>
