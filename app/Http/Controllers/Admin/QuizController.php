@@ -64,16 +64,14 @@ class QuizController extends Controller
             'material_id' => 'required',
             'title' => 'required|string',
             'description' => 'required|string',
-            'start_time' => 'required',
-            'end_time' => 'required',
+            'duration' => 'required|min:5',
         ]);
 
         Quiz::create([
             'title' => $validatedData['title'],
             'material_id' => $validatedData['material_id'],
             'description' => $validatedData['description'],
-            'start_time' => $validatedData['start_time'],
-            'end_time' => $validatedData['end_time'],
+            'duration' => $validatedData['duration'],
         ]);
 
         return redirect()->route('dashboard.quiz.index')->with('success', 'Kuis Berhasil Ditambahkan!');
@@ -109,8 +107,7 @@ class QuizController extends Controller
             'material_id' => 'required',
             'title' => 'required|string',
             'description' => 'required|string',
-            'start_time' => 'required',
-            'end_time' => 'required',
+            'duration' => 'required|min:5',
         ];
 
         $validatedData = $request->validate($rules);
@@ -119,8 +116,7 @@ class QuizController extends Controller
             'title' => $validatedData['title'],
             'material_id' => $validatedData['material_id'],
             'description' => $validatedData['description'],
-            'start_time' => $validatedData['start_time'],
-            'end_time' => $validatedData['end_time'],
+            'duration' => $validatedData['duration'],
         ]);
 
         return redirect()->route('dashboard.quiz.index')->with('success', 'Kuis Berhasil Diupdate');

@@ -15,8 +15,7 @@ return new class extends Migration {
             $table->foreignId(column: 'material_id')->constrained()->onDelete('cascade');
             $table->string(column: 'title');
             $table->text(column: 'description')->nullable();
-            $table->dateTime(column: 'start_time');
-            $table->dateTime(column: 'end_time');
+            $table->integer(column: 'duration');
             $table->timestamps();
         });
     }
