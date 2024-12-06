@@ -27,6 +27,16 @@ class Course extends Model
     }
 
     /**
+     * Get all of the meetings for the Course
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function meetings(): HasMany
+    {
+        return $this->hasMany(Meeting::class, 'course_id');
+    }
+
+    /**
      * Get all of the enrolls for the Course
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
