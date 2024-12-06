@@ -41,7 +41,7 @@ class EnrollmentController extends Controller
 
     public function update(Request $request, Enrollment $enrollment)
     {
-        $enrollment->status = 1;
+        $enrollment->status = 'active';
         $enrollment->save();
 
         return redirect()->route('dashboard.enrollment.index')->with('success', 'Data Berhasil Diupdate');
@@ -49,7 +49,7 @@ class EnrollmentController extends Controller
 
     public function updateAll(Request $request)
     {
-        Enrollment::query()->update(['status' => 1]);
+        Enrollment::query()->update(['status' => 'active']);
 
         return redirect()->route('dashboard.enrollment.index')->with('success', 'Data Berhasil Diupdate');
     }
