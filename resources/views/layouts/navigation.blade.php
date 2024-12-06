@@ -24,6 +24,14 @@
                             </ul>
                         </details>
                     </li>
+                    <li>
+                        <details>
+                            <summary>Kuis</summary>
+                            <ul class="p-2 z-10">
+                                <li><a href="{{ route('dashboard.question.index') }}">Data Pertanyaan</a></li>
+                            </ul>
+                        </details>
+                    </li>
                     <li><a href="{{ route('dashboard.admin.setting.index') }}">Pengaturan</a></li>
                 @endrole
                 @hasanyrole('author|instructor')
