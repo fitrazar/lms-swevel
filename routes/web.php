@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\QuizController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\MaterialController;
+use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\AssignmentController;
 use App\Http\Controllers\Admin\EnrollmentController;
 use App\Http\Controllers\Admin\InstructorController;
@@ -56,6 +57,9 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::put('/enrollment/{enrollment}', [EnrollmentController::class, 'update'])->name('enrollment.update');
         Route::post('/enrollment', [EnrollmentController::class, 'updateAll'])->name('enrollment.updateAll');
         Route::delete('/enrollment/{enrollment}', [EnrollmentController::class, 'destroy'])->name('enrollment.destroy');
+
+        Route::resource('/question', QuestionController::class);
+        Route::get('/question/{quiz}/create', [QuestionController::class, 'createWithQuiz'])->name('question.createWithQuiz');
     });
 
     Route::name('instructor.')->middleware(['role:instructor'])->group(function () {
