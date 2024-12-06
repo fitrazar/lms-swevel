@@ -36,10 +36,7 @@
                                     Judul Tugas
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Tanggal Mulai
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Tanggal Selesai
+                                    Durasi
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Action
@@ -142,14 +139,8 @@
                             searchable: true,
                         },
                         {
-                            data: 'start_time',
-                            name: 'start_time',
-                            orderable: true,
-                            searchable: true,
-                        },
-                        {
-                            data: 'end_time',
-                            name: 'end_time',
+                            data: 'duration',
+                            name: 'duration',
                             orderable: true,
                             searchable: true,
                         },
