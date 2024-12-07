@@ -15,7 +15,6 @@ use App\Http\Controllers\Admin\AssignmentController;
 use App\Http\Controllers\Admin\EnrollmentController;
 use App\Http\Controllers\Admin\InstructorController;
 use App\Http\Controllers\Admin\ParticipantController;
-use App\Http\Controllers\Participant\SiswaController;
 use App\Http\Controllers\Participant\ParticipantControllerUser;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Instructor\CourseController as InstructorCourseController;
@@ -35,7 +34,7 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     Route::name('participant.')->middleware(['role:participant'])->group(function () {
-        Route::get('/user', [ParticipantControllerUser::class, 'index'])->name('index');
+        Route::get('/my', [DashboardController::class, 'participant'])->name('index');
     });
 
     Route::middleware(['role:participant|instructor'])->group(function () {

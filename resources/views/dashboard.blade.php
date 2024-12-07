@@ -6,6 +6,9 @@
             <x-card.card-default class="static">
                 <p>Dashboard</p>
             </x-card.card-default>
+            @hasrole('participant')
+                @include('partials.participant')
+            @endrole
         </div>
     </div>
 </x-app-layout>
