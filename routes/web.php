@@ -33,9 +33,9 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
 
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
-    Route::name('participant.')->middleware(['role:participant'])->group(function () {
-        Route::get('/my', [DashboardController::class, 'participant'])->name('index');
-    });
+    // Route::name('participant.')->middleware(['role:participant'])->group(function () {
+    //     Route::get('/my', [DashboardController::class, 'participant'])->name('index');
+    // });
 
     Route::middleware(['role:participant|instructor'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

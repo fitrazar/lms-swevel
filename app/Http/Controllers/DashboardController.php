@@ -10,18 +10,9 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('dashboard');
-    }
-
-    public function participant()
-    {
-        $user = Auth::user();
-
-        $participant = $user->participant;
-
-        if ($participant) {
+        if (Auth::user()->roles->pluck('name')[0] == 'participant') {
             $activeCourses = Enrollment::where('status', 'active')
-                ->where('participant_id', $participant->id)
+                ->where('participant_id', Auth::user()->participant->id)
                 ->with('course')
                 ->get()
                 ->pluck('course');
