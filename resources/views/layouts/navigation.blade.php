@@ -49,7 +49,9 @@
                             </ul>
                         </details>
                     </li>
-
+                @endrole
+                @role('participant')
+                <li><a href="{{ route('dashboard.participant.index') }}">Dashboard</a></li>
                 @endrole
             @else
             @endauth
@@ -71,11 +73,13 @@
                     </div>
                 </div>
                 <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    @role('participant')
                     <li>
-                        <a href="{{ route('dashboard.index') }}">
+                        <a href="{{ route('dashboard.participant.index') }}">
                             {{ __('Dashboard') }}
                         </a>
                     </li>
+                    @endrole
                     @hasanyrole('participant|instructor')
                         <li>
                             <a href="{{ route('dashboard.profile.edit') }}">
