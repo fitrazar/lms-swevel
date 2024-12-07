@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             MaterialSeeder::class,
             AssignmentSeeder::class,
             QuizSeeder::class,
+            QuestionSeeder::class,
         ]);
     }
 }
