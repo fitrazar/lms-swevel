@@ -70,6 +70,7 @@ class CourseController extends Controller
             ->orWhere('topic_id', $nextTopic?->id)
             ->orWhere('topic_id', $currentTopic?->id)
             ->orWhere('is_completed', 1)
+            ->orWhere('is_completed', 0)
             ->first();
         if ($userProgress) {
             if ($nextTopic) {
@@ -79,7 +80,6 @@ class CourseController extends Controller
             } else {
                 $userProgress->update([
                     'topic_id' => $currentTopic->id,
-                    'is_completed' => 1
                 ]);
             }
         } else {
@@ -93,12 +93,12 @@ class CourseController extends Controller
         return view('participant.course.read', compact('course', 'currentTopic', 'prevTopic', 'nextTopic'));
     }
 
-    public function completed(Course $course)
+    public function completed(Course $course, Topic $topic)
     {
         $userId = Auth::user()->participant->id;
 
         $progress = Progress::where('participant_id', $userId)
-            ->where('course_id', $course->id)
+            ->where('topic_id', $topic->id)
             ->first();
 
         if ($progress) {
@@ -106,7 +106,7 @@ class CourseController extends Controller
         } else {
             Progress::create([
                 'participant_id' => $userId,
-                'course_id' => $course->id,
+                'topic_id' => $topic->id,
                 'is_completed' => 1,
             ]);
         }

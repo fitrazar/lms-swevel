@@ -98,6 +98,7 @@
             `;
 
                     questionsContainer.appendChild(questionBlock);
+                    saveToLocalStorage();
                 }
 
                 function generateOptionsHTML(questionIndex, options = []) {
@@ -173,6 +174,7 @@
                 }
 
                 form.addEventListener('submit', async function(e) {
+                    saveToLocalStorage();
                     e.preventDefault();
 
                     const questions = JSON.parse(localStorage.getItem('questions') || '[]');

@@ -52,12 +52,16 @@
                                     <x-button.primary-button type="button"
                                         class="btn-sm text-base-100">Kembali</x-button.primary-button>
                                 </a>
-                                <a href="javascript:void(0);"
-                                    onclick="markAsDone('{{ route('course.done', ['course' => $course->id]) }}')"
-                                    class="block mt-6">
-                                    <x-button.primary-button type="button"
-                                        class="btn-sm text-base-100">Selesai</x-button.primary-button>
-                                </a>
+                                @if (!auth()->user()->participant?->progress?->where('topic_id', $currentTopic->id)->where('is_completed', '1')->first())
+                                    <a href="javascript:void(0);"
+                                        onclick="markAsDone('{{ route('course.done', ['course' => $course->slug, 'topic' => $currentTopic->slug]) }}')"
+                                        class="block mt-6">
+                                        <x-button.primary-button type="button"
+                                            class="btn-sm text-base-100">Selesai</x-button.primary-button>
+                                    </a>
+                                @else
+                                    <p class="block mt-6">Kamu telah menyelesaikan semua topik.</p>
+                                @endif
 
                             </div>
                             {{-- <a href="{{ url('/course/' . $course->slug . '/read/' . $prevTopic->slug) }}"
@@ -84,6 +88,11 @@
                     .then(response => {
                         if (response.data.success) {
                             alert(response.data.message);
+
+                            const doneButton = document.querySelector('[onclick*="markAsDone"]');
+                            if (doneButton) {
+                                doneButton.remove();
+                            }
                         }
                     })
                     .catch(error => {

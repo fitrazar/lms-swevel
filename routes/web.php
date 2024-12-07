@@ -26,8 +26,7 @@ Route::get('/course', [CourseController::class, 'index'])->name('course.index');
 Route::get('/course/{course}', [CourseController::class, 'show'])->name('course.show');
 Route::post('/course', [CourseController::class, 'store'])->name('course.store');
 Route::get('/course/{course}/read/{topic}', [CourseController::class, 'read'])->name('course.read');
-Route::post('/course/{course}/read/done', [CourseController::class, 'completed'])->name('course.done');
-
+Route::post('/course/{course}/{topic}/read/done', [CourseController::class, 'completed'])->name('course.done');
 
 Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
@@ -42,7 +41,7 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::resource('/participant', ParticipantController::class)->except('show');
         Route::resource('/instructor', controller: InstructorController::class)->except('show');
         Route::resource('/course', AdminCourseController::class)->except('show');
-        Route::resource('/course', AdminCourseController::class)->except('show');
+        // Route::resource('/course', AdminCourseController::class)->except('show');
         Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
         Route::post('/setting', [SettingController::class, 'store'])->name('setting.store');
     });
