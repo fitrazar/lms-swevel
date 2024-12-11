@@ -1,5 +1,6 @@
 <section class="mt-5">
     <div class="py-8 mt-1">
+        <h2 class="text-center py-4 font-bold md:text-2xl text-lg">Kursus Saya</h2>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 gap-6 p-4">
             {{-- @dd($activeCourses) --}}
             @forelse ($activeCourses as $course)
@@ -7,15 +8,43 @@
                     image="{{ $course->cover ? 'storage/course/' . $course->cover : 'assets/images/no-image.png' }}">
                     <p>{{ $course->excerpt }}</p>
                     <p class="font-bold mt-2">Total Duration:
-                        <span class="badge badge-primary">{{ $course->duration }} Menit</span>
+                        <span class="badge badge-primary">{{ $course->duration }}</span>
                     </p>
+                    @if ($enroll = auth()->user()->participant?->enrolls?->where('course_id', $course->id)->where('status', 'active')->first())
+                        @php
+                            $progresses = $enroll->participant
+                                ->progress()
+                                ->whereHas('topic', function ($query) use ($course) {
+                                    $query->where('course_id', $course->id);
+                                })
+                                ->get();
+
+                            $allCompleted = $progresses->every(fn($progress) => $progress->is_completed);
+
+                            if ($allCompleted) {
+                                $progressValue = 100;
+                            } else {
+                                $lastCompletedTopicOrder = $progresses
+                                    ->map(fn($progress) => $progress->topic->order)
+                                    ->max();
+
+                                $maxOrder = $course->topics->max('order');
+
+                                $progressValue = $maxOrder > 0 ? ($lastCompletedTopicOrder / $maxOrder) * 100 : 0;
+                            }
+                        @endphp
+
+                        <p>Progress</p>
+                        <progress class="progress progress-primary w-56" value="{{ $progressValue }}"
+                            max="100"></progress>
+                        <span class="text-sm font-thin">{{ $progressValue }}%</span>
+                    @endif
+
                     <div class="card-actions justify-end mt-3">
-                        @if (now()->lte($course->start_date))
-                            <div class="badge badge-outline">Belum Dibuka</div>
+                        @if (auth()->user()->participant?->enrolls?->where('course_id', $course->id)->where('status', 'inactive')->first())
+                            <div class="badge badge-outline">Belum Aktif</div>
                         @else
-                            <div class="badge badge-outline">Terakhir diupdate</div>
-                            <div class="badge badge-outline">{{ $course->updated_at->diffForHumans() }}
-                            </div>
+                            <div class="badge badge-outline">Aktif</div>
                         @endif
                     </div>
                     @if (now()->lte($course->start_date))

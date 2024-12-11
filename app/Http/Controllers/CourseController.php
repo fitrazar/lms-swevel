@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Topic;
 use App\Models\Course;
+use App\Models\Option;
+use App\Models\Result;
 use App\Models\Progress;
 use App\Models\Question;
 use App\Models\Enrollment;
@@ -205,6 +207,14 @@ class CourseController extends Controller
             'difference' => $quizAttempt->difference,
         ]);
 
+        Result::create([
+            'quiz_id' => $topic->material->quiz->id,
+            'participant_id' => Auth::user()->participant->id,
+            'score' => $totalScore,
+            'graded_at' => now(),
+            'is_late' => $quizAttempt->is_late,
+        ]);
+
 
         session()->forget('quiz_start_time_' . $topic->material->quiz->id);
         session()->forget(keys: 'exitCount');
@@ -257,10 +267,12 @@ class CourseController extends Controller
 
 
         $quizAttempt = QuizAttempt::where('quiz_id', $topic->material->quiz->id)->where('participant_id', Auth::user()->participant->id)->first();
+        $result = Result::where('quiz_id', $topic->material->quiz->id)->where('participant_id', Auth::user()->participant->id)->first();
 
         $quizAttempt->questionAnswers()->delete();
 
         $quizAttempt->delete();
+        $result->delete();
 
         return redirect()->route('course.read', ['course' => $course->slug, 'topic' => $topic->slug])->with('success', 'Ujian diulangi!');
     }

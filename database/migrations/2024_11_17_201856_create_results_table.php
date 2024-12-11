@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->foreignId(column: 'assignment_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId(column: 'quiz_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId(column: 'participant_id')->constrained()->onDelete('cascade');
-            $table->string(column: 'option_text')->comment('point jawaban');
             $table->decimal(column: 'score', total: 5, places: 2)->nullable();
             $table->string(column: 'file_url')->nullable();
             $table->text(column: 'feedback')->nullable();
