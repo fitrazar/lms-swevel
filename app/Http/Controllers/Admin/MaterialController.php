@@ -29,13 +29,26 @@ class MaterialController extends Controller
 
         if ($request->ajax()) {
             $materials = Material::query();
-            if ($request->has('kursus') && $request->input('kursus') != 'All' && $request->input('kursus') != NULL) {
-                $course = $request->input('kursus');
-                $materials->whereHas('topic.course', function ($query) use ($course) {
-                    $query->where('id', $course);
-                })->with(['topic.course'])->latest()->get();
+            if (Auth::user()->roles->pluck('name')[0] == 'author') {
+                if ($request->has('kursus') && $request->input('kursus') != 'All' && $request->input('kursus') != NULL) {
+                    $course = $request->input('kursus');
+                    $materials->whereHas('topic.course', function ($query) use ($course) {
+                        $query->where('id', $course);
+                    })->with(['topic.course'])->latest()->get();
+                } else {
+                    $materials->whereHas('topic.course')->with(['topic.course'])->latest()->get();
+                }
             } else {
-                $materials->whereHas('topic.course')->with(['topic.course'])->latest()->get();
+                if ($request->has('kursus') && $request->input('kursus') != 'All' && $request->input('kursus') != NULL) {
+                    $course = $request->input('kursus');
+                    $materials->whereHas('topic.course.instructors', function ($query) use ($course) {
+                        $query->where('id', $course);
+                    })->with(['topic.course'])->latest()->get();
+                } else {
+                    $materials->whereHas('topic.course.instructors', function ($query) {
+                        $query->where('instructor_id', Auth::user()->instructor->id);
+                    })->with(['topic.course'])->latest()->get();
+                }
             }
 
             return DataTables::of($materials)->make();
