@@ -101,7 +101,16 @@
                     <div>
                         <x-card.card-default class="static mt-5" title="Pembahasan">
                             <div class="flex w-full flex-col mt-3">
-                                @foreach ($course->topics as $topic)
+                                @php
+                                    $topics = $course->topics->sortBy('order');
+                                    $currentOrder = 1;
+                                @endphp
+                                {{-- @php
+                                    $topics = $course->topics->sortBy('order'); // Urutkan berdasarkan 'order'
+                                    $orderedTopics = $topics->values(); // Reset key array untuk mempermudah looping
+                                @endphp
+
+                                @foreach ($orderedTopics as $index => $topic)
                                     <div class="cursor-pointer">
                                         @if (
                                             !auth()->user()
@@ -110,10 +119,33 @@
                                         @else
                                             <i class="fa-solid fa-lock-open"></i>
                                         @endif
-                                        Bab {{ $topic->order }} :
-                                        {{ $topic->title }}
+                                        Bab {{ $index + 1 }} : {{ $topic->title }}
                                     </div>
                                     <div class="divider"></div>
+                                @endforeach --}}
+
+                                @foreach ($topics as $topic)
+                                    @while ($currentOrder < $topic->order)
+                                        <div class="cursor-pointer">
+                                            <i class="fa-solid fa-lock"></i>
+                                            Bab {{ $currentOrder }} : <span class="text-red-500">[Materi Belum
+                                                Tersedia]</span>
+                                        </div>
+                                        <div class="divider"></div>
+                                        @php $currentOrder++; @endphp
+                                    @endwhile
+                                    <div class="cursor-pointer">
+                                        @if (
+                                            !auth()->user()
+                                                ?->participant?->enrolls?->where('course_id', $course->id)->where('status', 'active')->first())
+                                            <i class="fa-solid fa-lock"></i>
+                                        @else
+                                            <i class="fa-solid fa-lock-open"></i>
+                                        @endif
+                                        Bab {{ $topic->order }} : {{ $topic->title }}
+                                    </div>
+                                    <div class="divider"></div>
+                                    @php $currentOrder++; @endphp
                                 @endforeach
                             </div>
 
@@ -151,16 +183,16 @@
 
                         <x-card.card-default class="static mt-5" title="Kursus Lainnya">
                             <div class="flex w-full flex-col">
-                                @foreach ($courses as $course)
-                                    <a href="{{ url('/course/' . $course->slug) }}" class="flex items-center gap-6">
+                                @foreach ($courses as $item)
+                                    <a href="{{ url('/course/' . $item->slug) }}" class="flex items-center gap-6">
                                         <div class="avatar">
                                             <div class="w-16 rounded">
                                                 <img
-                                                    src="{{ $course->cover ? asset('storage/course/' . $course->cover) : asset('assets/images/no-image.png') }}" />
+                                                    src="{{ $item->cover ? asset('storage/course/' . $item->cover) : asset('assets/images/no-image.png') }}" />
                                             </div>
                                         </div>
                                         <div>
-                                            {{ $course->title }}
+                                            {{ $item->title }}
                                         </div>
                                     </a>
                                     <div class="divider"></div>

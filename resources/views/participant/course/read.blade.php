@@ -3,7 +3,9 @@
 <x-app-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if (!auth()->user()->participant?->enrolls?->where('course_id', $course->id)->where('status', 'active')->first())
+            @if (
+                !auth()->user()->participant?->enrolls?->where('course_id', $course->id)->first() ||
+                    auth()->user()->participant?->enrolls?->where('course_id', $course->id)->where('status', 'inactive')->first())
                 <x-card.card-default class="static">
                     <x-alert.warning message="Kamu belum bisa akses menu ini." />
                 </x-card.card-default>
@@ -24,7 +26,9 @@
                     </ul>
                     <div class="col-span-3">
                         @if (session()->has('success'))
-                            <x-alert.success :message="session('success')" />
+                            <div class="mb-3">
+                                <x-alert.success :message="session('success')" />
+                            </div>
                         @endif
                         @if (
                             $currentTopic->material->type == 'quiz' &&
@@ -66,14 +70,30 @@
                                             class="btn-sm text-base-100">Kembali</x-button.primary-button>
                                     </a>
                                     @if (!auth()->user()->participant?->progress?->where('topic_id', $currentTopic->id)->where('is_completed', '1')->first())
-                                        <a href="javascript:void(0);"
-                                            onclick="markAsDone('{{ route('course.done', ['topic' => $currentTopic->slug]) }}')"
-                                            class="block mt-6">
-                                            <x-button.primary-button type="button"
-                                                class="btn-sm text-base-100">Selesai</x-button.primary-button>
-                                        </a>
+                                        @if ($currentTopic->material->type == 'quiz')
+                                            <x-button.primary-button id="nextButton" class="block mt-6" type="submit"
+                                                onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
+                                                class="btn-sm text-base-100 block mt-6">Kirim
+                                                Jawaban</x-button.primary-button>
+                                        @else
+                                            <a href="javascript:void(0);"
+                                                onclick="markAsDone('{{ route('course.done', ['course' => $course->slug, 'topic' => $currentTopic->slug]) }}')"
+                                                class="block mt-6">
+                                                <x-button.primary-button type="button"
+                                                    class="btn-sm text-base-100">Selesai</x-button.primary-button>
+                                            </a>
+                                        @endif
                                     @else
-                                        <p class="block mt-6">Kamu telah menyelesaikan semua topik.</p>
+                                        @if (
+                                            $currentTopic->material->type == 'quiz' &&
+                                                !$currentTopic->material->quiz->quizAttempts->where('quiz_id', $currentTopic->material->quiz->id)->first())
+                                            <x-button.primary-button id="nextButton" class="block mt-6" type="submit"
+                                                onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
+                                                class="btn-sm text-base-100 block mt-6">Kirim
+                                                Jawaban</x-button.primary-button>
+                                        @else
+                                            <p class="block mt-6">Kamu telah menyelesaikan semua topik.</p>
+                                        @endif
                                     @endif
 
                                 </div>
@@ -95,8 +115,10 @@
                                         </span>
                                     </div>
 
-                                    <input type="hidden" name="nextTopic" id="nextTopic"
-                                        value="{{ $nextTopic->slug }}">
+                                    @if ($nextTopic)
+                                        <input type="hidden" name="nextTopic" id="nextTopic"
+                                            value="{{ $nextTopic->slug }}">
+                                    @endif
                                     <input type="hidden" name="exit_count" id="exitCount" value="0">
 
                                     <div class="mt-4">
@@ -166,14 +188,32 @@
                                                 class="btn-sm text-base-100">Kembali</x-button.primary-button>
                                         </a>
                                         @if (!auth()->user()->participant?->progress?->where('topic_id', $currentTopic->id)->where('is_completed', '1')->first())
-                                            <a href="javascript:void(0);"
-                                                onclick="markAsDone('{{ route('course.done', ['topic' => $currentTopic->slug]) }}')"
-                                                class="block mt-6">
-                                                <x-button.primary-button type="button"
-                                                    class="btn-sm text-base-100">Selesai</x-button.primary-button>
-                                            </a>
+                                            @if ($currentTopic->material->type == 'quiz')
+                                                <x-button.primary-button id="nextButton" class="block mt-6"
+                                                    type="submit"
+                                                    onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
+                                                    class="btn-sm text-base-100 block mt-6">Kirim
+                                                    Jawaban</x-button.primary-button>
+                                            @else
+                                                <a href="javascript:void(0);"
+                                                    onclick="markAsDone('{{ route('course.done', ['course' => $course->slug, 'topic' => $currentTopic->slug]) }}')"
+                                                    class="block mt-6">
+                                                    <x-button.primary-button type="button"
+                                                        class="btn-sm text-base-100">Selesai</x-button.primary-button>
+                                                </a>
+                                            @endif
                                         @else
-                                            <p class="block mt-6">Kamu telah menyelesaikan semua topik.</p>
+                                            @if (
+                                                $currentTopic->material->type == 'quiz' &&
+                                                    !$currentTopic->material->quiz->quizAttempts->where('quiz_id', $currentTopic->material->quiz->id)->first())
+                                                <x-button.primary-button id="nextButton" class="block mt-6"
+                                                    type="submit"
+                                                    onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
+                                                    class="btn-sm text-base-100 block mt-6">Kirim
+                                                    Jawaban</x-button.primary-button>
+                                            @else
+                                                <p class="block mt-6">Kamu telah menyelesaikan semua topik.</p>
+                                            @endif
                                         @endif
 
                                     </div>
@@ -190,102 +230,107 @@
         <script>
             let type = "{{ $currentTopic->material->type }}";
             if (type == 'quiz') {
-                // Mengambil nilai exitCount dari session melalui route atau inisialisasi dengan 0
-                let exitCount = {{ session('exitCount', 0) }};
+                let quizCompleted =
+                    "{{ $currentTopic->material->quiz->quizAttempts->where('quiz_id', $currentTopic->material->quiz->id)->first() }}";
+                if (!quizCompleted) {
 
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Set nilai exitCount pada elemen form
-                    document.getElementById('exitCount').value = exitCount;
-                });
+                    // Mengambil nilai exitCount dari session melalui route atau inisialisasi dengan 0
+                    let exitCount = {{ session('exitCount', 0) }};
 
-                document.addEventListener('visibilitychange', function(event) {
-                    if (document.visibilityState !== 'visible') {
-                        exitCount++;
-                        // Menyimpan exitCount ke session menggunakan Ajax
-                        updateExitCountSession(exitCount);
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Set nilai exitCount pada elemen form
                         document.getElementById('exitCount').value = exitCount;
-                        document.title = 'Hayo lagi nyontek ya';
-                        console.log('exitCount', exitCount);
-                    } else {
-                        document.title = '{{ $course->title }}';
-                    }
-                });
+                    });
 
-                // Fungsi untuk memperbarui exitCount di session
-                function updateExitCountSession(count) {
-                    axios.post('{{ route('course.exitcount') }}', {
-                            exitCount: count
-                        })
-                        .then(response => {
-                            // Berhasil menyimpan exitCount ke session, jika diperlukan
-                            console.log('Exit count updated in session');
-                        })
-                        .catch(error => {
-                            console.error('Error updating exit count in session:', error);
-                        });
-                }
-
-                function updateNextButtonState() {
-                    const nextButton = document.getElementById('nextButton');
-                    nextButton.disabled = !allQuestionsAnswered();
-                }
-
-                document.querySelector('form').addEventListener('submit', function(event) {
-                    document.getElementById('exitCount').value = exitCount;
-                });
-
-                document.querySelectorAll("input").forEach((element) => {
-                    element.addEventListener('input', updateNextButtonState);
-                    element.addEventListener('change', updateNextButtonState);
-                });
-
-                document.addEventListener('DOMContentLoaded', updateNextButtonState);
-
-                function allQuestionsAnswered() {
-                    let allAnswered = true;
-
-                    document.querySelectorAll("input[type='radio']").forEach((radio) => {
-                        const groupName = radio.name;
-                        const radios = document.querySelectorAll(`[name="${groupName}"]`);
-                        if (![...radios].some(r => r.checked)) {
-                            console.log(`question ${groupName} is not answered.`);
-                            allAnswered = false;
+                    document.addEventListener('visibilitychange', function(event) {
+                        if (document.visibilityState !== 'visible') {
+                            exitCount++;
+                            // Menyimpan exitCount ke session menggunakan Ajax
+                            updateExitCountSession(exitCount);
+                            document.getElementById('exitCount').value = exitCount;
+                            document.title = 'Hayo lagi nyontek ya';
+                            console.log('exitCount', exitCount);
+                        } else {
+                            document.title = '{{ $course->title }}';
                         }
                     });
 
-                    return allAnswered;
+                    // Fungsi untuk memperbarui exitCount di session
+                    function updateExitCountSession(count) {
+                        axios.post('{{ route('course.exitcount') }}', {
+                                exitCount: count
+                            })
+                            .then(response => {
+                                // Berhasil menyimpan exitCount ke session, jika diperlukan
+                                console.log('Exit count updated in session');
+                            })
+                            .catch(error => {
+                                console.error('Error updating exit count in session:', error);
+                            });
+                    }
+
+                    function updateNextButtonState() {
+                        const nextButton = document.getElementById('nextButton');
+                        nextButton.disabled = !allQuestionsAnswered();
+                    }
+
+                    document.querySelector('form').addEventListener('submit', function(event) {
+                        document.getElementById('exitCount').value = exitCount;
+                    });
+
+                    document.querySelectorAll("input").forEach((element) => {
+                        element.addEventListener('input', updateNextButtonState);
+                        element.addEventListener('change', updateNextButtonState);
+                    });
+
+                    document.addEventListener('DOMContentLoaded', updateNextButtonState);
+
+                    function allQuestionsAnswered() {
+                        let allAnswered = true;
+
+                        document.querySelectorAll("input[type='radio']").forEach((radio) => {
+                            const groupName = radio.name;
+                            const radios = document.querySelectorAll(`[name="${groupName}"]`);
+                            if (![...radios].some(r => r.checked)) {
+                                console.log(`question ${groupName} is not answered.`);
+                                allAnswered = false;
+                            }
+                        });
+
+                        return allAnswered;
+                    }
+
+                    let quizTime = "{{ $currentTopic?->material?->quiz?->duration }}" || 0;
+
+                    const quizStartTime = new Date("{{ $startTime }}").getTime(); // Waktu mulai dari server
+                    const quizDuration = quizTime * 60 * 1000; // Durasi dalam milidetik
+
+                    function startCountdown() {
+                        const minuteSpan = document.querySelector("#timer span:first-child");
+                        const secondSpan = document.querySelector("#timer span:last-child");
+
+                        const interval = setInterval(() => {
+                            const now = new Date().getTime();
+                            const elapsed = now - quizStartTime;
+                            const remaining = quizDuration - elapsed;
+
+                            if (remaining <= 0) {
+                                clearInterval(interval);
+                                minuteSpan?.style.setProperty('--value', 0);
+                                secondSpan?.style.setProperty('--value', 0);
+                                document.getElementById('nextButton').disabled = true; // Disable submit button
+                                alert("Waktu habis!");
+                            } else {
+                                const minutes = Math.floor(remaining / (1000 * 60));
+                                const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                                minuteSpan?.style.setProperty('--value', minutes);
+                                secondSpan?.style.setProperty('--value', seconds);
+                            }
+                        }, 1000);
+                    }
+
+                    document.addEventListener('DOMContentLoaded', startCountdown);
                 }
-
-                let quizTime = "{{ $currentTopic?->material?->quiz?->duration }}" || 0;
-
-                const quizStartTime = new Date("{{ $startTime }}").getTime(); // Waktu mulai dari server
-                const quizDuration = quizTime * 60 * 1000; // Durasi dalam milidetik
-
-                function startCountdown() {
-                    const minuteSpan = document.querySelector("#timer span:first-child");
-                    const secondSpan = document.querySelector("#timer span:last-child");
-
-                    const interval = setInterval(() => {
-                        const now = new Date().getTime();
-                        const elapsed = now - quizStartTime;
-                        const remaining = quizDuration - elapsed;
-
-                        if (remaining <= 0) {
-                            clearInterval(interval);
-                            minuteSpan?.style.setProperty('--value', 0);
-                            secondSpan?.style.setProperty('--value', 0);
-                            document.getElementById('nextButton').disabled = true; // Disable submit button
-                            alert("Waktu habis!");
-                        } else {
-                            const minutes = Math.floor(remaining / (1000 * 60));
-                            const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-                            minuteSpan?.style.setProperty('--value', minutes);
-                            secondSpan?.style.setProperty('--value', seconds);
-                        }
-                    }, 1000);
-                }
-
-                document.addEventListener('DOMContentLoaded', startCountdown);
             }
 
             function markAsDone(url) {

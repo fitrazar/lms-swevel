@@ -60,8 +60,8 @@ class CourseController extends Controller
     {
         $startTime = null;
         if ($topic->material->type == 'quiz') {
-            session()->forget('quiz_start_time_' . $topic->material->quiz->id);
-            session()->forget('exitCount');
+            // session()->forget('quiz_start_time_' . $topic->material->quiz->id);
+            // session()->forget('exitCount');
             $questions = $topic->material->quiz->questions()->with('options')->get();
             $startTime = session()->get('quiz_start_time_' . $topic->material->quiz->id, now());
             session()->put('quiz_start_time_' . $topic->material->quiz->id, $startTime);
@@ -205,8 +205,20 @@ class CourseController extends Controller
             'difference' => $quizAttempt->difference,
         ]);
 
+
         session()->forget('quiz_start_time_' . $topic->material->quiz->id);
-        session()->forget('exitCount');
+        session()->forget(keys: 'exitCount');
+
+        $lastTopicOrder = $course->topics()->max('order');
+        if ($topic->order == $lastTopicOrder) {
+            Progress::where('participant_id', Auth::user()->participant->id)
+                ->where('topic_id', $topic->id)
+                ->update(['is_completed' => 1]);
+
+            return redirect()->back()->with('success', 'Jawaban berhasil dikirim!');
+        }
+
+
 
         return redirect()->route('course.read', ['course' => $course->slug, 'topic' => $request->nextTopic])->with('success', 'Jawaban berhasil dikirim!');
     }
@@ -223,6 +235,10 @@ class CourseController extends Controller
 
     public function destroy(Course $course, Topic $topic)
     {
+        session()->forget('quiz_start_time_' . $topic->material->quiz->id);
+        session()->forget(keys: 'exitCount');
+
+
         $quizAttempt = QuizAttempt::where('quiz_id', $topic->material->quiz->id)->where('participant_id', Auth::user()->participant->id)->first();
 
         $quizAttempt->questionAnswers()->delete();
