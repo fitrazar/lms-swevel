@@ -86,15 +86,13 @@
                             orderable: false,
                             searchable: false,
                             render: function(data, type, full, meta) {
-                                if (full.action.status === "completed") {
-                                    return `
-                                        <a href="{{ url('/dashboard/participant/quiz/${full.action.id}/result') }}">
+                                return `
+                                        <a href="{{ url('/dashboard/participant/quiz/${full.id}/result') }}">
                                             <x-button.secondary-button type="button" class="btn-sm text-white">
                                                 <i class="fa-solid fa-eye"></i> Lihat Nilai
                                             </x-button.secondary-button>
                                         </a>
                                     `;
-                                }
                             }
 
 

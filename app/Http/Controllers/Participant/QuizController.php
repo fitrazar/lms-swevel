@@ -17,34 +17,16 @@ class QuizController extends Controller
         if (request()->ajax()) {
             $user = Auth::user()->participant;
 
-            $quizzes = Quiz::whereHas('material.topic.course.enrolls', function ($query) use ($user) {
-                $query->where('participant_id', $user->id)
-                    ->where('status', 'active');
+            $quizzes = Quiz::whereHas('quizAttempts', function ($query) use ($user) {
+                $query->where('participant_id', $user->id);
             })
-                ->with([
-                    'quizAttempts' => function ($query) use ($user) {
-                        $query->where('participant_id', $user->id);
-                    }
-                ]);
+                ->with('material.topic.course.enrolls')->get();
 
-            return DataTables::of($quizzes)
-                ->addColumn('action', function ($quiz) use ($user) {
-                    $attempt = $quiz->quizAttempts->first();
-
-                    if ($attempt) {
-                        return [
-                            'status' => 'completed',
-                            'id' => $quiz->id,
-                            'score' => $attempt->score,
-                        ];
-                    }
-
-                    return ['status' => 'not_started', 'id' => $quiz->id];
-                })
-                ->toJson();
+            return DataTables::of($quizzes)->make();
         }
         return view('participant.quiz.index');
     }
+
 
     public function result(Quiz $quiz)
     {
@@ -53,7 +35,7 @@ class QuizController extends Controller
         $attempt = $quiz->quizAttempts()->where('participant_id', $participant->id)->first();
 
         if (!$attempt) {
-            abort(404, 'Anda belum mengikuti ujian ini.');
+            abort(404, 'Anda belum mengikuti kuis ini.');
         }
 
         $answers = $attempt->questionAnswers()
