@@ -12,7 +12,7 @@
                     <p>Telat: {{ $attempt->difference }}</p>
                 @endif
                 @if ($result->feedback)
-                    <p>{{ $result->feedback }}</p>
+                    <p>Catatan Mentor : {{ $result->feedback }}</p>
                 @endif
 
                 <div class="mt-6">
