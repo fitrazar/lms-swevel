@@ -6,6 +6,7 @@ use App\Models\Topic;
 use App\Models\Course;
 use App\Models\Material;
 use App\Models\Instructor;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
@@ -82,21 +83,29 @@ class MaterialController extends Controller
         $validatedData = $request->validate([
             'course_id' => 'required',
             'title_topic' => 'required|max:255',
-            'slug' => [
-                'required',
-                Rule::unique('topics')->where(function ($query) use ($request) {
-                    return $query->where('course_id', $request->course_id);
-                }),
-            ],
+            // 'slug' => [
+            //     'required',
+            //     Rule::unique('topics')->where(function ($query) use ($request) {
+            //         return $query->where('course_id', $request->course_id);
+            //     }),
+            // ],
             'order_topic' => 'required|numeric',
             'content' => 'required',
             'type' => 'required|in:document,video,assignment,quiz',
         ]);
 
+        $baseSlug = Str::slug($request->name);
+        $slug = $baseSlug;
+
+        $existingCount = Topic::where('slug', 'like', $baseSlug . '%')->count();
+        if ($existingCount > 0) {
+            $slug = $baseSlug . '-' . ($existingCount + 1);
+        }
+
         $topic = Topic::create([
             'course_id' => $validatedData['course_id'],
             'title' => $validatedData['title_topic'],
-            'slug' => $validatedData['slug'],
+            'slug' => $slug,
             'order' => $validatedData['order_topic'],
         ]);
 
@@ -135,22 +144,30 @@ class MaterialController extends Controller
         $validatedData = $request->validate([
             'course_id' => 'required',
             'title_topic' => 'required|max:255',
-            'slug' => [
-                'required',
-                Rule::unique('topics')->where(function ($query) use ($request) {
-                    return $query->where('course_id', $request->course_id);
-                })->ignore($request->topic_id),
-            ],
+            // 'slug' => [
+            //     'required',
+            //     Rule::unique('topics')->where(function ($query) use ($request) {
+            //         return $query->where('course_id', $request->course_id);
+            //     })->ignore($request->topic_id),
+            // ],
             'order_topic' => 'required|numeric',
             'content' => 'required',
             'type' => 'required|in:document,video,assignment,quiz',
         ]);
 
+
         $topic = Topic::findOrFail($request->topic_id);
+        $baseSlug = Str::slug($request->name);
+        $slug = $baseSlug;
+
+        $existingCount = Topic::where('slug', 'like', $baseSlug . '%')->where('id', '!=', $topic->id)->count();
+        if ($existingCount > 0) {
+            $slug = $baseSlug . '-' . ($existingCount + 1);
+        }
         $topic->update([
             'course_id' => $validatedData['course_id'],
             'title' => $validatedData['title_topic'],
-            'slug' => $validatedData['slug'],
+            'slug' => $slug,
             'order' => $validatedData['order_topic'],
         ]);
         $material->update([
