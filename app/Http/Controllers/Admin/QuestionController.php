@@ -23,10 +23,10 @@ class QuestionController extends Controller
             if (Auth::user()->roles->pluck('name')[0] == 'author') {
                 $questions = Question::all();
             } else {
-                $questions = Question::whereHas('quiz.material.topic.course', function ($query) {
+                $questions = Question::whereHas('quiz.material.topic.course.instructors', function ($query) {
                     $query->where('instructor_id', Auth::user()->instructor->id);
                 })
-                    ->with('quiz.material.topic.course')
+                    ->with('quiz.material.topic.course.instructors')
                     ->get();
             }
 

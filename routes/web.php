@@ -19,6 +19,7 @@ use App\Http\Controllers\Participant\ParticipantControllerUser;
 use App\Http\Controllers\Participant\QuizController as ParticipantQuizController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Instructor\CourseController as InstructorCourseController;
+use App\Http\Controllers\Instructor\QuizController as InstructorQuizController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/dheny', [DhenyController::class, 'index'])->name("view.dheny");
@@ -74,8 +75,11 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::get('/question/{quiz}/create', [QuestionController::class, 'createWithQuiz'])->name('question.createWithQuiz');
     });
 
-    Route::name('instructor.')->middleware(['role:instructor'])->group(function () {
-        Route::get('/instructor/course', [InstructorCourseController::class, 'index'])->name('course.index');
+    Route::name('instructor.')->prefix('/instructor')->middleware(['role:instructor'])->group(function () {
+        Route::get('/course', [InstructorCourseController::class, 'index'])->name('course.index');
+        Route::get('/quiz/result', [InstructorQuizController::class, 'index'])->name('quiz.result');
+        Route::get('/quiz/{attempt}/show', [InstructorQuizController::class, 'show'])->name('quiz.show');
+        Route::delete('/quiz/{attempt}', [InstructorQuizController::class, 'destroy'])->name('quiz.destroy');
     });
 });
 

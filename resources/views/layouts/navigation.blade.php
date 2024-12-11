@@ -49,6 +49,15 @@
                             </ul>
                         </details>
                     </li>
+                    <li>
+                        <details>
+                            <summary>Kuis</summary>
+                            <ul class="p-2 z-10">
+                                <li><a href="{{ route('dashboard.question.index') }}">Data Pertanyaan</a></li>
+                                <li><a href="{{ route('dashboard.quiz.result') }}">Hasil Kuis</a></li>
+                            </ul>
+                        </details>
+                    </li>
                 @endrole
                 @role('participant')
                     <li><a href="{{ route('dashboard.participant.quiz.index') }}">Kuis</a></li>
