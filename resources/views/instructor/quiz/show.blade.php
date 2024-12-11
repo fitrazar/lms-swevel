@@ -1,13 +1,35 @@
-@section('title', 'Hasil Ujian')
+@section('title', 'Hasil Kuis')
 
 <x-app-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <x-card.card-default>
-                <h1 class="text-xl font-bold">Hasil Ujian: {{ $attempt->quiz->title }}</h1>
+            <x-card.card-default class="static">
+                <div class="flex justify-start flex-wrap mb-3 mt-3">
+                    @if ($result->feedback)
+                        <a class="mr-3"
+                            href="{{ route('dashboard.instructor.quiz.editFeedback', [$attempt->quiz->id, $result->id]) }}">
+                            <x-button.info-button>
+                                Edit Catatan
+                            </x-button.info-button>
+                        </a>
+                        <a href="{{ route('dashboard.instructor.quiz.deleteFeedback', $attempt->quiz->id) }}">
+                            <x-button.danger-button>
+                                Hapus Catatan
+                            </x-button.danger-button>
+                        </a>
+                    @else
+                        <a href="{{ route('dashboard.instructor.quiz.feedback', $attempt->quiz->id) }}">
+                            <x-button.info-button>
+                                Tambah Catatan
+                            </x-button.info-button>
+                        </a>
+                    @endif
+                </div>
+
+                <h1 class="text-xl font-bold">Hasil Kuis: {{ $attempt->quiz->title }}</h1>
                 <p>Nilai Akhir: {{ $attempt->score }}</p>
                 <p>Nama Peserta: {{ $attempt->participant->name }}</p>
-                <p>Tanggal Ujian: {{ $attempt->attempt_date }}</p>
+                <p>Tanggal Kuis: {{ $attempt->attempt_date }}</p>
 
                 <div class="mt-6">
                     <h2 class="text-lg font-bold">Review Soal</h2>

@@ -88,10 +88,10 @@
                             searchable: false,
                             render: function(data, type, full, meta) {
                                 return `
-                                <a href="{{ url('/dashboard/instructor/result/${full.id}/show') }}">
+                                <a href="{{ url('/dashboard/instructor/quiz/${full.id}/show') }}">
                                     <x-button.success-button type="button" class="btn-sm text-white"><i class="fa-solid fa-receipt"></i>Lihat Jawaban</x-button.success-button>
                                 </a>
-                                <x-form action="{{ url('/dashboard/instructor/result/${full.id}') }}" style="display: inline;">
+                                <x-form action="{{ url('/dashboard/instructor/quiz/${full.id}') }}" style="display: inline;">
                                     @csrf
                                     @method('DELETE')
                                     <x-button.danger-button type="submit" class="btn-sm text-white" onclick="return confirm('Kamu yakin?')"><i class="fa-solid fa-trash"></i>Hapus</x-button.danger-button>

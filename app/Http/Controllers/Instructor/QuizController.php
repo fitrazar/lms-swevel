@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Instructor;
 
+use App\Models\Quiz;
+use App\Models\Result;
 use App\Models\Question;
 use App\Models\QuizAttempt;
 use Illuminate\Http\Request;
@@ -29,10 +31,11 @@ class QuizController extends Controller
 
     public function show(QuizAttempt $attempt)
     {
+        $result = $attempt->quiz->results()->where('participant_id', $attempt->participant->id)->first();
         $questions = Question::with('options')->where('quiz_id', $attempt->quiz->id)->get();
         $userAnswers = QuestionAnswer::where('quiz_attempt_id', $attempt->id)->pluck('selected_option')->toArray();
 
-        return view('instructor.quiz.show', compact('attempt', 'questions', 'userAnswers'));
+        return view('instructor.quiz.show', compact('attempt', 'questions', 'userAnswers', 'result'));
     }
 
     public function destroy(QuizAttempt $attempt)
@@ -42,5 +45,50 @@ class QuizController extends Controller
         $attempt->delete();
 
         return response()->json(['message' => 'Hasil kuis berhasil dihapus!']);
+    }
+
+    public function feedback(Quiz $quiz)
+    {
+        return view('instructor.quiz.feedback', compact('quiz'));
+    }
+
+    public function storeFeedback(Request $request, Quiz $quiz)
+    {
+        $validatedData = $request->validate([
+            'feedback' => 'required',
+        ]);
+
+        Result::where('quiz_id', $quiz->id)->update([
+            'feedback' => $validatedData['feedback'],
+        ]);
+
+        return redirect()->route('dashboard.instructor.quiz.result')->with('success', 'Catatan Berhasil Ditambahkan!');
+    }
+
+    public function editFeedback(Quiz $quiz, Result $result)
+    {
+        return view('instructor.quiz.editFeedback', compact('quiz', 'result'));
+    }
+
+    public function updateFeedback(Request $request, Quiz $quiz)
+    {
+        $validatedData = $request->validate([
+            'feedback' => 'required',
+        ]);
+
+        Result::where('quiz_id', $quiz->id)->update([
+            'feedback' => $validatedData['feedback'],
+        ]);
+
+        return redirect()->route('dashboard.instructor.quiz.result')->with('success', 'Catatan Berhasil Diupdate!');
+    }
+
+    public function deleteFeedback(Quiz $quiz)
+    {
+        Result::where('quiz_id', $quiz->id)->update([
+            'feedback' => null,
+        ]);
+
+        return redirect()->route('dashboard.instructor.quiz.result')->with('success', 'Catatan Berhasil Dihapus!');
     }
 }

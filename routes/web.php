@@ -80,6 +80,11 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::get('/quiz/result', [InstructorQuizController::class, 'index'])->name('quiz.result');
         Route::get('/quiz/{attempt}/show', [InstructorQuizController::class, 'show'])->name('quiz.show');
         Route::delete('/quiz/{attempt}', [InstructorQuizController::class, 'destroy'])->name('quiz.destroy');
+        Route::get('/quiz/feedback/{quiz}', [InstructorQuizController::class, 'feedback'])->name('quiz.feedback');
+        Route::post('/quiz/feedback/{quiz}', [InstructorQuizController::class, 'storeFeedback'])->name('quiz.storeFeedback');
+        Route::get('/quiz/feedback/{quiz}/{result}/edit', [InstructorQuizController::class, 'editFeedback'])->name('quiz.editFeedback');
+        Route::post('/quiz/feedback/{quiz}/{result}/edit', [InstructorQuizController::class, 'updateFeedback'])->name('quiz.updateFeedback');
+        Route::get('/quiz/feedback/{quiz}/delete', [InstructorQuizController::class, 'deleteFeedback'])->name('quiz.deleteFeedback');
     });
 });
 
