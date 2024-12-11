@@ -19,25 +19,30 @@
                                 })
                                 ->get();
 
-                            $allCompleted = $progresses->every(fn($progress) => $progress->is_completed);
+                            if ($progresses->count() > 0) {
+                                $allCompleted = $progresses->every(fn($progress) => $progress->is_completed);
 
-                            if ($allCompleted) {
-                                $progressValue = 100;
+                                if ($allCompleted) {
+                                    $progressValue = 100;
+                                } else {
+                                    $lastCompletedTopicOrder = $progresses
+                                        ->map(fn($progress) => $progress->topic->order)
+                                        ->max();
+
+                                    $maxOrder = $course->topics->max('order');
+
+                                    $progressValue = $maxOrder > 0 ? ($lastCompletedTopicOrder / $maxOrder) * 100 : 0;
+                                }
                             } else {
-                                $lastCompletedTopicOrder = $progresses
-                                    ->map(fn($progress) => $progress->topic->order)
-                                    ->max();
-
-                                $maxOrder = $course->topics->max('order');
-
-                                $progressValue = $maxOrder > 0 ? ($lastCompletedTopicOrder / $maxOrder) * 100 : 0;
+                                $progressValue = 0;
                             }
+
                         @endphp
 
                         <p>Progress</p>
                         <progress class="progress progress-primary w-56" value="{{ $progressValue }}"
                             max="100"></progress>
-                        <span class="text-sm font-thin">{{ $progressValue }}%</span>
+                        <span class="text-sm font-thin">{{ round($progressValue) }}%</span>
                     @endif
 
                     <div class="card-actions justify-end mt-3">

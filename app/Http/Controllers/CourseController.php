@@ -79,35 +79,68 @@ class CourseController extends Controller
         $prevTopic = $course->topics->where('order', $currentTopic->order - 1)->first();
         $nextTopic = $course->topics->where('order', $currentTopic->order + 1)->first();
 
+
         $userProgress = Progress::where('participant_id', Auth::user()->participant->id)
-            ->where('topic_id', $prevTopic?->id)
+            ->where('topic_id', $currentTopic?->id)
+            ->orWhere('topic_id', $prevTopic?->id)
             ->orWhere('topic_id', $nextTopic?->id)
-            ->orWhere('topic_id', $currentTopic?->id)
-            ->orWhere('is_completed', 1)
-            ->orWhere('is_completed', 0)
+            // ->whereIn('is_completed', [0, 1])
             ->first();
         if ($userProgress) {
-            if ($nextTopic) {
-                $userProgress->update([
-                    'topic_id' => $currentTopic->id
-                ]);
+            $userProgress->update([
+                'topic_id' => $currentTopic->id,
+            ]);
+            // if ($nextTopic) {
+            //     $userProgress->update([
+            //         'topic_id' => $currentTopic->id
+            //     ]);
+            //     // dd('in');
+            // } else {
+            //     $userProgress->update([
+            //         'topic_id' => $currentTopic->id,
+            //     ]);
+            // }
+        } else {
+            // $checkCompleted = Progress::where('participant_id', Auth::user()->participant->id)
+            //     ->where('is_completed', 1)->pluck('topic_id')->toArray();
+            $checkTopic = Topic::all()->pluck('id')->toArray();
+            $currentUserProgress = Progress::where('participant_id', Auth::user()->participant->id)->whereHas('topic.course', function ($query) use ($course) {
+                $query->where('id', $course->id);
+            })->first();
+
+            // $commonValues = array_intersect($checkCompleted, $checkTopic);
+
+            // dd(vars: $currentTopic->id);
+            if (in_array($currentUserProgress?->topic_id, $checkTopic)) {
+                Progress::where('participant_id', Auth::user()->participant->id)->where('topic_id', $currentUserProgress->topic_id)
+                    ->update([
+                        'topic_id' => $currentTopic->id,
+                    ]);
             } else {
-                $userProgress->update([
+                Progress::create([
+                    'participant_id' => Auth::user()->participant->id,
                     'topic_id' => $currentTopic->id,
+                    'is_completed' => 0
                 ]);
             }
-        } else {
-            Progress::create([
-                'participant_id' => Auth::user()->participant->id,
-                'topic_id' => $currentTopic->id,
-                'is_completed' => 0
-            ]);
+            // if (!empty($commonValues)) {
+            //     dd($commonValues);
+            //     // Progress::where('participant_id', Auth::user()->participant->id)->where('topic_id', )->update()
+
+            // } else {
+            //     dd('notfound');
+            //     Progress::create([
+            //         'participant_id' => Auth::user()->participant->id,
+            //         'topic_id' => $currentTopic->id,
+            //         'is_completed' => 0
+            //     ]);
+            // }
         }
 
         return view('participant.course.read', compact('course', 'currentTopic', 'prevTopic', 'nextTopic', 'startTime'));
     }
 
-    public function completed(Topic $topic)
+    public function completed(Course $course, Topic $topic)
     {
         $userId = Auth::user()->participant->id;
 
