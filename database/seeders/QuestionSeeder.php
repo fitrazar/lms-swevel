@@ -219,7 +219,7 @@ class QuestionSeeder extends Seeder
 
         foreach ($questions2 as $item) {
             $question = Question::create([
-                'quiz_id' => 1,
+                'quiz_id' => 2,
                 'question_text' => $item['question_text'],
             ]);
 

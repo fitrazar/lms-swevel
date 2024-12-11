@@ -80,7 +80,7 @@ class CourseController extends Controller
         $nextTopic = $course->topics->where('order', $currentTopic->order + 1)->first();
 
 
-        $userProgress = Progress::where('participant_id', Auth::user()->participant->id)
+        $userProgress = Progress::where('participant_id', Auth::user()?->participant?->id)
             ->where('topic_id', $currentTopic?->id)
             ->orWhere('topic_id', $prevTopic?->id)
             ->orWhere('topic_id', $nextTopic?->id)
@@ -104,7 +104,7 @@ class CourseController extends Controller
             // $checkCompleted = Progress::where('participant_id', Auth::user()->participant->id)
             //     ->where('is_completed', 1)->pluck('topic_id')->toArray();
             $checkTopic = Topic::all()->pluck('id')->toArray();
-            $currentUserProgress = Progress::where('participant_id', Auth::user()->participant->id)->whereHas('topic.course', function ($query) use ($course) {
+            $currentUserProgress = Progress::where('participant_id', Auth::user()?->participant?->id)->whereHas('topic.course', function ($query) use ($course) {
                 $query->where('id', $course->id);
             })->first();
 
@@ -112,13 +112,13 @@ class CourseController extends Controller
 
             // dd(vars: $currentTopic->id);
             if (in_array($currentUserProgress?->topic_id, $checkTopic)) {
-                Progress::where('participant_id', Auth::user()->participant->id)->where('topic_id', $currentUserProgress->topic_id)
+                Progress::where('participant_id', Auth::user()?->participant?->id)->where('topic_id', $currentUserProgress->topic_id)
                     ->update([
                         'topic_id' => $currentTopic->id,
                     ]);
             } else {
                 Progress::create([
-                    'participant_id' => Auth::user()->participant->id,
+                    'participant_id' => Auth::user()?->participant?->id,
                     'topic_id' => $currentTopic->id,
                     'is_completed' => 0
                 ]);
