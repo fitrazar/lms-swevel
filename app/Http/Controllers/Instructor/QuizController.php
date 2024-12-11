@@ -47,7 +47,7 @@ class QuizController extends Controller
         $attempt->delete();
         $result->delete();
 
-        return response()->json(['message' => 'Hasil kuis berhasil dihapus!']);
+        return redirect()->route('dashboard.instructor.quiz.result')->with('success', 'Hasil Kuis Berhasil Dihapus!');
     }
 
     public function feedback(Quiz $quiz)
