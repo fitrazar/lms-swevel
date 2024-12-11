@@ -46,25 +46,25 @@ class TopicSeeder extends Seeder
         Topic::create([
             'course_id' => 2,
             'title' => 'Pendahuluan',
-            'slug' => 'pendahuluan',
+            'slug' => 'pendahuluan-2',
             'order' => 1,
         ]);
         Topic::create([
             'course_id' => 2,
             'title' => 'Tugas',
-            'slug' => 'tugas',
+            'slug' => 'tugas-2',
             'order' => 2,
         ]);
         Topic::create([
             'course_id' => 2,
             'title' => 'Kuis',
-            'slug' => 'kuis',
+            'slug' => 'kuis-2',
             'order' => 3,
         ]);
         Topic::create([
             'course_id' => 2,
             'title' => 'Penutup',
-            'slug' => 'penutup',
+            'slug' => 'penutup-2',
             'order' => 4,
         ]);
     }

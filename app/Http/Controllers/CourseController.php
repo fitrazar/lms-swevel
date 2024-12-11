@@ -167,6 +167,7 @@ class CourseController extends Controller
     public function submit(Request $request, Course $course, Topic $topic)
     {
         $answers = $request->all();
+        dd($topic->material->quiz, $topic, $topic->material);
         $totalScore = 0;
         $exitCount = $request->input('exit_count', 0);
 
