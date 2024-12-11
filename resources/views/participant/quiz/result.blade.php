@@ -8,7 +8,12 @@
                     {{ $quiz->material->topic->course->title }}</h1>
                 <p>Nilai Akhir: {{ $attempt->score }}</p>
                 <p>Tanggal: {{ $attempt->attempt_date }}</p>
-                <p>{{ $result->feedback ?? '-' }}</p>
+                @if ($attempt->is_late)
+                    <p>Telat: {{ $attempt->difference }}</p>
+                @endif
+                @if ($result->feedback)
+                    <p>{{ $result->feedback }}</p>
+                @endif
 
                 <div class="mt-6">
                     <h2 class="text-lg font-bold">Review Soal</h2>
@@ -23,7 +28,7 @@
                                                 {{ in_array($option->id, $userAnswers) ? 'checked' : '' }}>
                                             <span class="ml-3">{{ $option->option_text }}
                                                 @if (in_array($option->id, $userAnswers))
-                                                    <span class="text-sm">
+                                                    <span class="text-sm font-bold">
                                                         ({{ $option->is_correct ? 'Benar' : 'Salah' }})
                                                     </span>
                                                 @endif
@@ -36,7 +41,8 @@
                     </ol>
                 </div>
 
-                <a href="{{ route('dashboard.participant.quiz.index') }}" class="btn btn-primary mt-4">Kembali ke Daftar
+                <a href="{{ route('dashboard.participant.quiz.index') }}" class="btn btn-primary mt-4">Kembali ke
+                    Daftar
                     Kuis</a>
             </x-card.card-default>
         </div>
