@@ -40,9 +40,12 @@ class QuizController extends Controller
 
     public function destroy(QuizAttempt $attempt)
     {
+        $result = Result::where('quiz_id', $attempt->quiz->id)->first();
+
         $attempt->questionAnswers()->delete();
 
         $attempt->delete();
+        $result->delete();
 
         return response()->json(['message' => 'Hasil kuis berhasil dihapus!']);
     }
