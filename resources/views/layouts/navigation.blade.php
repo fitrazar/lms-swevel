@@ -51,6 +51,7 @@
                     </li>
                 @endrole
                 @role('participant')
+                    <li><a href="{{ route('dashboard.participant.quiz.index') }}">Kuis</a></li>
                 @endrole
             @else
             @endauth
@@ -77,6 +78,13 @@
                             {{ __('Dashboard') }}
                         </a>
                     </li>
+                    @hasrole('participant')
+                        <li>
+                            <a href="{{ route('dashboard.participant.quiz.index') }}">
+                                {{ __('Kuis') }}
+                            </a>
+                        </li>
+                    @endrole
                     @hasanyrole('participant|instructor')
                         <li>
                             <a href="{{ route('dashboard.profile.edit') }}">

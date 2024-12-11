@@ -61,8 +61,8 @@
             @empty
                 <x-card.card-default class="static md:col-span-2 lg:col-span-3 col-span-1">
                     <div class="flex flex-col w-full border-opacity-50">
-                        <div class="grid h-20 card bg-base-300 rounded-box place-items-center">belum ada
-                            course aktif
+                        <div class="grid h-20 card bg-base-300 rounded-box place-items-center">Anda belum terdaftar di
+                            kursus manapun
                         </div>
                     </div>
                 </x-card.card-default>
