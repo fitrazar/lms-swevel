@@ -30,7 +30,13 @@
     <div class="min-h-screen bg-base-100">
         @include('layouts.navigation')
 
-        <main class="py-24">
+        <div class="toast toast-end toast-middle split hidden">
+            <div class="alert alert-info">
+                <span>Dilarang split screen</span>
+            </div>
+        </div>
+
+        <main class="py-24 main-content">
             {{ $slot }}
         </main>
 

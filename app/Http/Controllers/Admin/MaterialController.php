@@ -94,7 +94,7 @@ class MaterialController extends Controller
             'type' => 'required|in:document,video,assignment,quiz',
         ]);
 
-        $baseSlug = Str::slug($request->name);
+        $baseSlug = Str::slug($request->title);
         $slug = $baseSlug;
 
         $existingCount = Topic::where('slug', 'like', $baseSlug . '%')->count();
@@ -157,7 +157,7 @@ class MaterialController extends Controller
 
 
         $topic = Topic::findOrFail($request->topic_id);
-        $baseSlug = Str::slug($request->name);
+        $baseSlug = Str::slug($request->title);
         $slug = $baseSlug;
 
         $existingCount = Topic::where('slug', 'like', $baseSlug . '%')->where('id', '!=', $topic->id)->count();
