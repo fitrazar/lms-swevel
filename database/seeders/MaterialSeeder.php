@@ -34,5 +34,34 @@ class MaterialSeeder extends Seeder
                 ->implode(''),
             'type' => 'quiz',
         ]);
+
+        Material::create([
+            'topic_id' => 4,
+            'content' => collect(fake()->paragraphs(mt_rand(5, 10)))
+                ->map(fn($p) => "<p>$p</p>")
+                ->implode(''),
+            'type' => 'document',
+        ]);
+        Material::create([
+            'topic_id' => 5,
+            'content' => collect(fake()->paragraphs(mt_rand(5, 10)))
+                ->map(fn($p) => "<p>$p</p>")
+                ->implode(''),
+            'type' => 'assignment',
+        ]);
+        Material::create([
+            'topic_id' => 6,
+            'content' => collect(fake()->paragraphs(mt_rand(5, 10)))
+                ->map(fn($p) => "<p>$p</p>")
+                ->implode(''),
+            'type' => 'quiz',
+        ]);
+        Material::create([
+            'topic_id' => 7,
+            'content' => collect(fake()->paragraphs(mt_rand(5, 10)))
+                ->map(fn($p) => "<p>$p</p>")
+                ->implode(''),
+            'type' => 'document',
+        ]);
     }
 }
