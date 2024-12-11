@@ -208,6 +208,7 @@ class CourseController extends Controller
 
         session()->forget('quiz_start_time_' . $topic->material->quiz->id);
         session()->forget(keys: 'exitCount');
+        session()->forget(keys: 'answers');
 
         $lastTopicOrder = $course->topics()->max('order');
         if ($topic->order == $lastTopicOrder) {
@@ -232,11 +233,27 @@ class CourseController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function updateAnswer(Request $request)
+    {
+        $questionId = $request->input('question');
+        $optionId = $request->input('checked');
+
+        $answers = session('answers', []);
+
+        $answers[$questionId] = $optionId;
+
+        session(['answers' => $answers]);
+
+        return response()->json(['success' => true]);
+    }
+
+
 
     public function destroy(Course $course, Topic $topic)
     {
         session()->forget('quiz_start_time_' . $topic->material->quiz->id);
         session()->forget(keys: 'exitCount');
+        session()->forget(keys: 'answers');
 
 
         $quizAttempt = QuizAttempt::where('quiz_id', $topic->material->quiz->id)->where('participant_id', Auth::user()->participant->id)->first();

@@ -32,7 +32,8 @@
                         @endif
                         @if (
                             $currentTopic->material->type == 'quiz' &&
-                                $currentTopic->material->quiz->quizAttempts->where('participant_id', auth()->user()->participant->id)->first())
+                                $currentTopic->material->quiz?->quizAttempts
+                                    ?->where('participant_id', auth()->user()->participant->id)->first())
                             <x-alert.warning message="Kamu sudah menjawab quiz ini." />
                             <x-form
                                 action="{{ route('course.destroy', ['course' => $course->slug, 'topic' => $currentTopic->slug]) }}"
@@ -86,7 +87,7 @@
                                     @else
                                         @if (
                                             $currentTopic->material->type == 'quiz' &&
-                                                !$currentTopic->material->quiz->quizAttempts->where('quiz_id', $currentTopic->material->quiz->id)->first())
+                                                !$currentTopic->material->quiz?->quizAttempts?->where('quiz_id', $currentTopic->material->quiz->id)->first())
                                             <x-button.primary-button id="nextButton" class="block mt-6" type="submit"
                                                 onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
                                                 class="btn-sm text-base-100 block mt-6">Kirim
@@ -128,15 +129,17 @@
                                     </div>
                                     @foreach ($currentTopic->material->quiz->questions as $question)
                                         <div class="mb-4">
-                                            <p class="font-bold">{{ $question->question_text }}</p>
+                                            <p class="font-bold" data-question="question_{{ $question->id }}">
+                                                {{ $question->question_text }}</p>
                                             <div class="options">
                                                 @foreach ($question->options as $option)
+                                                    {{-- @dd(session('answers.question_1')) --}}
                                                     <div class="flex justify-start">
                                                         <label class="label cursor-pointer space-x-3">
                                                             <input type="radio" name="question_{{ $question->id }}"
                                                                 id="{{ $option->id }}" value="{{ $option->id }}"
                                                                 class="radio checked:bg-blue-500"
-                                                                {{ old('question_' . $question->id) == $option->id ? 'checked' : '' }}>
+                                                                {{ session('answers.question_' . $question->id) == $option->id ? 'checked' : '' }}>
                                                             <span class="label-text">{{ $option->option_text }}</span>
                                                         </label>
                                                     </div>
@@ -144,6 +147,7 @@
                                             </div>
                                         </div>
                                     @endforeach
+
 
                                 @endif
 
@@ -205,7 +209,7 @@
                                         @else
                                             @if (
                                                 $currentTopic->material->type == 'quiz' &&
-                                                    !$currentTopic->material->quiz->quizAttempts->where('quiz_id', $currentTopic->material->quiz->id)->first())
+                                                    !$currentTopic->material->quiz?->quizAttempts?->where('quiz_id', $currentTopic->material->quiz->id)->first())
                                                 <x-button.primary-button id="nextButton" class="block mt-6"
                                                     type="submit"
                                                     onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
@@ -231,7 +235,7 @@
             let type = "{{ $currentTopic->material->type }}";
             if (type == 'quiz') {
                 let quizCompleted =
-                    "{{ $currentTopic->material->quiz->quizAttempts->where('quiz_id', $currentTopic->material->quiz->id)->first() }}";
+                    "{{ $currentTopic->material->quiz?->quizAttempts?->where('quiz_id', $currentTopic->material->quiz->id)->first() }}";
                 if (!quizCompleted) {
 
                     // Mengambil nilai exitCount dari session melalui route atau inisialisasi dengan 0
@@ -269,6 +273,34 @@
                             });
                     }
 
+                    document.querySelectorAll("input[type='radio']").forEach((radio) => {
+                        radio.addEventListener("change", (event) => {
+                            const question = event.target.name;
+                            const checked = event.target.id;
+
+                            fetch('/update-answer', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                            .content,
+                                    },
+                                    body: JSON.stringify({
+                                        question,
+                                        checked
+                                    }),
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log('Answer saved:', data);
+                                })
+                                .catch(error => {
+                                    console.error('Error saving answer:', error);
+                                });
+                        });
+                    });
+
+
                     function updateNextButtonState() {
                         const nextButton = document.getElementById('nextButton');
                         nextButton.disabled = !allQuestionsAnswered();
@@ -287,14 +319,28 @@
 
                     function allQuestionsAnswered() {
                         let allAnswered = true;
+                        const answeredQuestions = [];
 
                         document.querySelectorAll("input[type='radio']").forEach((radio) => {
                             const groupName = radio.name;
                             const radios = document.querySelectorAll(`[name="${groupName}"]`);
+                            const questionElement = document.querySelector(`[data-question="${groupName}"]`)
+
                             if (![...radios].some(r => r.checked)) {
                                 console.log(`question ${groupName} is not answered.`);
                                 allAnswered = false;
                             }
+                            // } else {
+                            //     const selected = [...radios].find(r => r.checked);
+                            //     const answerText = selected.nextElementSibling.textContent.trim();
+
+                            //     updateAnswerSession(groupName, selected.id);
+
+                            //     answeredQuestions.push({
+                            //         question: questionElement.textContent.trim(),
+                            //         answer: answerText,
+                            //     });
+                            // }
                         });
 
                         return allAnswered;

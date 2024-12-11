@@ -33,7 +33,7 @@
                                     Nama Topik
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Judul Tugas
+                                    Judul Kuis
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Durasi

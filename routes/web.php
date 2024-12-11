@@ -31,6 +31,7 @@ Route::post('/course/{course}/{topic}/read/done', [CourseController::class, 'com
 Route::post('/course/{course}/{topic}/read/quiz', [CourseController::class, 'submit'])->name('course.submit');
 Route::delete('/course/{course}/{topic}/read/quiz', [CourseController::class, 'destroy'])->name('course.destroy');
 Route::post('/update-exitcount', [CourseController::class, 'updateExitCount'])->name('course.exitcount');
+Route::post('/update-answer', [CourseController::class, 'updateAnswer'])->name('course.answer');
 
 Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(function () {
 
