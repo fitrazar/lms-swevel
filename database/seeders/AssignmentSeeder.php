@@ -19,7 +19,17 @@ class AssignmentSeeder extends Seeder
             'description' => collect(fake()->paragraphs(mt_rand(5, 10)))
                 ->map(fn($p) => "<p>$p</p>")
                 ->implode(''),
-            'due_date' => 10,
+            'deadline' => 10,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        Assignment::create([
+            'title' => 'Tugas Akhir',
+            'material_id' => 5,
+            'description' => collect(fake()->paragraphs(mt_rand(5, 10)))
+                ->map(fn($p) => "<p>$p</p>")
+                ->implode(''),
+            'deadline' => 5,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

@@ -44,6 +44,9 @@
                                 <x-alert.success :message="session('success')" />
                             </div>
                         @endif
+                        @if (session()->has('error'))
+                            <x-alert.warning :message="session('error')" />
+                        @endif
                         @if (
                             $currentTopic->material->type == 'quiz' &&
                                 $currentTopic->material->quiz?->quizAttempts
@@ -91,9 +94,9 @@
                                                 class="btn-sm text-base-100 block mt-6">Kirim
                                                 Jawaban</x-button.primary-button>
                                         @elseif ($currentTopic->material->type == 'assignment')
-                                            <x-button.primary-button class="block mt-6" type="submit"
+                                            <x-button.primary-button id="submitButton" class="block mt-6" type="submit"
                                                 onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
-                                                class="btn-sm text-base-100 block mt-6">Kirim
+                                                class="btn-sm text-base-100 block mt-6" disabled>Kirim
                                                 Tugas</x-button.primary-button>
                                         @else
                                             <a href="javascript:void(0);"
@@ -107,7 +110,7 @@
                                         @if (
                                             $currentTopic->material->type == 'quiz' &&
                                                 !$currentTopic->material->quiz?->quizAttempts?->where('quiz_id', $currentTopic->material->quiz->id)->first())
-                                            <x-button.primary-button class="block mt-6" type="submit"
+                                            <x-button.primary-button id="nextButton" class="block mt-6" type="submit"
                                                 onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
                                                 class="btn-sm text-base-100 block mt-6">Kirim
                                                 Jawaban</x-button.primary-button>
@@ -115,9 +118,95 @@
                                             $currentTopic->material->type == 'assignment' &&
                                                 !$currentTopic->material->assignment?->results
                                                     ?->where('assignment_id', $currentTopic->material->assignment->id)->first())
-                                            <x-button.primary-button id="nextButton" class="block mt-6" type="submit"
+                                            <x-button.primary-button id="submitButton" class="block mt-6" type="submit"
+                                                onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
+                                                class="btn-sm text-base-100 block mt-6" disabled>Kirim
+                                                Tugas</x-button.primary-button>
+                                        @else
+                                            <p class="block mt-6">Kamu telah menyelesaikan semua topik.</p>
+                                        @endif
+                                    @endif
+
+                                </div>
+                            @endif
+                        @elseif (
+                            $currentTopic->material->type == 'assignment' &&
+                                $currentTopic->material->assignment?->results
+                                    ?->where('assignment_id', $currentTopic->material->assignment->id)->where('participant_id', auth()->user()->participant->id)->first())
+                            <x-alert.warning message="Kamu sudah mengunggah tugas ini." />
+                            <x-form
+                                action="{{ route('course.destroyAssignment', ['course' => $course->slug, 'topic' => $currentTopic->slug]) }}"
+                                style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <x-button.warning-button type="submit" class="mt-4 btn-sm text-white"
+                                    onclick="return confirm('Kamu yakin?')"><i class="fa-solid fa-repeat"></i>Upload
+                                    Ulang</x-button.warning-button>
+                            </x-form>
+                            @if ($nextTopic && $prevTopic)
+                                <div class="flex justify-start gap-4">
+                                    <a href="{{ url('/course/' . $course->slug . '/read/' . $prevTopic->slug) }}"
+                                        class="block mt-6">
+                                        <x-button.primary-button type="button"
+                                            class="btn-sm text-base-100">Kembali</x-button.primary-button>
+                                    </a>
+                                    <a href="{{ url('/course/' . $course->slug . '/read/' . $nextTopic->slug) }}"
+                                        class="block mt-6">
+                                        <x-button.primary-button type="button"
+                                            class="btn-sm text-base-100">Selanjutnya</x-button.primary-button>
+                                    </a>
+                                </div>
+                            @elseif ($nextTopic)
+                                <a href="{{ url('/course/' . $course->slug . '/read/' . $nextTopic->slug) }}"
+                                    class="block mt-6">
+                                    <x-button.primary-button type="button"
+                                        class="btn-sm text-base-100">Selanjutnya</x-button.primary-button>
+                                </a>
+                            @else
+                                <div class="flex justify-start gap-4">
+                                    <a href="{{ url('/course/' . $course->slug . '/read/' . $prevTopic->slug) }}"
+                                        class="block mt-6">
+                                        <x-button.primary-button type="button"
+                                            class="btn-sm text-base-100">Kembali</x-button.primary-button>
+                                    </a>
+                                    @if (!auth()->user()->participant?->progress?->where('topic_id', $currentTopic->id)->where('is_completed', '1')->first())
+                                        @if ($currentTopic->material->type == 'quiz')
+                                            <x-button.primary-button id="nextButton" class="block mt-6"
+                                                type="submit"
                                                 onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
                                                 class="btn-sm text-base-100 block mt-6">Kirim
+                                                Jawaban</x-button.primary-button>
+                                        @elseif ($currentTopic->material->type == 'assignment')
+                                            <x-button.primary-button id="submitButton" class="block mt-6"
+                                                type="submit"
+                                                onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
+                                                class="btn-sm text-base-100 block mt-6" disabled>Kirim
+                                                Tugas</x-button.primary-button>
+                                        @else
+                                            <a href="javascript:void(0);"
+                                                onclick="markAsDone('{{ route('course.done', ['course' => $course->slug, 'topic' => $currentTopic->slug]) }}')"
+                                                class="block mt-6">
+                                                <x-button.primary-button type="button"
+                                                    class="btn-sm text-base-100">Selesai</x-button.primary-button>
+                                            </a>
+                                        @endif
+                                    @else
+                                        @if (
+                                            $currentTopic->material->type == 'quiz' &&
+                                                !$currentTopic->material->quiz?->quizAttempts?->where('quiz_id', $currentTopic->material->quiz->id)->first())
+                                            <x-button.primary-button id="nextButton" class="block mt-6"
+                                                type="submit"
+                                                onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
+                                                class="btn-sm text-base-100 block mt-6">Kirim
+                                                Jawaban</x-button.primary-button>
+                                        @elseif (
+                                            $currentTopic->material->type == 'assignment' &&
+                                                !$currentTopic->material->assignment?->results
+                                                    ?->where('assignment_id', $currentTopic->material->assignment->id)->first())
+                                            <x-button.primary-button id="submitButton" class="block mt-6"
+                                                type="submit"
+                                                onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
+                                                class="btn-sm text-base-100 block mt-6" disabled>Kirim
                                                 Tugas</x-button.primary-button>
                                         @else
                                             <p class="block mt-6">Kamu telah menyelesaikan semua topik.</p>
@@ -128,9 +217,13 @@
                             @endif
                         @else
                             {!! $currentTopic->material->content !!}
-                            <form enctype="multipart/form-data"
-                                method="{{ $currentTopic->material->type == 'quiz' || 'assigment' ? 'post' : '#' }}"
-                                action="{{ ($currentTopic->material->type == 'quiz' ? route('course.submit', ['course' => $course->slug, 'topic' => $currentTopic->slug]) : $currentTopic->material->type == 'assignment') ? route('course.assignment', ['course' => $course->slug, 'topic' => $currentTopic->slug]) : '#' }}">
+                            <form enctype="multipart/form-data" method="post"
+                                action="{{ $currentTopic->material->type == 'quiz'
+                                    ? route('course.submit', ['course' => $course->slug, 'topic' => $currentTopic->slug])
+                                    : ($currentTopic->material->type == 'assignment'
+                                        ? route('course.assignment', ['course' => $course->slug, 'topic' => $currentTopic->slug])
+                                        : '#') }}">
+
                                 @csrf
 
                                 @if ($currentTopic->material->type == 'quiz')
@@ -180,13 +273,30 @@
                                     <h2 class="font-semibold text-2xl mt-3">
                                         {{ $currentTopic->material->assignment->title }}
                                     </h2>
+                                    @php
+                                        $userDate = auth()
+                                            ->user()
+                                            ->participant?->enrolls?->where('course_id', $course->id)
+                                            ->first();
+                                        $parseDate = Carbon\Carbon::parse($userDate->activated_at);
+                                        $deadline = $parseDate
+                                            ->addDays((int) $currentTopic->material->assignment->deadline)
+                                            ->endOfDay();
+                                        $diffInDays = now()->diffInDays($deadline, false);
+                                    @endphp
                                     <p>{!! $currentTopic->material->assignment->description !!}</p>
-                                    @if (now()->gte($currentTopic->material->assignment->due_date))
+                                    @if (now()->gte($deadline))
                                         <div class="badge badge-error mt-3">
-                                            {{ $currentTopic->material->assignment->due_date }}</div>
+                                            {{ $deadline }}
+                                        </div>
+                                    @elseif ($diffInDays <= 2)
+                                        <div class="badge badge-warning mt-3">
+                                            {{ $deadline }}
+                                        </div>
                                     @else
                                         <div class="badge badge-primary mt-3">
-                                            {{ $currentTopic->material->assignment->due_date }}</div>
+                                            {{ $deadline }}
+                                        </div>
                                     @endif
                                     @if ($nextTopic)
                                         <input type="hidden" name="nextTopic" id="nextTopic"
@@ -219,9 +329,10 @@
                                                 class="btn-sm text-base-100 block mt-6">Kirim
                                                 Jawaban</x-button.primary-button>
                                         @elseif ($currentTopic->material->type == 'assignment')
-                                            <x-button.primary-button class="block mt-6" type="submit"
+                                            <x-button.primary-button id="submitButton" class="block mt-6"
+                                                type="submit"
                                                 onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
-                                                class="btn-sm text-base-100 block mt-6">Kirim
+                                                class="btn-sm text-base-100 block mt-6" disabled>Kirim
                                                 Tugas</x-button.primary-button>
                                         @else
                                             <a href="{{ url('/course/' . $course->slug . '/read/' . $nextTopic->slug) }}"
@@ -238,9 +349,9 @@
                                             class="btn-sm text-base-100 block mt-6">Kirim
                                             Jawaban</x-button.primary-button>
                                     @elseif ($currentTopic->material->type == 'assignment')
-                                        <x-button.primary-button class="block mt-6" type="submit"
+                                        <x-button.primary-button id="submitButton" class="block mt-6" type="submit"
                                             onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
-                                            class="btn-sm text-base-100 block mt-6">Kirim
+                                            class="btn-sm text-base-100 block mt-6" disabled>Kirim
                                             Tugas</x-button.primary-button>
                                     @else
                                         <a href="{{ url('/course/' . $course->slug . '/read/' . $nextTopic->slug) }}"
@@ -264,9 +375,10 @@
                                                     class="btn-sm text-base-100 block mt-6">Kirim
                                                     Jawaban</x-button.primary-button>
                                             @elseif ($currentTopic->material->type == 'assignment')
-                                                <x-button.primary-button class="block mt-6" type="submit"
+                                                <x-button.primary-button id="submitButton" class="block mt-6"
+                                                    type="submit"
                                                     onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
-                                                    class="btn-sm text-base-100 block mt-6">Kirim
+                                                    class="btn-sm text-base-100 block mt-6" disabled>Kirim
                                                     Tugas</x-button.primary-button>
                                             @else
                                                 <a href="javascript:void(0);"
@@ -289,9 +401,10 @@
                                                 $currentTopic->material->type == 'assignment' &&
                                                     !$currentTopic->material->assignment?->results
                                                         ?->where('assignment_id', $currentTopic->material->assignment->id)->first())
-                                                <x-button.primary-button class="block mt-6" type="submit"
+                                                <x-button.primary-button id="submitButton" class="block mt-6"
+                                                    type="submit"
                                                     onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
-                                                    class="btn-sm text-base-100 block mt-6">Kirim
+                                                    class="btn-sm text-base-100 block mt-6" disabled>Kirim
                                                     Tugas</x-button.primary-button>
                                             @else
                                                 <p class="block mt-6">Kamu telah menyelesaikan semua topik.</p>
@@ -323,6 +436,27 @@
                     sidebar.classList.remove('-translate-x-full');
                     sidebar.classList.add('translate-x-0');
                     overlay.classList.remove('hidden');
+                }
+            }
+        </script>
+        <script>
+            let type2 = "{{ $currentTopic->material->type }}";
+            if (type2 == 'assignment') {
+                let assignmentCompleted =
+                    "{{ $currentTopic->material->assignment?->results?->where('assignment_id', $currentTopic->material->assignment->id)->first() }}";
+                if (!assignmentCompleted) {
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const fileInput = document.getElementById('file');
+                        const submitButton = document.getElementById('submitButton');
+
+                        fileInput.addEventListener('change', function() {
+                            if (fileInput.files.length > 0) {
+                                submitButton.disabled = false;
+                            } else {
+                                submitButton.disabled = true;
+                            }
+                        });
+                    });
                 }
             }
         </script>

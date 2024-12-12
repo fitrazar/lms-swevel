@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Topic;
 use App\Models\Course;
 use App\Models\Option;
@@ -13,6 +14,7 @@ use App\Models\QuizAttempt;
 use Illuminate\Http\Request;
 use App\Models\QuestionAnswer;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Constraint\Count;
 
 class CourseController extends Controller
@@ -247,6 +249,7 @@ class CourseController extends Controller
             'score' => $totalScore,
             'graded_at' => now(),
             'is_late' => $quizAttempt->is_late,
+            'difference' => $quizAttempt->difference,
         ]);
 
 
@@ -311,11 +314,59 @@ class CourseController extends Controller
 
     public function assignment(Request $request, Course $course, Topic $topic)
     {
-        dd($request->all());
+        $validatedData = $request->validate([
+            'file' => 'required|mimes:rar,zip|max:10000',
+        ]);
+
+        $parseDate = Carbon::parse(
+            Auth::user()->participant?->enrolls?->where('course_id', $course->id)->first()?->activated_at
+        );
+
+        $deadline = $parseDate->addDays((int) $topic->material->assignment->deadline)->endOfDay();
+
+        $isLate = 0;
+        $lateMinutes = 0;
+
+        if (now()->gte($deadline)) {
+            $isLate = 1;
+            $lateDifferenceInSeconds = now()->diffInSeconds($deadline);
+            $lateMinutes = ceil($lateDifferenceInSeconds / 60);
+        }
+
+        $path = 'assignments/' . Auth::user()->participant->id . '/' . $topic->material->assignment->id;
+        $validatedData['file'] = time() . '.' . $request->file('file')->getClientOriginalExtension();
+        $request->file('file')->storeAs($path, $validatedData['file']);
+
+
+        $result = new Result();
+        $result->participant_id = Auth::user()->participant->id;
+        $result->assignment_id = $topic->material->assignment->id;
+        $result->file_url = $validatedData['file'];
+        $result->is_late = $isLate;
+        $result->difference = $lateMinutes;
+        $result->save();
+
+        $lastTopicOrder = $course->topics()->max('order');
+        if ($topic->order == $lastTopicOrder) {
+            Progress::where('participant_id', Auth::user()->participant->id)
+                ->where('topic_id', $topic->id)
+                ->update(['is_completed' => 1]);
+
+            return redirect()->back()->with('success', 'File berhasil dikirim!');
+        }
+
+
+
+        return redirect()->route('course.read', ['course' => $course->slug, 'topic' => $request->nextTopic])->with('success', 'File berhasil dikirim!');
     }
 
     public function destroyAssignment(Course $course, Topic $topic)
     {
+        Storage::delete('assignments/' . Auth::user()->participant->id . '/' . $topic->material->assignment->id);
+        $result = Result::where('assignment_id', $topic->material->assignment->id)->where('participant_id', Auth::user()->participant->id)->first();
 
+        $result->delete();
+
+        return redirect()->route('course.read', ['course' => $course->slug, 'topic' => $topic->slug])->with('success', 'Tugas Berhasil Dihapus!');
     }
 }

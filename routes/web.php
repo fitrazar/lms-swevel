@@ -32,10 +32,13 @@ Route::post('/course', [CourseController::class, 'store'])->name('course.store')
 Route::middleware(['auth', 'role:participant'])->group(function () {
     Route::get('/course/{course}/read/{topic}', [CourseController::class, 'read'])->name('course.read');
     Route::post('/course/{course}/{topic}/read/done', [CourseController::class, 'completed'])->name('course.done');
+
     Route::post('/course/{course}/{topic}/read/quiz', [CourseController::class, 'submit'])->name('course.submit');
     Route::delete('/course/{course}/{topic}/read/quiz', [CourseController::class, 'destroy'])->name('course.destroy');
+
     Route::post('/course/{course}/{topic}/read/assignment', [CourseController::class, 'assignment'])->name('course.assignment');
     Route::delete('/course/{course}/{topic}/read/assignment', [CourseController::class, 'destroyAssignment'])->name('course.destroyAssignment');
+
     Route::post('/update-exitcount', [CourseController::class, 'updateExitCount'])->name('course.exitcount');
     Route::post('/update-answer', [CourseController::class, 'updateAnswer'])->name('course.answer');
 });
