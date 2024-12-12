@@ -11,20 +11,34 @@
                 </x-card.card-default>
             @else
                 <div class="grid md:grid-cols-4 grid-cols-1 gap-4">
-                    <ul class="menu bg-base-200 rounded-box w-56">
-                        <li>
-                            <h2 class="menu-title">Daftar Isi</h2>
-                            <ul>
-                                @foreach ($course->topics as $topic)
-                                    <li>
-                                        <a
-                                            href="{{ url('/course/' . $course->slug . '/read/' . $topic->slug) }}">{{ $topic->title }}</a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </li>
-                    </ul>
-                    <div class="col-span-3">
+                    <button onclick="toggleSidebar()"
+                        class="p-4 z-50 fixed bottom-16 left-3 lg:static bg-base-100 rounded shadow-md lg:hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+
+                    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"
+                        onclick="toggleSidebar()"></div>
+
+                    <div id="sidebar"
+                        class="fixed top-0 left-0 h-screen w-56 bg-base-100 z-50 transform -translate-x-full transition-transform duration-300 lg:translate-x-0 lg:relative lg:block lg:w-56">
+                        <ul class="menu p-4 space-y-3">
+                            <li class="menu-title">Daftar Isi</li>
+                            @foreach ($course->topics as $topic)
+                                <li>
+                                    <a href="{{ url('/course/' . $course->slug . '/read/' . $topic->slug) }}">
+                                        {{ $topic->title }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+
+                    <div class="md:col-span-3 p-4">
                         @if (session()->has('success'))
                             <div class="mb-3">
                                 <x-alert.success :message="session('success')" />
@@ -159,7 +173,8 @@
                                                 class="btn-sm text-base-100">Kembali</x-button.primary-button>
                                         </a>
                                         @if ($currentTopic->material->type == 'quiz')
-                                            <x-button.primary-button id="nextButton" class="block mt-6" type="submit"
+                                            <x-button.primary-button id="nextButton" class="block mt-6"
+                                                type="submit"
                                                 onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
                                                 class="btn-sm text-base-100 block mt-6">Kirim
                                                 Jawaban</x-button.primary-button>
@@ -231,6 +246,23 @@
     </div>
 
     <x-slot name="script">
+        <script>
+            function toggleSidebar() {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('sidebar-overlay');
+                const isOpen = sidebar.classList.contains('translate-x-0');
+
+                if (isOpen) {
+                    sidebar.classList.add('-translate-x-full');
+                    sidebar.classList.remove('translate-x-0');
+                    overlay.classList.add('hidden');
+                } else {
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebar.classList.add('translate-x-0');
+                    overlay.classList.remove('hidden');
+                }
+            }
+        </script>
         <script>
             let type = "{{ $currentTopic->material->type }}";
             if (type == 'quiz') {

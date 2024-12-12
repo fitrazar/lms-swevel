@@ -136,8 +136,9 @@ class CourseController extends Controller
             //     ]);
             // }
         }
+        $isOpen = true;
 
-        return view('participant.course.read', compact('course', 'currentTopic', 'prevTopic', 'nextTopic', 'startTime'));
+        return view('participant.course.read', compact('course', 'currentTopic', 'prevTopic', 'nextTopic', 'startTime', 'isOpen'));
     }
 
     public function completed(Course $course, Topic $topic)
