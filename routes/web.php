@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\InstructorController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantControllerUser;
 use App\Http\Controllers\Participant\QuizController as ParticipantQuizController;
+use App\Http\Controllers\Participant\AssignmentController as ParticipantAssignmentController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Instructor\CourseController as InstructorCourseController;
 use App\Http\Controllers\Instructor\QuizController as InstructorQuizController;
@@ -51,6 +52,9 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         // Route::get('/my', [DashboardController::class, 'participant'])->name('index');
         Route::get('/quiz', [ParticipantQuizController::class, 'index'])->name('quiz.index');
         Route::get('/quiz/{quiz}/result', [ParticipantQuizController::class, 'result'])->name('quiz.result');
+
+        Route::get('/assignment', [ParticipantAssignmentController::class, 'index'])->name('assignment.index');
+        Route::get('/assignment/{result}/result', [ParticipantAssignmentController::class, 'result'])->name('assignment.result');
     });
 
     Route::middleware(['role:participant|instructor'])->group(function () {
