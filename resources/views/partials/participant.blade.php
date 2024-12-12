@@ -1,4 +1,28 @@
-<section class="mt-5">
+<section class="py-12">
+    <div class="grid gap-4">
+        <x-form method="GET" action="{{ route('dashboard.index') }}" class="mb-8 relative">
+            <div class="flex items-center space-x-4">
+                <x-input.text-input type="search" name="search" placeholder="Cari Kursus..." :value="$search"
+                    class="w-full" />
+            </div>
+            <div class="flex justify-between items-center mt-3">
+                <div>
+                    <p class="font-bold">Ditampilkan {{ $activeCourses->count() }} - {{ $activeCourses->total() }}</p>
+                </div>
+                <div class="flex items-center">
+                    <span class="mr-2">Filter :</span>
+                    <select class="select select-bordered w-full max-w-xs" name="filter" id="filter">
+                        <option value="" selected disabled>Pilih Status</option>
+                        <option value="active">Aktif</option>
+                        <option value="inactive">Belum Aktif</option>
+                    </select>
+                </div>
+            </div>
+            <x-button.primary-button type="submit">Cari</x-button.primary-button>
+        </x-form>
+
+    </div>
+
     <div class="py-8 mt-1">
         <h2 class="text-center py-4 font-bold md:text-2xl text-lg">Kursus Saya</h2>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 gap-6 p-4">
@@ -66,12 +90,17 @@
             @empty
                 <x-card.card-default class="static md:col-span-2 lg:col-span-3 col-span-1">
                     <div class="flex flex-col w-full border-opacity-50">
-                        <div class="grid h-20 card bg-base-300 rounded-box place-items-center">Anda belum terdaftar di
-                            kursus manapun
+                        <div class="grid h-20 card bg-base-300 rounded-box place-items-center">Kursus Tidak Ditemukan
                         </div>
                     </div>
                 </x-card.card-default>
             @endforelse
+        </div>
+
+        <div class="mt-6 text-center">
+            <div class="join">
+                {{ $activeCourses->appends(['search' => $search, 'filter' => $filter])->links() }}
+            </div>
         </div>
     </div>
 </section>
