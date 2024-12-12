@@ -1,5 +1,5 @@
-<section class="py-12">
-    <div class="grid gap-4">
+<section class="py-16">
+    <div class="grid gap-4 bg-base-100 shadow rounded p-6">
         <x-form method="GET" action="{{ route('dashboard.index') }}" class="mb-8 relative">
             <div class="flex items-center space-x-4">
                 <x-input.text-input type="search" name="search" placeholder="Cari Kursus..." :value="$search"
@@ -9,8 +9,7 @@
                 <div>
                     <p class="font-bold">Ditampilkan {{ $activeCourses->count() }} - {{ $activeCourses->total() }}</p>
                 </div>
-                <div class="flex items-center">
-                    <span class="mr-2">Filter :</span>
+                <div class="flex justify-end items-center">
                     <select class="select select-bordered w-full max-w-xs" name="filter" id="filter">
                         <option value="" selected disabled>Pilih Status</option>
                         <option value="active">Aktif</option>
