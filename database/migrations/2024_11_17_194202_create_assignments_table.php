@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignId('material_id')->constrained()->onDelete('cascade');
             $table->string(column: 'title');
             $table->text(column: 'description');
-            $table->dateTime(column: 'due_date');
+            $table->integer(column: 'deadline');
             $table->timestamps();
         });
     }

@@ -64,14 +64,14 @@ class AssignmentController extends Controller
             'material_id' => 'required',
             'title' => 'required|string',
             'description' => 'required|string',
-            'due_date' => 'required',
+            'deadline' => 'required|numeric',
         ]);
 
         Assignment::create([
             'title' => $validatedData['title'],
             'material_id' => $validatedData['material_id'],
             'description' => $validatedData['description'],
-            'due_date' => $validatedData['due_date'],
+            'deadline' => $validatedData['deadline'],
         ]);
 
         return redirect()->route('dashboard.assignment.index')->with('success', 'Tugas Berhasil Ditambahkan!');
@@ -107,7 +107,7 @@ class AssignmentController extends Controller
             'material_id' => 'required',
             'title' => 'required|string',
             'description' => 'required|string',
-            'due_date' => 'required',
+            'deadline' => 'required|numeric',
         ];
 
         $validatedData = $request->validate($rules);
@@ -116,7 +116,7 @@ class AssignmentController extends Controller
             'title' => $validatedData['title'],
             'material_id' => $validatedData['material_id'],
             'description' => $validatedData['description'],
-            'due_date' => $validatedData['due_date'],
+            'deadline' => $validatedData['deadline'],
         ]);
 
         return redirect()->route('dashboard.assignment.index')->with('success', 'Tugas Berhasil Diupdate');

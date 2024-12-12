@@ -38,10 +38,10 @@
                     </div>
 
                     <div class="mt-4">
-                        <x-input.input-label for="due_date" :value="__('Batas Pengumpulan')" />
-                        <x-input.text-input id="due_date" class="mt-1 w-full" type="datetime-local" name="due_date"
-                            :value="old('due_date')" required autofocus autocomplete="due_date" />
-                        <x-input.input-error :messages="$errors->get('due_date')" class="mt-2" />
+                        <x-input.input-label for="deadline" :value="__('Batas Pengumpulan')" />
+                        <x-input.text-input id="deadline" class="mt-1 w-full" type="number" name="deadline"
+                            :value="old('deadline')" required autofocus autocomplete="deadline" />
+                        <x-input.input-error :messages="$errors->get('deadline')" class="mt-2" />
                     </div>
 
                     <div class="mt-4 col-span-2">

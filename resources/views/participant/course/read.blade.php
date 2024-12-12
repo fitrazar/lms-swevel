@@ -24,7 +24,7 @@
                         onclick="toggleSidebar()"></div>
 
                     <div id="sidebar"
-                        class="fixed top-0 left-0 h-screen w-56 bg-base-100 z-50 transform -translate-x-full transition-transform duration-300 lg:translate-x-0 lg:relative lg:block lg:w-56">
+                        class="fixed top-0 left-0 h-screen w-56 bg-base-100 z-0 transform -translate-x-full transition-transform duration-300 lg:translate-x-0 lg:relative lg:block lg:w-56">
                         <ul class="menu p-4 space-y-3">
                             <li class="menu-title">Daftar Isi</li>
                             @foreach ($course->topics as $topic)
@@ -90,6 +90,11 @@
                                                 onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
                                                 class="btn-sm text-base-100 block mt-6">Kirim
                                                 Jawaban</x-button.primary-button>
+                                        @elseif ($currentTopic->material->type == 'assignment')
+                                            <x-button.primary-button class="block mt-6" type="submit"
+                                                onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
+                                                class="btn-sm text-base-100 block mt-6">Kirim
+                                                Tugas</x-button.primary-button>
                                         @else
                                             <a href="javascript:void(0);"
                                                 onclick="markAsDone('{{ route('course.done', ['course' => $course->slug, 'topic' => $currentTopic->slug]) }}')"
@@ -102,10 +107,18 @@
                                         @if (
                                             $currentTopic->material->type == 'quiz' &&
                                                 !$currentTopic->material->quiz?->quizAttempts?->where('quiz_id', $currentTopic->material->quiz->id)->first())
-                                            <x-button.primary-button id="nextButton" class="block mt-6" type="submit"
+                                            <x-button.primary-button class="block mt-6" type="submit"
                                                 onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
                                                 class="btn-sm text-base-100 block mt-6">Kirim
                                                 Jawaban</x-button.primary-button>
+                                        @elseif (
+                                            $currentTopic->material->type == 'assignment' &&
+                                                !$currentTopic->material->assignment?->results
+                                                    ?->where('assignment_id', $currentTopic->material->assignment->id)->first())
+                                            <x-button.primary-button id="nextButton" class="block mt-6" type="submit"
+                                                onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
+                                                class="btn-sm text-base-100 block mt-6">Kirim
+                                                Tugas</x-button.primary-button>
                                         @else
                                             <p class="block mt-6">Kamu telah menyelesaikan semua topik.</p>
                                         @endif
@@ -115,9 +128,11 @@
                             @endif
                         @else
                             {!! $currentTopic->material->content !!}
-                            <form method="{{ $currentTopic->material->type == 'quiz' ? 'post' : '#' }}"
-                                action="{{ $currentTopic->material->type == 'quiz' ? route('course.submit', ['course' => $course->slug, 'topic' => $currentTopic->slug]) : '#' }}">
+                            <form enctype="multipart/form-data"
+                                method="{{ $currentTopic->material->type == 'quiz' || 'assigment' ? 'post' : '#' }}"
+                                action="{{ ($currentTopic->material->type == 'quiz' ? route('course.submit', ['course' => $course->slug, 'topic' => $currentTopic->slug]) : $currentTopic->material->type == 'assignment') ? route('course.assignment', ['course' => $course->slug, 'topic' => $currentTopic->slug]) : '#' }}">
                                 @csrf
+
                                 @if ($currentTopic->material->type == 'quiz')
                                     <h2 class="font-semibold text-2xl mt-3">
                                         {{ $currentTopic->material->quiz->title }}
@@ -161,8 +176,33 @@
                                             </div>
                                         </div>
                                     @endforeach
-
-
+                                @elseif ($currentTopic->material->type == 'assignment')
+                                    <h2 class="font-semibold text-2xl mt-3">
+                                        {{ $currentTopic->material->assignment->title }}
+                                    </h2>
+                                    <p>{!! $currentTopic->material->assignment->description !!}</p>
+                                    @if (now()->gte($currentTopic->material->assignment->due_date))
+                                        <div class="badge badge-error mt-3">
+                                            {{ $currentTopic->material->assignment->due_date }}</div>
+                                    @else
+                                        <div class="badge badge-primary mt-3">
+                                            {{ $currentTopic->material->assignment->due_date }}</div>
+                                    @endif
+                                    @if ($nextTopic)
+                                        <input type="hidden" name="nextTopic" id="nextTopic"
+                                            value="{{ $nextTopic->slug }}">
+                                    @endif
+                                    <div class="mt-4">
+                                        <div class="divider">
+                                            Upload Tugas
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <x-input.input-label for="file" :value="__('Upload Tugas')" />
+                                        <x-input.input-file id="file" class="mt-1 w-full" type="file"
+                                            name="file" :value="old('file')" required autofocus autocomplete="file" />
+                                        <x-input.input-error :messages="$errors->get('file')" class="mt-2" />
+                                    </div>
                                 @endif
 
                                 @if ($nextTopic && $prevTopic)
@@ -178,6 +218,11 @@
                                                 onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
                                                 class="btn-sm text-base-100 block mt-6">Kirim
                                                 Jawaban</x-button.primary-button>
+                                        @elseif ($currentTopic->material->type == 'assignment')
+                                            <x-button.primary-button class="block mt-6" type="submit"
+                                                onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
+                                                class="btn-sm text-base-100 block mt-6">Kirim
+                                                Tugas</x-button.primary-button>
                                         @else
                                             <a href="{{ url('/course/' . $course->slug . '/read/' . $nextTopic->slug) }}"
                                                 class="block mt-6">
@@ -192,6 +237,11 @@
                                             onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
                                             class="btn-sm text-base-100 block mt-6">Kirim
                                             Jawaban</x-button.primary-button>
+                                    @elseif ($currentTopic->material->type == 'assignment')
+                                        <x-button.primary-button class="block mt-6" type="submit"
+                                            onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
+                                            class="btn-sm text-base-100 block mt-6">Kirim
+                                            Tugas</x-button.primary-button>
                                     @else
                                         <a href="{{ url('/course/' . $course->slug . '/read/' . $nextTopic->slug) }}"
                                             class="block mt-6">
@@ -213,6 +263,11 @@
                                                     onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
                                                     class="btn-sm text-base-100 block mt-6">Kirim
                                                     Jawaban</x-button.primary-button>
+                                            @elseif ($currentTopic->material->type == 'assignment')
+                                                <x-button.primary-button class="block mt-6" type="submit"
+                                                    onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
+                                                    class="btn-sm text-base-100 block mt-6">Kirim
+                                                    Tugas</x-button.primary-button>
                                             @else
                                                 <a href="javascript:void(0);"
                                                     onclick="markAsDone('{{ route('course.done', ['course' => $course->slug, 'topic' => $currentTopic->slug]) }}')"
@@ -230,6 +285,14 @@
                                                     onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
                                                     class="btn-sm text-base-100 block mt-6">Kirim
                                                     Jawaban</x-button.primary-button>
+                                            @elseif (
+                                                $currentTopic->material->type == 'assignment' &&
+                                                    !$currentTopic->material->assignment?->results
+                                                        ?->where('assignment_id', $currentTopic->material->assignment->id)->first())
+                                                <x-button.primary-button class="block mt-6" type="submit"
+                                                    onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
+                                                    class="btn-sm text-base-100 block mt-6">Kirim
+                                                    Tugas</x-button.primary-button>
                                             @else
                                                 <p class="block mt-6">Kamu telah menyelesaikan semua topik.</p>
                                             @endif

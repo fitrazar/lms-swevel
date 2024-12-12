@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('participant_id')->constrained()->onDelete('cascade');
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
             $table->enum('status', ['inactive', 'active'])->default('inactive');
+            $table->dateTime(column: 'activated_at')->nullable();
             $table->timestamps();
         });
     }

@@ -291,8 +291,6 @@ class CourseController extends Controller
         return response()->json(['success' => true]);
     }
 
-
-
     public function destroy(Course $course, Topic $topic)
     {
         session()->forget('quiz_start_time_' . $topic->material->quiz->id);
@@ -309,5 +307,15 @@ class CourseController extends Controller
         $result->delete();
 
         return redirect()->route('course.read', ['course' => $course->slug, 'topic' => $topic->slug])->with('success', 'Ujian diulangi!');
+    }
+
+    public function assignment(Request $request, Course $course, Topic $topic)
+    {
+        dd($request->all());
+    }
+
+    public function destroyAssignment(Course $course, Topic $topic)
+    {
+
     }
 }
