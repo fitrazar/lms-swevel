@@ -89,7 +89,6 @@
                         }]
                     },
                 });
-
                 new Chart($('#courseRate').get(0).getContext('2d'), {
                     type: 'doughnut',
                     data: {
@@ -100,7 +99,7 @@
                                 {{ $courseStatus['sedang_berlangsung'] }},
                                 {{ $courseStatus['selesai'] }}
                             ],
-                            backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', '#FFCE56'],
+                            backgroundColor: ['rgb(255, 99, 132)', '#FFCE56', 'rgb(54, 162, 235)'],
                             color: '#ffff',
                             hoverOffset: 4
                         }]
