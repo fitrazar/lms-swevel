@@ -50,18 +50,18 @@ class QuizController extends Controller
         return redirect()->route('dashboard.instructor.quiz.result')->with('success', 'Hasil Kuis Berhasil Dihapus!');
     }
 
-    public function feedback(Quiz $quiz)
+    public function feedback(Quiz $quiz, Result $result)
     {
-        return view('instructor.quiz.feedback', compact('quiz'));
+        return view('instructor.quiz.feedback', compact('quiz', 'result'));
     }
 
-    public function storeFeedback(Request $request, Quiz $quiz)
+    public function storeFeedback(Request $request, Quiz $quiz, Result $result)
     {
         $validatedData = $request->validate([
             'feedback' => 'required',
         ]);
 
-        Result::where('quiz_id', $quiz->id)->update([
+        Result::where('id', $result->id)->update([
             'feedback' => $validatedData['feedback'],
         ]);
 
@@ -73,22 +73,22 @@ class QuizController extends Controller
         return view('instructor.quiz.editFeedback', compact('quiz', 'result'));
     }
 
-    public function updateFeedback(Request $request, Quiz $quiz)
+    public function updateFeedback(Request $request, Quiz $quiz, Result $result)
     {
         $validatedData = $request->validate([
             'feedback' => 'required',
         ]);
 
-        Result::where('quiz_id', $quiz->id)->update([
+        Result::where('id', $result->id)->update([
             'feedback' => $validatedData['feedback'],
         ]);
 
         return redirect()->route('dashboard.instructor.quiz.result')->with('success', 'Catatan Berhasil Diupdate!');
     }
 
-    public function deleteFeedback(Quiz $quiz)
+    public function deleteFeedback(Quiz $quiz, Result $result)
     {
-        Result::where('quiz_id', $quiz->id)->update([
+        Result::where('id', $result->id)->update([
             'feedback' => null,
         ]);
 

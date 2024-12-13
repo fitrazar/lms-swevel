@@ -58,6 +58,14 @@
                             </ul>
                         </details>
                     </li>
+                    <li>
+                        <details>
+                            <summary>Tugas</summary>
+                            <ul class="p-2 z-10">
+                                <li><a href="{{ route('dashboard.instructor.assignment.index') }}">Hasil Tugas</a></li>
+                            </ul>
+                        </details>
+                    </li>
                 @endrole
                 @role('participant')
                     <li><a href="{{ route('dashboard.participant.quiz.index') }}">Kuis</a></li>

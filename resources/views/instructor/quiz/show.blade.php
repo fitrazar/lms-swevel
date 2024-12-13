@@ -12,13 +12,14 @@
                                 Edit Catatan
                             </x-button.info-button>
                         </a>
-                        <a href="{{ route('dashboard.instructor.quiz.deleteFeedback', $attempt->quiz->id) }}">
+                        <a
+                            href="{{ route('dashboard.instructor.quiz.deleteFeedback', [$attempt->quiz->id, $result->id]) }}">
                             <x-button.danger-button>
                                 Hapus Catatan
                             </x-button.danger-button>
                         </a>
                     @else
-                        <a href="{{ route('dashboard.instructor.quiz.feedback', $attempt->quiz->id) }}">
+                        <a href="{{ route('dashboard.instructor.quiz.feedback', [$attempt->quiz->id, $result->id]) }}">
                             <x-button.info-button>
                                 Tambah Catatan
                             </x-button.info-button>
