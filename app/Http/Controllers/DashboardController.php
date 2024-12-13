@@ -18,6 +18,19 @@ class DashboardController extends Controller
         if (!$isParticipant) {
             return view('dashboard', [
                 'activeCourses' => collect(),
+                'search' => null,
+                'filter' => null,
+                'totalInActive' => null,
+                'totalActive' => null,
+                'totalCompleted' => null,
+                'totalNotCompleted' => null,
+                'totalProgress' => null,
+                'courseStatus' => [
+                    'belum_dimulai' => null,
+                    'sedang_berlangsung' => null,
+                    'selesai' => null,
+                ],
+                'chartData' => ['labels' => null, 'data' => null],
             ]);
         }
 

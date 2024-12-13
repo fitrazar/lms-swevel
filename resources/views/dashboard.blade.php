@@ -3,6 +3,12 @@
 <x-app-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @hasrole('instructor')
+                <x-card.card-custom class="static glass mt-6">
+                    <p class="mb-2">Selamat Datang, {{ auth()->user()->instructor->name }}
+                    </p>
+                </x-card.card-custom>
+            @endrole
             @hasrole('participant')
                 <x-card.card-custom class="static glass mt-6">
                     <p class="mb-2">Selamat Datang, {{ auth()->user()->participant->name }}
@@ -48,7 +54,7 @@
     <x-slot name="script">
         <script>
             const role = "{{ auth()->user()->roles->pluck('name')[0] }}";
-            const enroll = "{{ auth()->user()->participant->enrolls->count() }}";
+            const enroll = "{{ auth()->user()->participant?->enrolls?->count() }}";
 
             if (role == 'participant' && enroll > 0) {
                 new Chart($('#courseStatus').get(0).getContext('2d'), {
@@ -112,11 +118,11 @@
                         indexAxis: 'y',
                     },
                     data: {
-                        labels: {!! json_encode($totalProgress->pluck('title')) !!},
+                        labels: {!! json_encode($totalProgress?->pluck('title')) !!},
                         datasets: [{
                             axis: 'y',
                             label: 'Progress (%)',
-                            data: {!! json_encode($totalProgress->pluck('progress')) !!},
+                            data: {!! json_encode($totalProgress?->pluck('progress')) !!},
                             backgroundColor: [
                                 'rgba(75, 192, 192, 0.2)',
                                 'rgba(54, 162, 235, 0.2)',
