@@ -41,15 +41,24 @@
                                 <div class="options">
                                     @foreach ($question->options as $option)
                                         <div class="flex items-center mb-2">
-                                            <input type="radio" class="radio checked:bg-blue-500" disabled
-                                                {{ in_array($option->id, $userAnswers) ? 'checked' : '' }}>
-                                            <span class="ml-3">{{ $option->option_text }}
+                                            <input type="radio"
+                                                class="radio checked:{{ in_array($option->id, $userAnswers) ? ($option->is_correct ? 'text-blue-500' : 'text-error') : '' }}"
+                                                disabled {{ in_array($option->id, $userAnswers) ? 'checked' : '' }}>
+                                            <span
+                                                class="ml-3 {{ in_array($option->id, $userAnswers) ? ($option->is_correct ? 'text-blue-500' : 'text-error') : '' }}">{{ $option->option_text }}
                                                 @if (in_array($option->id, $userAnswers))
                                                     <span class="text-sm font-bold">
                                                         ({{ $option->is_correct ? 'Benar' : 'Salah' }})
                                                     </span>
                                                 @endif
                                             </span>
+                                            {{-- <span class="ml-3">{{ $option->option_text }}
+                                                @if (in_array($option->id, $userAnswers))
+                                                    <span class="text-sm font-bold">
+                                                        ({{ $option->is_correct ? 'Benar' : 'Salah' }})
+                                                    </span>
+                                                @endif
+                                            </span> --}}
                                         </div>
                                     @endforeach
                                 </div>

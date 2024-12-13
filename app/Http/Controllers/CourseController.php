@@ -63,7 +63,7 @@ class CourseController extends Controller
     public function read(Course $course, Topic $topic)
     {
         $startTime = null;
-        if ($topic->material->type == 'quiz') {
+        if ($topic->material->type == 'quiz' && $topic->material->quiz) {
             // session()->forget('quiz_start_time_' . $topic->material->quiz->id);
             // session()->forget('exitCount');
             $questions = $topic->material->quiz->questions()->with('options')->get();

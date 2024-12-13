@@ -88,20 +88,12 @@
                                             class="btn-sm text-base-100">Kembali</x-button.primary-button>
                                     </a>
                                     @if (!auth()->user()->participant?->progress?->where('topic_id', $currentTopic->id)->where('is_completed', '1')->first())
-                                        @if (
-                                            $currentTopic->material->type == 'quiz' &&
-                                                $currentTopic->material->quiz &&
-                                                !$currentTopic->material->quiz?->quizAttempts
-                                                    ?->where('quiz_id', $currentTopic->material->quiz->id)->where('participant_id', auth()->user()->participant->id)->first())
+                                        @if ($currentTopic->material->type == 'quiz')
                                             <x-button.primary-button id="nextButton" class="block mt-6" type="submit"
                                                 onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
                                                 class="btn-sm text-base-100 block mt-6">Kirim
                                                 Jawaban</x-button.primary-button>
-                                        @elseif (
-                                            $currentTopic->material->type == 'assignment' &&
-                                                $currentTopic->material->assignment &&
-                                                !$currentTopic->material->assignment?->results
-                                                    ?->where('assignment_id', $currentTopic->material->assignment->id)->where('participant_id', auth()->user()->participant->id)->first())
+                                        @elseif ($currentTopic->material->type == 'assignment')
                                             <x-button.primary-button id="submitButton" class="block mt-6" type="submit"
                                                 onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
                                                 class="btn-sm text-base-100 block mt-6" disabled>Kirim
@@ -236,7 +228,7 @@
 
                                 @csrf
 
-                                @if ($currentTopic->material->type == 'quiz' && $currentTopic->material->quiz)
+                                @if ($currentTopic->material->type == 'quiz')
                                     <h2 class="font-semibold text-2xl mt-3">
                                         {{ $currentTopic->material->quiz->title }}
                                     </h2>
@@ -279,7 +271,7 @@
                                             </div>
                                         </div>
                                     @endforeach
-                                @elseif ($currentTopic->material->type == 'assignment' && $currentTopic->material->assignment)
+                                @elseif ($currentTopic->material->type == 'assignment')
                                     <h2 class="font-semibold text-2xl mt-3">
                                         {{ $currentTopic->material->assignment->title }}
                                     </h2>
@@ -323,8 +315,6 @@
                                             name="file" :value="old('file')" required autofocus autocomplete="file" />
                                         <x-input.input-error :messages="$errors->get('file')" class="mt-2" />
                                     </div>
-                                @elseif($currentTopic->material->type != 'video' && $currentTopic->material->type != 'document')
-                                    <x-alert.warning message="Materi ini belum ada." />
                                 @endif
 
                                 @if ($nextTopic && $prevTopic)
@@ -334,13 +324,13 @@
                                             <x-button.primary-button type="button"
                                                 class="btn-sm text-base-100">Kembali</x-button.primary-button>
                                         </a>
-                                        @if ($currentTopic->material->type == 'quiz' && $currentTopic->material->quiz)
+                                        @if ($currentTopic->material->type == 'quiz')
                                             <x-button.primary-button id="nextButton" class="block mt-6"
                                                 type="submit"
                                                 onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
                                                 class="btn-sm text-base-100 block mt-6">Kirim
                                                 Jawaban</x-button.primary-button>
-                                        @elseif ($currentTopic->material->type == 'assignment' && $currentTopic->material->assignment)
+                                        @elseif ($currentTopic->material->type == 'assignment')
                                             <x-button.primary-button id="submitButton" class="block mt-6"
                                                 type="submit"
                                                 onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
@@ -380,13 +370,13 @@
                                                 class="btn-sm text-base-100">Kembali</x-button.primary-button>
                                         </a>
                                         @if (!auth()->user()->participant?->progress?->where('topic_id', $currentTopic->id)->where('is_completed', '1')->first())
-                                            @if ($currentTopic->material->type == 'quiz' && $currentTopic->material->quiz)
+                                            @if ($currentTopic->material->type == 'quiz')
                                                 <x-button.primary-button id="nextButton" class="block mt-6"
                                                     type="submit"
                                                     onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
                                                     class="btn-sm text-base-100 block mt-6">Kirim
                                                     Jawaban</x-button.primary-button>
-                                            @elseif ($currentTopic->material->type == 'assignment' && $currentTopic->material->assignment)
+                                            @elseif ($currentTopic->material->type == 'assignment')
                                                 <x-button.primary-button id="submitButton" class="block mt-6"
                                                     type="submit"
                                                     onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"
@@ -403,7 +393,6 @@
                                         @else
                                             @if (
                                                 $currentTopic->material->type == 'quiz' &&
-                                                    $currentTopic->material->quiz &&
                                                     !$currentTopic->material->quiz?->quizAttempts
                                                         ?->where('quiz_id', $currentTopic->material->quiz->id)->where('participant_id', auth()->user()->participant->id)->first())
                                                 <x-button.primary-button id="nextButton" class="block mt-6"
@@ -414,7 +403,7 @@
                                             @elseif (
                                                 $currentTopic->material->type == 'assignment' &&
                                                     !$currentTopic->material->assignment?->results
-                                                        ?->where('assignment_id', $currentTopic->material->assignment->id)->where('participant_id', auth()->user()->participant->id)->first())
+                                                        ?->where('assignment_id', $currentTopic->material->assignment->id)->first())
                                                 <x-button.primary-button id="submitButton" class="block mt-6"
                                                     type="submit"
                                                     onclick="return confirm('Apakah Anda yakin ingin mengirim data?')"

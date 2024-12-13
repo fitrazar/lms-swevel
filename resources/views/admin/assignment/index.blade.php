@@ -139,8 +139,8 @@
                             searchable: true,
                         },
                         {
-                            data: 'due_date',
-                            name: 'due_date',
+                            data: 'deadline',
+                            name: 'deadline',
                             orderable: true,
                             searchable: true,
                         },

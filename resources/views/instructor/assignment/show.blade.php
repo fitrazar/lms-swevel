@@ -17,7 +17,7 @@
                             </x-button.danger-button>
                         </a>
                     @else
-                        <a href="{{ route('dashboard.instructor.quiz.create', $result->id) }}">
+                        <a href="{{ route('dashboard.instructor.assignment.create', $result->id) }}">
                             <x-button.info-button>
                                 Tambah Nilai
                             </x-button.info-button>
@@ -40,7 +40,7 @@
                         href="{{ url('/storage/assignments/' . $result->participant->id . '/' . $result->assignment->id . '/' . $result->file_url) }}">Download</a>
                 </div>
 
-                <a href="{{ route('dashboard.participant.assignment.index') }}" class="btn btn-primary mt-4">Kembali ke
+                <a href="{{ route('dashboard.intructor.assignment.index') }}" class="btn btn-primary mt-4">Kembali ke
                     Daftar
                     Tugas</a>
             </x-card.card-default>

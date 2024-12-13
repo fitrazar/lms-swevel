@@ -45,6 +45,7 @@ class AssignmentController extends Controller
         Result::where('id', $result->id)->update([
             'feedback' => $validatedData['feedback'],
             'score' => $validatedData['score'],
+            'graded_at' => now(),
         ]);
 
         return redirect()->route('dashboard.instructor.assignment.index')->with('success', 'Nilai Berhasil Ditambahkan!');
@@ -52,7 +53,7 @@ class AssignmentController extends Controller
 
     public function edit(Result $result)
     {
-        return view('instructor.assignment.edit', compact('quiz', 'result'));
+        return view('instructor.assignment.edit', compact('result'));
     }
 
     public function update(Request $request, Result $result)

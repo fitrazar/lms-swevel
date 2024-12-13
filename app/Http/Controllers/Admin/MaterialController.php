@@ -94,7 +94,7 @@ class MaterialController extends Controller
             'type' => 'required|in:document,video,assignment,quiz',
         ]);
 
-        $baseSlug = Str::slug($request->title);
+        $baseSlug = Str::slug($request->title_topic);
         $slug = $baseSlug;
 
         $existingCount = Topic::where('slug', 'like', $baseSlug . '%')->count();
@@ -157,7 +157,7 @@ class MaterialController extends Controller
 
 
         $topic = Topic::findOrFail($request->topic_id);
-        $baseSlug = Str::slug($request->title);
+        $baseSlug = Str::slug($request->title_topic);
         $slug = $baseSlug;
 
         $existingCount = Topic::where('slug', 'like', $baseSlug . '%')->where('id', '!=', $topic->id)->count();
@@ -202,7 +202,6 @@ class MaterialController extends Controller
             $courses = Instructor::with('courses.topics')
                 ->find(Auth::user()->instructor->id)
                 ->courses ?? collect();
-
         }
 
         return view('admin.material.createWithCourse', compact('course', 'courses'));
