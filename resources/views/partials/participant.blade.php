@@ -1,4 +1,5 @@
 <section class="py-16">
+    <h2 class="text-center py-4 font-bold md:text-2xl text-lg">Kursus Saya</h2>
     <div class="grid gap-4 bg-base-100 shadow rounded p-6">
         <x-form method="GET" action="{{ route('dashboard.index') }}" class="mb-8 relative">
             <div class="flex items-center space-x-4">
@@ -17,13 +18,17 @@
                     </select>
                 </div>
             </div>
-            <x-button.primary-button type="submit">Cari</x-button.primary-button>
+            <div class="flex justify-start items-center gap-6">
+                <x-button.primary-button type="submit">Cari</x-button.primary-button>
+                <a href="{{ route('dashboard.index') }}">
+                    <x-button.warning-button type="submit">Reset</x-button.warning-button>
+                </a>
+            </div>
         </x-form>
 
     </div>
 
     <div class="py-8 mt-1">
-        <h2 class="text-center py-4 font-bold md:text-2xl text-lg">Kursus Saya</h2>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 gap-6 p-4">
             {{-- @dd($activeCourses) --}}
             @forelse ($activeCourses as $course)

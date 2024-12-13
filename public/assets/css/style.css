@@ -1,38 +1,34 @@
 /* Menghindari split screen di perangkat mobile */
-@media (max-width: 768px) {
-    /* Membatasi ukuran maksimal viewport */
+/* @media (max-width: 768px) {
     body,
     html {
         overflow: hidden;
-        /* Tidak bisa scroll jika dibagi layar */
         height: 100%;
     }
 
     .main-content {
         height: 100vh;
-        /* Konten hanya mengisi satu layar penuh */
         overflow-y: auto;
     }
-}
+} */
 
 @media screen and (min-height: 100px) and (max-height: 555px) {
-    body,
+    /* body,
     html {
         overflow: hidden;
-        /* Tidak bisa scroll jika dibagi layar */
         height: 100%;
-    }
+    } */
 
     .split {
         display: block !important;
     }
 
-    .main-content {
+    /* .main-content {
         height: 100vh;
-        /* Konten hanya mengisi satu layar penuh */
+
         overflow-y: auto;
         display: none;
-    }
+    } */
 }
 
 .note-editor.note-airframe .note-editing-area,
@@ -61,4 +57,13 @@
 .editor {
     font-size: 18px;
     margin-left: 24.4rem;
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+    /* Tinggi disesuaikan otomatis */
+    max-width: 100%;
+    /* Pastikan tidak melebihi ukuran kontainer */
 }
