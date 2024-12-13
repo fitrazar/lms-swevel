@@ -88,18 +88,7 @@
                             {{ __('Dashboard') }}
                         </a>
                     </li>
-                    @hasrole('participant')
-                        <li>
-                            <a href="{{ route('dashboard.participant.quiz.index') }}">
-                                {{ __('Kuis') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('dashboard.participant.assignment.index') }}">
-                                {{ __('Tugas') }}
-                            </a>
-                        </li>
-                    @endrole
+
                     @hasanyrole('participant|instructor')
                         <li>
                             <a href="{{ route('dashboard.profile.edit') }}">
@@ -107,6 +96,25 @@
                             </a>
                         </li>
                     @endhasanyrole
+                    @hasrole('participant')
+                        <li>
+                            <details>
+                                <summary>Kursus</summary>
+                                <ul>
+                                    <li>
+                                        <a href="{{ route('dashboard.participant.quiz.index') }}">
+                                            {{ __('Kuis') }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('dashboard.participant.assignment.index') }}">
+                                            {{ __('Tugas') }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </details>
+                        </li>
+                    @endrole
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <li>
