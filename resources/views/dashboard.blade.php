@@ -4,6 +4,10 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @hasrole('participant')
+                <x-card.card-custom class="static glass mt-6">
+                    <p class="mb-2">Selamat Datang, {{ auth()->user()->participant->name }}
+                    </p>
+                </x-card.card-custom>
                 @if (auth()->user()->participant->enrolls->count() > 0)
                     <div class="grid grid-cols-1 md::grid-cols-2 lg:grid-cols-3 gap-5 mt-6">
                         <x-card.card-custom class="static glass chart-container">
