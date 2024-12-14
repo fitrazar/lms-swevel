@@ -14,29 +14,25 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $isParticipant = $user->roles->pluck('name')[0] == 'participant';
+        $isInstructor = $user->roles->pluck('name')[0] == 'instructor';
 
         if (!$isParticipant) {
+            if ($isInstructor) {
+                return $this->instructor();
+            }
             return view('dashboard', [
                 'activeCourses' => collect(),
-                'search' => null,
-                'filter' => null,
-                'totalInActive' => null,
-                'totalActive' => null,
-                'totalCompleted' => null,
-                'totalNotCompleted' => null,
-                'totalProgress' => null,
-                'courseStatus' => [
-                    'belum_dimulai' => null,
-                    'sedang_berlangsung' => null,
-                    'selesai' => null,
-                ],
-                'chartData' => ['labels' => null, 'data' => null],
             ]);
         }
 
+        return $this->participant($user, $request->input('search'), $request->input('filter'));
+
+
+    }
+
+    public function participant($user, $search, $filter)
+    {
         $participantId = $user->participant->id;
-        $search = $request->input('search');
-        $filter = $request->input('filter');
 
         // Eager load necessary relationships to minimize N+1 queries
         $coursesQuery = Course::query()
@@ -158,6 +154,96 @@ class DashboardController extends Controller
             'courseStatus',
             'chartData'
         ));
+    }
+
+    public function instructor()
+    {
+        $instructorId = Auth::user()->instructor->id;
+
+        $totalParticipantsPerCourse = Course::whereHas('instructors', function ($query) use ($instructorId) {
+            $query->where('instructor_id', $instructorId);
+        })
+            ->withCount('enrolls')
+            ->get(['id', 'name', 'enrolls_count']);
+
+        $chartDataParticipant = $totalParticipantsPerCourse->map(function ($course) {
+            return [
+                'label' => $course->title,
+                'value' => $course->enrolls_count,
+            ];
+        });
+        // dd($chartDataParticipant, $totalParticipantsPerCourse);
+
+        $totalParticipant = $totalParticipantsPerCourse->sum('enrolls_count');
+
+        // dd($totalParticipant);
+        $totalActive = Enrollment::where('status', 'active')
+            ->whereHas('course.instructors', function ($query) use ($instructorId) {
+                $query->where('instructor_id', $instructorId);
+            })->count();
+
+        $totalInactive = Enrollment::where('status', 'inactive')
+            ->whereHas('course.instructors', function ($query) use ($instructorId) {
+                $query->where('instructor_id', $instructorId);
+            })->count();
+
+        $completedPerMonth = DB::table('progress')
+            ->join('topics', 'progress.topic_id', '=', 'topics.id')
+            ->join('courses', 'topics.course_id', '=', 'courses.id')
+            ->join('course_instructors', 'courses.id', '=', 'course_instructors.course_id')
+            ->join('enrollments', 'courses.id', '=', 'enrollments.course_id')
+            ->selectRaw("DATE_FORMAT(progress.updated_at, '%Y-%m') as month, COUNT(DISTINCT enrollments.participant_id) as total")
+            ->where('progress.is_completed', 1)
+            ->whereYear('progress.updated_at', date('Y'))
+            ->where('course_instructors.instructor_id', $instructorId)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        // dd($completedPerMonth);
+
+        $labels = [];
+        $data = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $month = date('Y-m', mktime(0, 0, 0, $i, 1, date('Y')));
+            $labels[] = date('F', mktime(0, 0, 0, $i, 1));
+            $data[$month] = 0;
+        }
+
+        foreach ($completedPerMonth as $record) {
+            $data[$record->month] = $record->total;
+        }
+
+        $chartData = [
+            'labels' => $labels,
+            'data' => array_values($data),
+        ];
+
+        $topCourse = Course::whereHas('instructors', function ($query) use ($instructorId) {
+            $query->where('instructor_id', $instructorId);
+        })
+            ->withCount(['enrolls'])
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get()
+            ->map(function ($course) {
+                return [
+                    'title' => $course->title,
+                    'total_participants' => $course->enrolls_count,
+                ];
+            });
+
+        return view('dashboard', [
+            'activeCourses' => collect(),
+            'totalInActive' => $totalInactive,
+            'totalActive' => $totalActive,
+            'chartData' => $chartData,
+            'totalParticipant' => $totalParticipant,
+            'chartDataParticipant' => $chartDataParticipant,
+            'completedPerMonth' => $completedPerMonth,
+            'topCourse' => $topCourse
+
+        ]);
     }
 
 }

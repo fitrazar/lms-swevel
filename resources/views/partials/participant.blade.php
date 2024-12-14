@@ -1,3 +1,37 @@
+<x-card.card-custom class="static glass mt-6">
+    <p class="mb-2">Selamat Datang, {{ auth()->user()->participant->name }}
+    </p>
+</x-card.card-custom>
+@if (auth()->user()->participant->enrolls->count() > 0)
+    <div class="grid grid-cols-1 md::grid-cols-2 lg:grid-cols-3 gap-5 mt-6">
+        <x-card.card-custom class="static glass chart-container">
+            <h5 class="mb-2 text-lg font-bold tracking-tight">Kursus Aktif & Belum Aktif</h5>
+            <hr>
+            <canvas id="courseStatus"></canvas>
+        </x-card.card-custom>
+        <x-card.card-custom class="static glass chart-container">
+            <h5 class="mb-2 text-lg font-bold tracking-tight">Kursus Selesai & Belum Selesai</h5>
+            <hr>
+            <canvas id="courseCompleted"></canvas>
+        </x-card.card-custom>
+        <x-card.card-custom class="static glass chart-container">
+            <h5 class="mb-2 text-lg font-bold tracking-tight">Completion Rates</h5>
+            <hr>
+            <canvas id="courseRate"></canvas>
+        </x-card.card-custom>
+        <x-card.card-custom class="static glass chart-container col-span-3">
+            <h5 class="mb-2 text-lg font-bold tracking-tight">Progress Kursus</h5>
+            <hr>
+            <canvas id="courseProgress"></canvas>
+        </x-card.card-custom>
+        <x-card.card-custom class="static glass chart-container col-span-3">
+            <h5 class="mb-2 text-lg font-bold tracking-tight">Kursus Selesai</h5>
+            <hr>
+            <canvas id="courseDone"></canvas>
+        </x-card.card-custom>
+    </div>
+@endif
+
 <section class="py-16">
     <h2 class="text-center py-4 font-bold md:text-2xl text-lg">Kursus Saya</h2>
     <div class="grid gap-4 bg-base-100 shadow rounded p-6">
