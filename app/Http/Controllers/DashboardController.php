@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Quiz;
 use App\Models\Course;
+use App\Models\Material;
+use App\Models\Assignment;
 use App\Models\Enrollment;
+use App\Models\Instructor;
+use App\Models\Participant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -20,8 +25,36 @@ class DashboardController extends Controller
             if ($isInstructor) {
                 return $this->instructor();
             }
+
+            $totalParticipant = Participant::count();
+            $totalInstructor = Instructor::count();
+            $totalEnrollmentActive = Enrollment::where('status', 'active')->count();
+            $totalEnrollmentInActive = Enrollment::where('status', 'inactive')->count();
+            $totalMaterial = Material::count();
+            $totalAssignment = Assignment::count();
+            $totalQuiz = Quiz::count();
+            $totalCourse = Course::count();
+            $totalParticipantsPerCourse = Course::withCount('enrolls')
+                ->get(['id', 'name', 'enrolls_count']);
+
+            $chartDataParticipant = $totalParticipantsPerCourse->map(function ($course) {
+                return [
+                    'label' => $course->title,
+                    'value' => $course->enrolls_count,
+                ];
+            });
+
             return view('dashboard', [
                 'activeCourses' => collect(),
+                'totalParticipant' => $totalParticipant,
+                'totalInstructor' => $totalInstructor,
+                'totalEnrollmentActive' => $totalEnrollmentActive,
+                'totalEnrollmentInActive' => $totalEnrollmentInActive,
+                'totalMaterial' => $totalMaterial,
+                'totalQuiz' => $totalQuiz,
+                'totalAssignment' => $totalAssignment,
+                'totalCourse' => $totalCourse,
+                'chartDataParticipant' => $chartDataParticipant,
             ]);
         }
 

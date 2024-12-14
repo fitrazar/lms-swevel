@@ -3,6 +3,9 @@
 <x-app-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @hasrole('author')
+                @include('partials.author')
+            @endrole
             @hasrole('instructor')
                 @include('partials.instructor')
             @endrole
@@ -19,6 +22,9 @@
         @endrole
         @hasrole('instructor')
             @include('partials.scripts.instructor')
+        @endrole
+        @hasrole('author')
+            @include('partials.scripts.author')
         @endrole
     </x-slot>
 </x-app-layout>
