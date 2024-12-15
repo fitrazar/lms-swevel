@@ -81,6 +81,28 @@
         </ul>
     </div>
     <div class="navbar-end mr-10">
+        @auth
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                    <div class="avatar placeholder">
+                        <div class="bg-neutral text-neutral-content rounded-full w-8">
+                            <i class="fa-regular fa-bell"></i>
+                        </div>
+                    </div>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    @forelse (auth()->user()->notifications as $notification)
+                        <li>
+                            {{ $notification?->data['message'] ?? '-' }}
+                        </li>
+                    @empty
+                        <li>
+                            Tidak Ada Notifikasi
+                        </li>
+                    @endforelse
+                </ul>
+            </div>
+        @endauth
         <div class="dropdown dropdown-end">
             @auth
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">

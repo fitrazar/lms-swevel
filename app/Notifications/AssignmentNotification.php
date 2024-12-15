@@ -39,9 +39,10 @@ class AssignmentNotification extends Notification
         $course = $this->assignment->material->topic->course->slug;
         $topic = $this->assignment->material->topic->slug;
         return (new MailMessage)
+            ->greeting('Halo ' . $notifiable->email)
             ->subject('Reminder: Deadline Tugas')
             ->line('Tugas "' . $this->assignment->title . '" kurang dari 1 hari lagi.')
-            ->action('Lihat Tugas', url('/course/' . $course . '/read/' . $topic))
+            ->action('Lihat Tugas', route('course.read', [$course, $topic]))
             ->line('Ayo cepat submit.');
     }
 
@@ -61,7 +62,8 @@ class AssignmentNotification extends Notification
     {
 
         return [
-            'assignment' => $this->assignment['title']
+            'message' => 'Kamu belum mengumpulkan tugas nih',
+            'type' => 'assignment'
         ];
 
     }
