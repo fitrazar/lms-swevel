@@ -49,9 +49,9 @@ class MeetingController extends Controller
         } else {
             $meetings = Meeting::join('meeting_schedules', 'meetings.id', '=', 'meeting_schedules.meeting_id')
                 ->join('courses', 'meetings.course_id', '=', 'courses.id')
-                ->join('course_instructor', 'courses.id', '=', 'course_instructor.course_id')
+                ->join('course_instructors', 'courses.id', '=', 'course_instructors.course_id')
                 ->select('meetings.*', 'meeting_schedules.day', 'meeting_schedules.start_time')
-                ->where('course_instructor.instructor_id', Auth::user()->instructor->id)
+                ->where('course_instructors.instructor_id', Auth::user()->instructor->id)
                 ->where(function ($query) use ($search) {
                     if (!empty($search)) {
                         $query->where('meeting_schedules.day', 'like', '%' . $search . '%');
