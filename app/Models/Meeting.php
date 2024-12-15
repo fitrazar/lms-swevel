@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -25,10 +26,10 @@ class Meeting extends Model
     /**
      * Get all of the schedules for the Meeting
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function schedules(): HasMany
+    public function schedules(): HasOne
     {
-        return $this->hasMany(MeetingSchedule::class, 'meeting_id');
+        return $this->hasOne(MeetingSchedule::class, 'meeting_id');
     }
 }

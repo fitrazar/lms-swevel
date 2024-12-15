@@ -21,6 +21,7 @@
                                 <li><a href="{{ route('dashboard.material.index') }}">Data Materi</a></li>
                                 <li><a href="{{ route('dashboard.assignment.index') }}">Data Tugas</a></li>
                                 <li><a href="{{ route('dashboard.quiz.index') }}">Data Kuis</a></li>
+                                <li><a href="{{ route('dashboard.meet.index') }}">Data Meet</a></li>
                             </ul>
                         </details>
                     </li>
@@ -46,6 +47,7 @@
                                 <li><a href="{{ route('dashboard.material.index') }}">Data Materi</a></li>
                                 <li><a href="{{ route('dashboard.assignment.index') }}">Data Tugas</a></li>
                                 <li><a href="{{ route('dashboard.quiz.index') }}">Data Kuis</a></li>
+                                <li><a href="{{ route('dashboard.meet.index') }}">Data Meet</a></li>
                             </ul>
                         </details>
                     </li>
