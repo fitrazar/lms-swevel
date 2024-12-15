@@ -23,6 +23,7 @@ use App\Http\Controllers\Participant\QuizController as ParticipantQuizController
 use App\Http\Controllers\Instructor\CourseController as InstructorCourseController;
 use App\Http\Controllers\Instructor\AssignmentController as InstructorAssignmentController;
 use App\Http\Controllers\Participant\AssignmentController as ParticipantAssignmentController;
+use App\Http\Controllers\Participant\MeetingController as ParticipantMeetingController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/dheny', [DhenyController::class, 'index'])->name("view.dheny");
@@ -57,6 +58,7 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
 
         Route::get('/assignment', [ParticipantAssignmentController::class, 'index'])->name('assignment.index');
         Route::get('/assignment/{result}/result', [ParticipantAssignmentController::class, 'result'])->name('assignment.result');
+        Route::get('/meeting', [ParticipantMeetingController::class, 'index'])->name('meeting.index');
     });
 
     Route::middleware(['role:participant|instructor'])->group(function () {

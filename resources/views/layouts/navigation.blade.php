@@ -72,6 +72,7 @@
                 @role('participant')
                     <li><a href="{{ route('dashboard.participant.quiz.index') }}">Kuis</a></li>
                     <li><a href="{{ route('dashboard.participant.assignment.index') }}">Tugas</a></li>
+                    <li><a href="{{ route('dashboard.participant.meeting.index') }}">Meet</a></li>
                 @endrole
             @else
             @endauth
@@ -119,6 +120,11 @@
                                     <li>
                                         <a href="{{ route('dashboard.participant.assignment.index') }}">
                                             {{ __('Tugas') }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('dashboard.participant.meeting.index') }}">
+                                            {{ __('Meet') }}
                                         </a>
                                     </li>
                                 </ul>
