@@ -143,6 +143,7 @@ class DashboardController extends Controller
 
                 return [
                     'title' => $course->title,
+                    'slug' => $course->slug,
                     'progress' => round($progressValue),
                 ];
             });

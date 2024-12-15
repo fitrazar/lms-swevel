@@ -62,7 +62,7 @@
 
     </div>
 
-    <div class="py-8 mt-1">
+    <div class="py-8 mt-1" id="course">
         <div class="grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 gap-6 p-4">
             {{-- @dd($activeCourses) --}}
             @forelse ($activeCourses as $course)

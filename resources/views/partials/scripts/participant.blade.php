@@ -5,13 +5,21 @@
     if (role == 'participant' && enroll > 0) {
         new Chart($('#courseStatus').get(0).getContext('2d'), {
             type: 'doughnut',
+            options: {
+                onClick: function(event, elements) {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const filter = index === 0 ? 'active' : 'inactive';
+                        const url = `/dashboard?search=&filter=${filter}#course`;
+                        window.location.href = url;
+                    }
+                },
+            },
             data: {
                 labels: ['Aktif', 'Belum Aktif'],
                 datasets: [{
                     label: 'Kursus Aktif & Belum Aktif',
-                    data: [{{ $totalActive }},
-                        {{ $totalInActive }}
-                    ],
+                    data: [{{ $totalActive }}, {{ $totalInActive }}],
                     backgroundColor: [
                         'rgb(54, 162, 235)',
                         'rgb(255, 99, 132)',
@@ -20,8 +28,8 @@
                     hoverOffset: 4
                 }]
             },
-
         });
+
 
         new Chart($('#courseCompleted').get(0).getContext('2d'), {
             type: 'pie',
@@ -62,6 +70,14 @@
             type: 'bar',
             options: {
                 indexAxis: 'y',
+                onClick: function(event, elements) {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const courseId = {!! json_encode($totalProgress?->pluck('slug')) !!}[index];
+                        const url = `/course/${courseId}`;
+                        window.location.href = url;
+                    }
+                },
             },
             data: {
                 labels: {!! json_encode($totalProgress?->pluck('title')) !!},
@@ -89,6 +105,7 @@
                 }]
             },
         });
+
 
         new Chart($('#courseDone').get(0).getContext('2d'), {
             type: 'line',
