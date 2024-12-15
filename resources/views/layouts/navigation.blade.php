@@ -74,6 +74,7 @@
                     <li><a href="{{ route('dashboard.participant.assignment.index') }}">Tugas</a></li>
                     <li><a href="{{ route('dashboard.participant.meeting.index') }}">Meet</a></li>
                 @endrole
+                <li><a href="{{ route('messenger') }}">Pesan</a></li>
             @else
             @endauth
 
@@ -104,6 +105,11 @@
                         <li>
                             <a href="{{ route('dashboard.profile.edit') }}">
                                 {{ __('Profile') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('messenger') }}">
+                                {{ __('Pesan') }}
                             </a>
                         </li>
                     @endhasanyrole
