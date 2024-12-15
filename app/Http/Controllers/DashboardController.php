@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quiz;
+use App\Models\User;
 use App\Models\Course;
 use App\Models\Material;
 use App\Models\Assignment;
@@ -12,11 +13,16 @@ use App\Models\Participant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\AssignmentNotification;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+        // $user = User::find(1);
+        // $assignment = Assignment::find(1);
+
+        // $user->notify(new AssignmentNotification($assignment));
         $user = Auth::user();
         $isParticipant = $user->roles->pluck('name')[0] == 'participant';
         $isInstructor = $user->roles->pluck('name')[0] == 'instructor';
