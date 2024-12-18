@@ -71,6 +71,10 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::resource('/instructor', controller: InstructorController::class)->except('show');
         Route::resource('/course', AdminCourseController::class)->except('show');
         // Route::resource('/course', AdminCourseController::class)->except('show');
+
+        Route::post('/participant/export', [ParticipantController::class, 'export'])->name('participant.export');
+        Route::post('/instructor/export', [InstructorController::class, 'export'])->name('instructor.export');
+
         Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
         Route::post('/setting', [SettingController::class, 'store'])->name('setting.store');
     });
@@ -86,6 +90,7 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::put('/enrollment/{enrollment}', [EnrollmentController::class, 'update'])->name('enrollment.update');
         Route::post('/enrollment', [EnrollmentController::class, 'updateAll'])->name('enrollment.updateAll');
         Route::delete('/enrollment/{enrollment}', [EnrollmentController::class, 'destroy'])->name('enrollment.destroy');
+        Route::post('/enrollment/export', [EnrollmentController::class, 'export'])->name('enrollment.export');
 
         Route::resource('/question', QuestionController::class);
         Route::get('/question/{quiz}/create', [QuestionController::class, 'createWithQuiz'])->name('question.createWithQuiz');

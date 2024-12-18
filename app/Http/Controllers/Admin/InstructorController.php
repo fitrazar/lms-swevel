@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use App\Models\Instructor;
 use Illuminate\Http\Request;
+use App\Exports\InstructorExport;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -17,8 +19,11 @@ class InstructorController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $instructors = Instructor::all();
+            $instructors = Instructor::query();
 
+            if ($request->has('gender') && $request->input('gender') != 'All' && $request->input('gender') != NULL) {
+                $instructors->where('gender', $request->input('gender'));
+            }
 
             return DataTables::of($instructors)->make();
         }
@@ -129,5 +134,11 @@ class InstructorController extends Controller
             'success' => true,
             'message' => 'Mentor berhasil dihapus.'
         ]);
+    }
+
+    public function export(Request $request)
+    {
+        $gender = $request->genderExport;
+        return Excel::download(new InstructorExport($gender), 'Data Mentor.xlsx');
     }
 }

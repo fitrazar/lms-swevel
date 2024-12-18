@@ -18,7 +18,31 @@
                             </div>
                         </x-form>
                     @endrole
+
+
+                    <x-form id="export-form" action="{{ route('dashboard.enrollment.export') }}"
+                        enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" id="kursusExport" name="kursusExport" value="">
+                        <x-button.info-button id="export-button" type="submit">
+                            <i class="fa-regular fa-file-excel"></i>
+                            Export
+                        </x-button.info-button>
+                    </x-form>
                 </div>
+
+                <div class="mt-4">
+                    <x-input.select-input id="kursus" class="mt-1 w-full" type="text" name="kursus">
+                        <option value="" disabled selected>Pilih Kursus</option>
+                        <option value="All">Semua
+                        </option>
+                        @foreach ($courses as $course)
+                            <option value="{{ $course->id }}">{{ $course->title }}
+                            </option>
+                        @endforeach
+                    </x-input.select-input>
+                </div>
+
                 <div class="relative overflow-x-auto mt-5">
                     <table id="enrollments" class="table">
                         <thead>
@@ -47,7 +71,11 @@
     <x-slot name="script">
         <script>
             $(document).ready(function() {
+                $('#export-button').on('click', function() {
+                    let kursus = $('#kursus').val();
 
+                    $('#export-form #kursusExport').val(kursus);
+                });
 
                 let dataTable = $('#enrollments').DataTable({
                     buttons: [
@@ -59,7 +87,12 @@
                         return: true
                     },
                     serverSide: true,
-                    ajax: '{{ url()->current() }}',
+                    ajax: {
+                        url: '{{ route('dashboard.enrollment.index') }}',
+                        data: function(d) {
+                            d.kursus = $('#kursus').val();
+                        }
+                    },
                     columns: [{
                             data: null,
                             name: 'no',
@@ -121,6 +154,9 @@
                             }
                         },
                     ]
+                });
+                $('#kursus').change(function() {
+                    dataTable.ajax.reload();
                 });
             });
         </script>

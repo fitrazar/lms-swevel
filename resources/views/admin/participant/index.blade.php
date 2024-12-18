@@ -17,6 +17,28 @@
                         </x-button.primary-button>
                     </a>
 
+                    <x-form id="export-form" action="{{ route('dashboard.admin.participant.export') }}"
+                        enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" id="genderExport" name="genderExport" value="">
+                        <x-button.info-button id="export-button" type="submit">
+                            <i class="fa-regular fa-file-excel"></i>
+                            Export
+                        </x-button.info-button>
+                    </x-form>
+
+                </div>
+
+                <div class="mt-4">
+                    <x-input.select-input id="gender" class="mt-1 w-full" type="text" name="gender">
+                        <option value="" disabled selected>Pilih Jenis Kelamin</option>
+                        <option value="All">Semua
+                        </option>
+                        <option value="Laki - Laki">Laki - Laki
+                        </option>
+                        <option value="Perempuan">Perempuan
+                        </option>
+                    </x-input.select-input>
                 </div>
                 <div class="relative overflow-x-auto mt-5">
                     <table id="participants" class="table">
@@ -93,11 +115,14 @@
             }
 
             $(document).ready(function() {
+                $('#export-button').on('click', function() {
+                    let gender = $('#gender').val();
 
+                    $('#export-form #genderExport').val(gender);
+                });
 
                 let dataTable = $('#participants').DataTable({
                     buttons: [
-                        // 'copy', 'excel', 'csv', 'pdf', 'print',
                         'colvis'
                     ],
                     processing: true,
@@ -107,6 +132,9 @@
                     serverSide: true,
                     ajax: {
                         url: '{{ route('dashboard.admin.participant.index') }}',
+                        data: function(d) {
+                            d.gender = $('#gender').val();
+                        }
                     },
                     columns: [{
                             data: null,
@@ -148,6 +176,9 @@
                             }
                         },
                     ]
+                });
+                $('#gender').change(function() {
+                    dataTable.ajax.reload();
                 });
             });
         </script>

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use App\Models\Participant;
 use Illuminate\Http\Request;
+use App\Exports\ParticipantExport;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -17,8 +19,11 @@ class ParticipantController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $participants = Participant::all();
+            $participants = Participant::query();
 
+            if ($request->has('gender') && $request->input('gender') != 'All' && $request->input('gender') != NULL) {
+                $participants->where('gender', $request->input('gender'));
+            }
 
             return DataTables::of($participants)->make();
         }
@@ -129,5 +134,11 @@ class ParticipantController extends Controller
             'success' => true,
             'message' => 'Peserta berhasil dihapus.'
         ]);
+    }
+
+    public function export(Request $request)
+    {
+        $gender = $request->genderExport;
+        return Excel::download(new ParticipantExport($gender), 'Data Peserta.xlsx');
     }
 }
