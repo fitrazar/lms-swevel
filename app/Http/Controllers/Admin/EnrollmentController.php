@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
+use App\Notifications\ParticipantEnrollmentNotification;
 
 class EnrollmentController extends Controller
 {
@@ -43,8 +44,9 @@ class EnrollmentController extends Controller
     {
         $enrollment->status = 'active';
         $enrollment->activated_at = now();
-        ;
+
         $enrollment->save();
+        $enrollment->participant->user->notify(new ParticipantEnrollmentNotification($enrollment, 'Terdaftar', 'Kamu telah terdaftar di kursus ' . $enrollment->course->title));
 
         return redirect()->route('dashboard.enrollment.index')->with('success', 'Data Berhasil Diupdate');
     }
@@ -58,6 +60,7 @@ class EnrollmentController extends Controller
 
     public function destroy(Enrollment $enrollment)
     {
+        $enrollment->participant->user->notify(new ParticipantEnrollmentNotification($enrollment, 'Ditolak', 'Kamu ditolak di kursus ' . $enrollment->course->title));
         Enrollment::destroy($enrollment->id);
 
         return redirect()->route('dashboard.enrollment.index')->with('success', 'Data Berhasil Dihapus!');

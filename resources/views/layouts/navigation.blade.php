@@ -91,15 +91,31 @@
                     </div>
                 </div>
                 <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                    @forelse (auth()->user()->notifications as $notification)
-                        <li>
-                            {{ $notification?->data['message'] ?? '-' }}
+                    @forelse (auth()->user()->notifications->take(5) as $notification)
+                        <li class="mb-3">
+                            <a href="{{ $notification?->data['link'] }}" class="flex flex-col">
+                                <div class="font-bold">
+                                    {{ $notification?->data['title'] ?? '-' }}
+                                </div>
+                                <div class="text-xs text-center">
+                                    {{ $notification?->data['message'] ?? '-' }}
+                                </div>
+                            </a>
                         </li>
+                        <hr>
                     @empty
-                        <li>
-                            Tidak Ada Notifikasi
+                        <li class="mb-3">
+                            <a href="#" class="flex flex-col">
+                                Tidak Ada Notifikasi
+                            </a>
                         </li>
+                        <hr>
                     @endforelse
+                    <li class="flex mt-3 justify-center items-center">
+                        <a href="{{ route('dashboard.index') }}">
+                            {{ __('Lihat Semua') }}
+                        </a>
+                    </li>
                 </ul>
             </div>
         @endauth

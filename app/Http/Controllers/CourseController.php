@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Topic;
 use App\Models\Course;
 use App\Models\Option;
@@ -10,12 +11,14 @@ use App\Models\Result;
 use App\Models\Progress;
 use App\Models\Question;
 use App\Models\Enrollment;
+use App\Models\Instructor;
 use App\Models\QuizAttempt;
 use Illuminate\Http\Request;
 use App\Models\QuestionAnswer;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Constraint\Count;
+use App\Notifications\EnrollmentNotification;
 
 class CourseController extends Controller
 {
@@ -51,11 +54,25 @@ class CourseController extends Controller
             'agreement' => 'required',
         ]);
 
+        $course = $request->course_id;
 
-        Enrollment::create([
+        $enrollment = Enrollment::create([
             'participant_id' => Auth::user()->participant->id,
-            'course_id' => $request->course_id,
+            'course_id' => $course,
         ]);
+
+
+        $mentors = User::whereHas('instructor', function ($query) use ($course) {
+            $query->whereHas('courses', function ($query) use ($course) {
+                $query->where('course_id', $course);
+            });
+        })->get();
+        $admin = User::role('author')->get();
+        $users = $mentors->merge($admin);
+
+        foreach ($users as $user) {
+            $user->notify(new EnrollmentNotification($enrollment));
+        }
 
         return redirect()->back()->with('success', 'Berhasil Melakukan Pendaftaran.');
     }

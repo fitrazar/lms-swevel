@@ -7,18 +7,19 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class AssignmentNotification extends Notification
+class ParticipantEnrollmentNotification extends Notification
 {
     use Queueable;
 
-    private $assignment;
-
+    private $enrollment, $title, $message;
     /**
      * Create a new notification instance.
      */
-    public function __construct($assignment)
+    public function __construct($enrollment, $title, $message)
     {
-        $this->assignment = $assignment;
+        $this->enrollment = $enrollment;
+        $this->title = $title;
+        $this->message = $message;
     }
 
     /**
@@ -28,7 +29,7 @@ class AssignmentNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database'];
+        return ['database'];
     }
 
     /**
@@ -36,14 +37,10 @@ class AssignmentNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $course = $this->assignment->material->topic->course->slug;
-        $topic = $this->assignment->material->topic->slug;
         return (new MailMessage)
-            ->greeting('Halo ' . $notifiable->email)
-            ->subject('Reminder: Deadline Tugas')
-            ->line('Tugas "' . $this->assignment->title . '" kurang dari 1 hari lagi.')
-            ->action('Lihat Tugas', route('course.read', [$course, $topic]))
-            ->line('Ayo cepat submit.');
+            ->line('The introduction to the notification.')
+            ->action('Notification Action', url('/'))
+            ->line('Thank you for using our application!');
     }
 
     /**
@@ -60,17 +57,15 @@ class AssignmentNotification extends Notification
 
     public function toDatabase(object $notifiable)
     {
-
-        $course = $this->assignment->material->topic->course->slug;
-        $topic = $this->assignment->material->topic->slug;
+        $course = $this->enrollment->course->slug;
+        $topic = $this->enrollment->course->topics[0]->slug;
         return [
-            'id' => $this->assignment->id,
+            'id' => $this->enrollment->id,
             'participant_id' => $notifiable->participant->id,
-            'title' => 'Deadline Tugas',
-            'message' => 'Kamu belum mengumpulkan tugas nih',
-            'type' => 'assignment',
+            'title' => $this->title,
+            'message' => $this->message,
+            'type' => 'enrollment',
             'link' => route('course.read', [$course, $topic]),
         ];
-
     }
 }
