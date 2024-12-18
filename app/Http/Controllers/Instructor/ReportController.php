@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Instructor;
 
 use App\Models\Course;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ParticipantCourseExport;
 use Yajra\DataTables\Facades\DataTables;
+use App\Exports\ParticipantCompleteExport;
 use App\Exports\ParticipantProgressExport;
 
 class ReportController extends Controller
@@ -94,6 +96,49 @@ class ReportController extends Controller
         return view('instructor.report.progress');
     }
 
+    public function complete(Request $request)
+    {
+        $instructorId = Auth::user()->instructor->id;
+        if ($request->ajax()) {
+            $completedPerMonth = DB::table('progress')
+                ->join('topics', 'progress.topic_id', '=', 'topics.id')
+                ->join('courses', 'topics.course_id', '=', 'courses.id')
+                ->join('course_instructors', 'courses.id', '=', 'course_instructors.course_id')
+                ->join('enrollments', 'courses.id', '=', 'enrollments.course_id')
+                ->selectRaw("DATE_FORMAT(progress.updated_at, '%Y-%m') as month, COUNT(DISTINCT enrollments.participant_id) as total")
+                ->where('progress.is_completed', 1)
+                ->whereYear('progress.updated_at', date('Y'))
+                ->where('course_instructors.instructor_id', $instructorId)
+                ->groupBy('month')
+                ->orderBy('month', 'asc')
+                ->get();
+
+            $data = [];
+            for ($i = 1; $i <= 12; $i++) {
+                $month = date('Y-m', mktime(0, 0, 0, $i, 1, date('Y')));
+                $data[$month] = 0;
+            }
+
+            foreach ($completedPerMonth as $record) {
+                $data[$record->month] = $record->total;
+            }
+
+            $tableData = [];
+            foreach ($data as $month => $total) {
+                $tableData[] = [
+                    'month' => $month,
+                    'month_name' => date('F', strtotime($month . '-01')),
+                    'total' => $total,
+                ];
+            }
+
+            return DataTables::of($tableData)->make();
+        }
+
+
+        return view('instructor.report.complete');
+    }
+
 
     public function exportProgress(Request $request)
     {
@@ -103,5 +148,10 @@ class ReportController extends Controller
     public function exportCourse(Request $request)
     {
         return Excel::download(new ParticipantCourseExport(), 'Laporan Kursus.xlsx');
+    }
+
+    public function exportComplete(Request $request)
+    {
+        return Excel::download(new ParticipantCompleteExport(), 'Laporan Kursus Selesai.xlsx');
     }
 }
