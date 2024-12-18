@@ -68,6 +68,17 @@
                             </ul>
                         </details>
                     </li>
+                    <li>
+                        <details>
+                            <summary>Laporan</summary>
+                            <ul class="p-2 z-10">
+                                <li><a href="{{ route('dashboard.instructor.report.course') }}">Laporan Kursus</a></li>
+                                <li><a href="{{ route('dashboard.instructor.report.progress') }}">Laporan Progress</a></li>
+                                <li><a href="{{ route('dashboard.instructor.report.complete') }}">Laporan Kursus Selesai</a>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
                 @endrole
                 @role('participant')
                     <li><a href="{{ route('dashboard.participant.quiz.index') }}">Kuis</a></li>

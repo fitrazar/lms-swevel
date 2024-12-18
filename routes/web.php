@@ -16,13 +16,14 @@ use App\Http\Controllers\Admin\AssignmentController;
 use App\Http\Controllers\Admin\EnrollmentController;
 use App\Http\Controllers\Admin\InstructorController;
 use App\Http\Controllers\Admin\ParticipantController;
+use App\Http\Controllers\Instructor\ReportController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Instructor\QuizController as InstructorQuizController;
 use App\Http\Controllers\Participant\QuizController as ParticipantQuizController;
 use App\Http\Controllers\Instructor\CourseController as InstructorCourseController;
+use App\Http\Controllers\Participant\MeetingController as ParticipantMeetingController;
 use App\Http\Controllers\Instructor\AssignmentController as InstructorAssignmentController;
 use App\Http\Controllers\Participant\AssignmentController as ParticipantAssignmentController;
-use App\Http\Controllers\Participant\MeetingController as ParticipantMeetingController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/dheny', [DhenyController::class, 'index'])->name("view.dheny");
@@ -97,6 +98,15 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
     });
 
     Route::name('instructor.')->prefix('/instructor')->middleware(['role:instructor'])->group(function () {
+        Route::get('/report/progress', [ReportController::class, 'progress'])->name('report.progress');
+        Route::post('/report/progress', [ReportController::class, 'exportProgress'])->name('report.exportProgress');
+
+        Route::get('/report/complete', [ReportController::class, 'complete'])->name('report.complete');
+        Route::post('/report/complete', [ReportController::class, 'exportComplete'])->name('report.exportComplete');
+
+        Route::get('/report/course', [ReportController::class, 'course'])->name('report.course');
+        Route::post('/report/course', [ReportController::class, 'exportCourse'])->name('report.exportCourse');
+
         Route::get('/course', [InstructorCourseController::class, 'index'])->name('course.index');
         Route::get('/quiz/result', [InstructorQuizController::class, 'index'])->name('quiz.result');
         Route::get('/quiz/{attempt}/show', [InstructorQuizController::class, 'show'])->name('quiz.show');
