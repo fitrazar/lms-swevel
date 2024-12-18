@@ -1,34 +1,22 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Http\Middleware;
 
+use Closure;
 use Carbon\Carbon;
-use App\Models\Assignment;
 use App\Models\Enrollment;
-use Illuminate\Console\Command;
+use Illuminate\Http\Request;
 use App\Notifications\AssignmentNotification;
+use Symfony\Component\HttpFoundation\Response;
 
-class SendDeadlineNotifications extends Command
+class DeadlineMiddleware
 {
     /**
-     * The name and signature of the console command.
+     * Handle an incoming request.
      *
-     * @var string
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    protected $signature = 'assignment:send-deadline-notifications';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Send reminder notifications for assignments that are due in less than 1 day';
-
-    /**
-     * Execute the console command.
-     */
-
-    public function handle()
+    public function handle(Request $request, Closure $next): Response
     {
         $enrollments = Enrollment::where('status', 'active')
             ->get();
@@ -59,7 +47,6 @@ class SendDeadlineNotifications extends Command
             }
         }
 
-        $this->info('Deadline notifications sent.');
+        return $next($request);
     }
-
 }

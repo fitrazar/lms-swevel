@@ -61,9 +61,15 @@ class AssignmentNotification extends Notification
     public function toDatabase(object $notifiable)
     {
 
+		$course = $this->assignment->material->topic->course->slug;
+        $topic = $this->assignment->material->topic->slug;
         return [
+            'id' => $this->assignment->id,
+            'participant_id' => $notifiable->participant->id,
+            'title' => 'Deadline Tugas',
             'message' => 'Kamu belum mengumpulkan tugas nih',
-            'type' => 'assignment'
+            'type' => 'assignment',
+            'link' => route('course.read', [$course, $topic]),
         ];
 
     }

@@ -16,7 +16,6 @@ use App\Http\Controllers\Admin\AssignmentController;
 use App\Http\Controllers\Admin\EnrollmentController;
 use App\Http\Controllers\Admin\InstructorController;
 use App\Http\Controllers\Admin\ParticipantController;
-use App\Http\Controllers\Participant\ParticipantControllerUser;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Instructor\QuizController as InstructorQuizController;
 use App\Http\Controllers\Participant\QuizController as ParticipantQuizController;
