@@ -623,7 +623,7 @@
                                 clearInterval(interval);
                                 minuteSpan?.style.setProperty('--value', 0);
                                 secondSpan?.style.setProperty('--value', 0);
-                                document.getElementById('nextButton').disabled = true; // Disable submit button
+                                //document.getElementById('nextButton').disabled = true; // Disable submit button
                                 alert("Waktu habis!");
                             } else {
                                 const minutes = Math.floor(remaining / (1000 * 60));

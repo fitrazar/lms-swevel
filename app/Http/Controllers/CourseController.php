@@ -207,7 +207,8 @@ class CourseController extends Controller
 
         $quizStartTime = session()->get('quiz_start_time_' . $topic->material->quiz->id);
         $quizDurationInSeconds = $topic->material->quiz->duration * 60;
-        $attemptTime = now()->diffInSeconds($quizStartTime);
+        // $attemptTime = now()->diffInSeconds($quizStartTime);
+        $attemptTime = $quizStartTime->diffInSeconds(now());
 
         $latePenaltyPoints = 0;
 

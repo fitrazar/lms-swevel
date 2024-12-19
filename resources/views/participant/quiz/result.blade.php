@@ -9,7 +9,7 @@
                 <p>Nilai Akhir: {{ $attempt->score }}</p>
                 <p>Tanggal: {{ $attempt->attempt_date }}</p>
                 @if ($attempt->is_late)
-                    <p>Telat: {{ $attempt->difference }}</p>
+                    <p>Telat: {{ $attempt->difference }} Menit</p>
                 @endif
                 @if ($result->feedback)
                     <p>Catatan Mentor : {{ $result->feedback }}</p>
