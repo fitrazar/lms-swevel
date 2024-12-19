@@ -123,7 +123,7 @@
                         <hr>
                     @endforelse
                     <li class="flex mt-3 justify-center items-center">
-                        <a href="{{ route('dashboard.index') }}">
+                        <a href="{{ route('dashboard.notification.index') }}">
                             {{ __('Lihat Semua') }}
                         </a>
                     </li>

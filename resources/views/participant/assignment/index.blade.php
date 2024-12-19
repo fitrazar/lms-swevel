@@ -90,8 +90,6 @@
                             orderable: false,
                             searchable: false,
                             render: function(data, type, full, meta) {
-
-
                                 return `
                                     <div class="flex flex-wrap justify-start gap-4">
                                         <a href="{{ url('/dashboard/participant/assignment/${full.id}/result') }}">

@@ -7,6 +7,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\QuizController;
 use App\Http\Controllers\Admin\MeetingController;
 use App\Http\Controllers\Admin\SettingController;
@@ -50,7 +51,8 @@ Route::middleware(['auth', 'role:participant'])->group(function () {
 Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(function () {
 
     Route::get('/', [DashboardController::class, 'index'])->name('index');
-
+	Route::get('/notification', [NotificationController::class, 'index'])->name('notification.index');
+	
     Route::name('participant.')->prefix('/participant')->middleware(['role:participant'])->group(function () {
         // Route::get('/my', [DashboardController::class, 'participant'])->name('index');
         Route::get('/quiz', [ParticipantQuizController::class, 'index'])->name('quiz.index');
