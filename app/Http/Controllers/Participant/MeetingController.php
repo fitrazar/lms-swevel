@@ -29,6 +29,7 @@ class MeetingController extends Controller
             ->join('enrollments', 'courses.id', '=', 'enrollments.course_id')
             ->select('meetings.*', 'meeting_schedules.day', 'meeting_schedules.start_time')
             ->where('enrollments.participant_id', Auth::user()->participant->id)
+            ->where('enrollments.status', 'active')
             ->where(function ($query) use ($search) {
                 if (!empty($search)) {
                     $query->where('meeting_schedules.day', 'like', '%' . $search . '%');
