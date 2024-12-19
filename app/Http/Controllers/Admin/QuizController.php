@@ -133,22 +133,22 @@ class QuizController extends Controller
     public function destroy(Quiz $quiz)
     {
         Quiz::destroy($quiz->id);
-        if ($quiz->results) {
-            foreach ($quiz->results as $result) {
+        if ($quiz?->results) {
+            foreach ($quiz?->results as $result) {
                 Result::destroy($result->id);
             }
         }
-        if ($quiz->questions) {
-            foreach ($quiz->questions as $question) {
+        if ($quiz?->questions) {
+            foreach ($quiz?->questions as $question) {
                 Question::destroy($question->id);
-                if ($question->options) {
-                    foreach ($question->options as $option) {
+                if ($question?->options) {
+                    foreach ($question?->options as $option) {
                         Option::destroy($option->id);
                     }
                 }
             }
-            if ($quiz->quizAttempts) {
-                foreach ($quiz->attempts as $attempt) {
+            if ($quiz?->quizAttempts) {
+                foreach ($quiz?->attempts as $attempt) {
                     QuizAttempt::destroy($attempt->id);
                     QuestionAnswer::where('quiz_attempt_id', $attempt->id)->delete();
                 }

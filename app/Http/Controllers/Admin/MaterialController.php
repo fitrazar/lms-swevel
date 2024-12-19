@@ -193,37 +193,37 @@ class MaterialController extends Controller
     {
         Material::destroy($material->id);
         Topic::destroy($material->topic->id);
-        if ($material->quiz) {
-            if ($material->quiz->results) {
-                foreach ($material->quiz->results as $result) {
+        if ($material?->quiz) {
+            if ($material?->quiz?->results) {
+                foreach ($material?->quiz?->results as $result) {
                     Result::destroy($result->id);
                 }
             }
-            if ($material->quiz->questions) {
-                foreach ($material->quiz->questions as $question) {
+            if ($material?->quiz?->questions) {
+                foreach ($material?->quiz?->questions as $question) {
                     Question::destroy($question->id);
-                    if ($question->options) {
-                        foreach ($question->options as $option) {
+                    if ($question?->options) {
+                        foreach ($question?->options as $option) {
                             Option::destroy($option->id);
                         }
                     }
                 }
-                if ($material->quiz->quizAttempts) {
-                    foreach ($material->quiz->attempts as $attempt) {
+                if ($material?->quiz?->quizAttempts) {
+                    foreach ($material?->quiz?->attempts as $attempt) {
                         QuizAttempt::destroy($attempt->id);
                         QuestionAnswer::where('quiz_attempt_id', $attempt->id)->delete();
                     }
                 }
             }
-            Quiz::destroy($material->quiz->id);
+            Quiz::destroy($material?->quiz?->id);
         }
-        if ($material->assignment) {
-            if ($material->assignment->results) {
-                foreach ($material->assignment->results as $result) {
+        if ($material?->assignment) {
+            if ($material?->assignment?->results) {
+                foreach ($material?->assignment?->results as $result) {
                     Result::destroy($result->id);
                 }
             }
-            Assignment::destroy($material->assignment->id);
+            Assignment::destroy($material?->assignment?->id);
         }
 
         return response()->json([
