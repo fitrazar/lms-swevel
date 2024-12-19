@@ -93,11 +93,18 @@
 
 
                                 return `
+                                    <div class="flex flex-wrap justify-start">
                                         <a href="{{ url('/dashboard/participant/assignment/${full.id}/result') }}">
                                             <x-button.secondary-button type="button" class="btn-sm text-white">
                                                 <i class="fa-solid fa-eye"></i> Lihat Nilai
                                             </x-button.secondary-button>
                                         </a>
+                                        <a href="{{ url('/course/${full.assignment.material.topic.course.slug}/read/${full.assignment.material.topic.slug}') }}">
+                                            <x-button.primary-button type="button" class="btn-sm text-white">
+                                                <i class="fa-solid fa-eye"></i> Lihat Kuis
+                                            </x-button.primary-button>
+                                        </a>
+                                    </div>
                                     `;
                             }
 

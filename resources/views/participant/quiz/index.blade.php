@@ -87,11 +87,18 @@
                             searchable: false,
                             render: function(data, type, full, meta) {
                                 return `
+                                    <div class="flex flex-wrap justify-start">
                                         <a href="{{ url('/dashboard/participant/quiz/${full.id}/result') }}">
                                             <x-button.secondary-button type="button" class="btn-sm text-white">
                                                 <i class="fa-solid fa-eye"></i> Lihat Nilai
                                             </x-button.secondary-button>
                                         </a>
+                                        <a href="{{ url('/course/${full.material.topic.course.slug}/read/${full.material.topic.slug}') }}">
+                                            <x-button.primary-button type="button" class="btn-sm text-white">
+                                                <i class="fa-solid fa-eye"></i> Lihat Kuis
+                                            </x-button.primary-button>
+                                        </a>
+                                    </div>
                                     `;
                             }
 

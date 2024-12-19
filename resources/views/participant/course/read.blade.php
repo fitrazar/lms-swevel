@@ -52,6 +52,12 @@
                                 $currentTopic->material->quiz?->quizAttempts
                                     ?->where('participant_id', auth()->user()->participant->id)->first())
                             <x-alert.warning message="Kamu sudah menjawab quiz ini." />
+                            <a
+                                href="{{ route('dashboard.participant.quiz.result', $currentTopic->material->quiz->id) }}">
+                                <x-button.success-button type="button" class="btn-sm text-white">
+                                    <i class="fa-solid fa-eye"></i> Lihat Nilai
+                                </x-button.success-button>
+                            </a>
                             <x-form
                                 action="{{ route('course.destroy', ['course' => $course->slug, 'topic' => $currentTopic->slug]) }}"
                                 style="display: inline;">
@@ -143,6 +149,16 @@
                                 $currentTopic->material->assignment?->results
                                     ?->where('assignment_id', $currentTopic->material->assignment->id)->where('participant_id', auth()->user()->participant->id)->first())
                             <x-alert.warning message="Kamu sudah mengunggah tugas ini." />
+                            <a
+                                href="{{ route(
+                                    'dashboard.participant.assignment.result',
+                                    $currentTopic->material->assignment?->results
+                                        ?->where('assignment_id', $currentTopic->material->assignment->id)->where('participant_id', auth()->user()->participant->id)->first()->id,
+                                ) }}">
+                                <x-button.secondary-button type="button" class="btn-sm text-white">
+                                    <i class="fa-solid fa-eye"></i> Lihat Hasil
+                                </x-button.secondary-button>
+                            </a>
                             <x-form
                                 action="{{ route('course.destroyAssignment', ['course' => $course->slug, 'topic' => $currentTopic->slug]) }}"
                                 style="display: inline;">
