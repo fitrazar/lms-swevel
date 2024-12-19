@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('participant_id')->constrained()->onDelete('cascade');
             $table->foreignId('topic_id')->constrained()->onDelete('cascade');
             $table->tinyInteger('is_completed');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

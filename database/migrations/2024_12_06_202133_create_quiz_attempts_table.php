@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->decimal(column: 'score', total: 5, places: 2)->nullable();
             $table->boolean(column: 'is_late')->nullable();
             $table->string(column: 'difference')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

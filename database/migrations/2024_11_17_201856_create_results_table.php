@@ -21,7 +21,8 @@ return new class extends Migration {
             $table->dateTime(column: 'graded_at')->nullable();
             $table->boolean(column: 'is_late')->default(0);
             $table->string(column: 'difference')->nullable();
-            $table->timestamp('submitted_at');
+            $table->timestamp('submitted_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

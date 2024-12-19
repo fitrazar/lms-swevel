@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string(column: 'title');
             $table->text(column: 'description');
             $table->integer(column: 'deadline');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

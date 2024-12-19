@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId(column: 'question_id')->constrained()->onDelete('cascade');
             $table->string(column: 'option_text')->comment('point jawaban');
             $table->boolean('is_correct')->default(false);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

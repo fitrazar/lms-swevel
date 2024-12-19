@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('gender');
             $table->string('phone')->nullable();
             $table->text('bio')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

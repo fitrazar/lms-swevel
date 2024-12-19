@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->string('email')->nullable();
             $table->date('open_date')->nullable();
             $table->date('close_date')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
