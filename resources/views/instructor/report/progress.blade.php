@@ -20,6 +20,13 @@
                             Export
                         </x-button.info-button>
                     </x-form>
+
+                    <a href="{{ route('dashboard.instructor.report.exportProgressPdf') }}">
+                        <x-button.primary-button id="export-pdf" type="button">
+                            <i class="fa-solid fa-print"></i>
+                            Export PDF
+                        </x-button.primary-button>
+                    </a>
                 </div>
 
                 <div class="relative overflow-x-auto mt-5">

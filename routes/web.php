@@ -100,12 +100,15 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
     Route::name('instructor.')->prefix('/instructor')->middleware(['role:instructor'])->group(function () {
         Route::get('/report/progress', [ReportController::class, 'progress'])->name('report.progress');
         Route::post('/report/progress', [ReportController::class, 'exportProgress'])->name('report.exportProgress');
+        Route::get('/report/progress/pdf', [ReportController::class, 'exportProgressPdf'])->name('report.exportProgressPdf');
 
         Route::get('/report/complete', [ReportController::class, 'complete'])->name('report.complete');
         Route::post('/report/complete', [ReportController::class, 'exportComplete'])->name('report.exportComplete');
+        Route::get('/report/complete/pdf', [ReportController::class, 'exportCompletePdf'])->name('report.exportCompletePdf');
 
         Route::get('/report/course', [ReportController::class, 'course'])->name('report.course');
         Route::post('/report/course', [ReportController::class, 'exportCourse'])->name('report.exportCourse');
+        Route::get('/report/course/pdf', [ReportController::class, 'exportCoursePdf'])->name('report.exportCoursePdf');
 
         Route::get('/course', [InstructorCourseController::class, 'index'])->name('course.index');
         Route::get('/quiz/result', [InstructorQuizController::class, 'index'])->name('quiz.result');

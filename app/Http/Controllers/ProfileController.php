@@ -58,7 +58,7 @@ class ProfileController extends Controller
             Participant::where('user_id', $user->id)->update($validatedData);
         }
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('dashboard.profile.edit')->with('status', 'profile-updated');
     }
 
     /**
