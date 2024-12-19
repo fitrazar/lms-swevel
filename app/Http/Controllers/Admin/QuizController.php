@@ -4,6 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Quiz;
 use App\Models\Material;
+use App\Models\QuestionAnswer;
+use App\Models\Question;
+use App\Models\QuizAttempt;
+use App\Models\Option;
+use App\Models\Result;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -64,7 +69,7 @@ class QuizController extends Controller
             'material_id' => 'required',
             'title' => 'required|string',
             'description' => 'required|string',
-            'duration' => 'required|min:5',
+            'duration' => 'required|numeric|min:5',
         ]);
 
         Quiz::create([
@@ -107,7 +112,7 @@ class QuizController extends Controller
             'material_id' => 'required',
             'title' => 'required|string',
             'description' => 'required|string',
-            'duration' => 'required|min:5',
+            'duration' => 'required|numeric|min:5',
         ];
 
         $validatedData = $request->validate($rules);
@@ -128,6 +133,27 @@ class QuizController extends Controller
     public function destroy(Quiz $quiz)
     {
         Quiz::destroy($quiz->id);
+        if ($quiz->results) {
+            foreach ($quiz->results as $result) {
+                Result::destroy($result->id);
+            }
+        }
+        if ($quiz->questions) {
+            foreach ($quiz->questions as $question) {
+                Question::destroy($question->id);
+                if ($question->options) {
+                    foreach ($question->options as $option) {
+                        Option::destroy($option->id);
+                    }
+                }
+            }
+            if ($quiz->quizAttempts) {
+                foreach ($quiz->attempts as $attempt) {
+                    QuizAttempt::destroy($attempt->id);
+                    QuestionAnswer::where('quiz_attempt_id', $attempt->id)->delete();
+                }
+            }
+        }
 
         return response()->json([
             'success' => true,

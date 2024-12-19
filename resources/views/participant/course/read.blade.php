@@ -155,9 +155,9 @@
                                     $currentTopic->material->assignment?->results
                                         ?->where('assignment_id', $currentTopic->material->assignment->id)->where('participant_id', auth()->user()->participant->id)->first()->id,
                                 ) }}">
-                                <x-button.parimary-button type="button" class="btn-sm text-white">
+                                <x-button.primary-button type="button" class="btn-sm text-white">
                                     <i class="fa-solid fa-eye"></i> Lihat Hasil
-                                </x-button.parimary-button>
+                                </x-button.primary-button>
                             </a>
                             <x-form
                                 action="{{ route('course.destroyAssignment', ['course' => $course->slug, 'topic' => $currentTopic->slug]) }}"
@@ -258,10 +258,33 @@
                                     </h2>
                                     <p>{!! $currentTopic->material->quiz->description !!}</p>
                                     <div class="mt-4">
-                                        <span class="countdown font-mono text-2xl" id="timer">
-                                            <span style="--value:24;"></span> :
-                                            <span style="--value:59;"></span>
-                                        </span>
+                                        <div class="grid auto-cols-min grid-flow-col gap-5 text-center w-full">
+                                            <div class="bg-neutral rounded-box text-neutral-content flex flex-col p-2">
+                                                <span class="countdown font-mono text-5xl">
+                                                    <span id="days" style="--value:0;"></span>
+                                                </span>
+                                                hari
+                                            </div>
+                                            <div class="bg-neutral rounded-box text-neutral-content flex flex-col p-2">
+                                                <span class="countdown font-mono text-5xl">
+                                                    <span id="hours" style="--value:0;"></span>
+                                                </span>
+                                                jam
+                                            </div>
+                                            <div class="bg-neutral rounded-box text-neutral-content flex flex-col p-2">
+                                                <span class="countdown font-mono text-5xl">
+                                                    <span id="minutes" style="--value:0;"></span>
+                                                </span>
+                                                menit
+                                            </div>
+                                            <div class="bg-neutral rounded-box text-neutral-content flex flex-col p-2">
+                                                <span class="countdown font-mono text-5xl">
+                                                    <span id="seconds" style="--value:0;"></span>
+                                                </span>
+                                                detik
+                                            </div>
+                                        </div>
+
                                     </div>
 
                                     @if ($nextTopic)
@@ -275,26 +298,39 @@
                                             Soal
                                         </div>
                                     </div>
-                                    @foreach ($currentTopic->material->quiz->questions as $question)
-                                        <div class="mb-4">
-                                            <p class="font-bold" data-question="question_{{ $question->id }}">
-                                                {{ $question->question_text }}</p>
-                                            <div class="options">
-                                                @foreach ($question->options as $option)
-                                                    {{-- @dd(session('answers.question_1')) --}}
-                                                    <div class="flex justify-start">
-                                                        <label class="label cursor-pointer space-x-3">
-                                                            <input type="radio" name="question_{{ $question->id }}"
-                                                                id="{{ $option->id }}" value="{{ $option->id }}"
-                                                                class="radio checked:bg-blue-500"
-                                                                {{ session('answers.question_' . $question->id) == $option->id ? 'checked' : '' }}>
-                                                            <span class="label-text">{{ $option->option_text }}</span>
-                                                        </label>
-                                                    </div>
-                                                @endforeach
-                                            </div>
+                                    <ol class="list-decimal pl-5 mt-3">
+                                        @foreach ($currentTopic->material->quiz->questions as $question)
+                                            <li class="mb-4">
+                                                <p class="font-bold select-none"
+                                                    data-question="question_{{ $question->id }}">
+                                                    {{ $question->question_text }}</p>
+                                                <div class="options">
+                                                    @foreach ($question->options as $option)
+                                                        {{-- @dd(session('answers.question_1')) --}}
+                                                        <div class="flex justify-start">
+                                                            <label class="label cursor-pointer space-x-3">
+                                                                <input type="radio"
+                                                                    name="question_{{ $question->id }}"
+                                                                    id="{{ $option->id }}"
+                                                                    value="{{ $option->id }}"
+                                                                    class="radio checked:bg-blue-500"
+                                                                    {{ session('answers.question_' . $question->id) == $option->id ? 'checked' : '' }}>
+                                                                <span
+                                                                    class="label-text">{{ $option->option_text }}</span>
+                                                            </label>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ol>
+                                    <div class="dropdown-question-container dropdown hidden">
+                                        <div tabindex="0" role="button" class="btn m-1">Pertanyaan Belum Dijawab
                                         </div>
-                                    @endforeach
+                                        <ul tabindex="0"
+                                            class="dropdown-question dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                                        </ul>
+                                    </div>
                                 @elseif ($currentTopic->material->type == 'assignment' && $currentTopic->material->assignment)
                                     <h2 class="font-semibold text-2xl mt-3">
                                         {{ $currentTopic->material->assignment->title }}
@@ -582,11 +618,12 @@
 
                         document.querySelectorAll("input[type='radio']").forEach((radio) => {
                             const groupName = radio.name;
+
                             const radios = document.querySelectorAll(`[name="${groupName}"]`);
                             const questionElement = document.querySelector(`[data-question="${groupName}"]`)
 
                             if (![...radios].some(r => r.checked)) {
-                                console.log(`question ${groupName} is not answered.`);
+                                // console.log(`question ${number} is not answered.`);
                                 allAnswered = false;
                             }
                             // } else {
@@ -601,18 +638,49 @@
                             //     });
                             // }
                         });
+                        const questionElements = document.querySelectorAll("[data-question]");
+                        const unansweredQuestions = [];
+                        const dropdownContainer = document.querySelector('.dropdown-question-container');
+                        const dropdownMenu = document.querySelector('.dropdown-question');
+                        dropdownMenu.innerHTML = '';
+
+                        questionElements.forEach((questionElement, index) => {
+                            const questionNumber = index + 1;
+                            const groupName2 = questionElement.getAttribute("data-question");
+                            const radios2 = document.querySelectorAll(`[name="${groupName2}"]`);
+
+                            if (![...radios2].some(r => r.checked)) {
+                                unansweredQuestions.push(questionNumber);
+                            }
+                        });
+
+                        if (unansweredQuestions.length >= 10) {
+                            $('dropdownContainer').classList.remove('hidden');
+
+                            const topUnanswered = unansweredQuestions.slice(0, 10);
+
+                            topUnanswered.forEach((number) => {
+                                const listItem = document.createElement('li');
+                                const link = document.createElement('a');
+                                link.textContent = `Pertanyaan nomor ${number}`;
+                                listItem.appendChild(link);
+                                dropdownMenu.appendChild(listItem);
+                            });
+                        }
 
                         return allAnswered;
                     }
 
                     let quizTime = "{{ $currentTopic?->material?->quiz?->duration }}" || 0;
-
-                    const quizStartTime = new Date("{{ $startTime }}").getTime(); // Waktu mulai dari server
-                    const quizDuration = quizTime * 60 * 1000; // Durasi dalam milidetik
+                    const quizStartTime = new Date("{{ $startTime }}").getTime();
+                    const quizDuration = quizTime * 60 * 1000;
 
                     function startCountdown() {
-                        const minuteSpan = document.querySelector("#timer span:first-child");
-                        const secondSpan = document.querySelector("#timer span:last-child");
+                        // Identifikasi elemen timer
+                        const daysSpan = document.getElementById("days");
+                        const hoursSpan = document.getElementById("hours");
+                        const minutesSpan = document.getElementById("minutes");
+                        const secondsSpan = document.getElementById("seconds");
 
                         const interval = setInterval(() => {
                             const now = new Date().getTime();
@@ -621,20 +689,27 @@
 
                             if (remaining <= 0) {
                                 clearInterval(interval);
-                                minuteSpan?.style.setProperty('--value', 0);
-                                secondSpan?.style.setProperty('--value', 0);
-                                //document.getElementById('nextButton').disabled = true; // Disable submit button
+                                daysSpan.style.setProperty('--value', 0);
+                                hoursSpan.style.setProperty('--value', 0);
+                                minutesSpan.style.setProperty('--value', 0);
+                                secondsSpan.style.setProperty('--value', 0);
                                 alert("Waktu habis!");
                             } else {
-                                const minutes = Math.floor(remaining / (1000 * 60));
+                                const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+                                const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
                                 const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-                                minuteSpan?.style.setProperty('--value', minutes);
-                                secondSpan?.style.setProperty('--value', seconds);
+
+                                daysSpan.style.setProperty('--value', days);
+                                hoursSpan.style.setProperty('--value', hours);
+                                minutesSpan.style.setProperty('--value', minutes);
+                                secondsSpan.style.setProperty('--value', seconds);
                             }
                         }, 1000);
                     }
 
                     document.addEventListener('DOMContentLoaded', startCountdown);
+
                 }
             }
 

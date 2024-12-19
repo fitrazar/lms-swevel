@@ -97,6 +97,7 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
 
         Route::resource('/question', QuestionController::class);
         Route::get('/question/{quiz}/create', [QuestionController::class, 'createWithQuiz'])->name('question.createWithQuiz');
+		Route::post('/question/import', [QuestionController::class, 'import'])->name('question.import');
     });
 
     Route::name('instructor.')->prefix('/instructor')->middleware(['role:instructor'])->group(function () {

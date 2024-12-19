@@ -14,6 +14,11 @@
                 @if ($result->feedback)
                     <p>Catatan Mentor : {{ $result->feedback }}</p>
                 @endif
+				
+				<div class="mt-6">
+                    <p><strong>Jawaban Benar:</strong> {{ $correctAnswers }}</p>
+                    <p><strong>Jawaban Salah:</strong> {{ $wrongAnswers }}</p>
+                </div>
 
                 <div class="mt-6">
                     <h2 class="text-lg font-bold">Review Soal</h2>

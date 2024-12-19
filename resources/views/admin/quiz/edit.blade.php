@@ -53,7 +53,7 @@
                     <div class="mt-4">
                         <x-input.input-label for="duration" :value="__('Durasi')" />
                         <x-input.text-input id="duration" class="mt-1 w-full" type="number" name="duration"
-                            :value="old('duration', $quiz->duration)" required autofocus autocomplete="duration" disabled />
+                            :value="old('duration', $quiz->duration)" required autofocus autocomplete="duration" />
                         <x-input.input-error :messages="$errors->get('duration')" class="mt-2" />
                     </div>
 

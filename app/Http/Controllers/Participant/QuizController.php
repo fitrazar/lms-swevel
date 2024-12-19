@@ -28,7 +28,7 @@ class QuizController extends Controller
     }
 
 
-    public function result(Quiz $quiz)
+	public function result(Quiz $quiz)
     {
         $participant = Auth::user()->participant;
 
@@ -38,6 +38,8 @@ class QuizController extends Controller
             abort(404, 'Anda belum mengikuti kuis ini.');
         }
 
+
+
         $answers = $attempt->questionAnswers()
             ->with('question')
             ->get();
@@ -46,6 +48,23 @@ class QuizController extends Controller
         $questions = Question::with('options')->where('quiz_id', $quiz->id)->get();
         $userAnswers = QuestionAnswer::where('quiz_attempt_id', $attempt->id)->pluck('selected_option')->toArray();
 
-        return view('participant.quiz.result', compact('quiz', 'attempt', 'answers', 'questions', 'userAnswers', 'result'));
+        $correctAnswers = 0;
+        $wrongAnswers = 0;
+
+        foreach ($questions as $question) {
+            $userAnswer = in_array($question->id, $userAnswers);
+
+            foreach ($question->options as $option) {
+                if (in_array($option->id, $userAnswers)) {
+                    if ($option->is_correct) {
+                        $correctAnswers++;
+                    } else {
+                        $wrongAnswers++;
+                    }
+                }
+            }
+        }
+
+        return view('participant.quiz.result', compact('quiz', 'attempt', 'answers', 'questions', 'userAnswers', 'result', 'correctAnswers', 'wrongAnswers'));
     }
 }

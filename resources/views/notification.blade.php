@@ -5,7 +5,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div role="tablist" class="tabs tabs-lifted">
                 @php
-                    $groupedNotifications = auth()->user()->notifications->groupBy(fn($notification) => $notification->data['type'] ?? 'Unknown');
+                    $groupedNotifications = auth()->user()->notifications->groupBy(fn($notification) => $notification->data['type'] ?? '-');
                 @endphp
 
                 @forelse ($groupedNotifications as $type => $notifications)

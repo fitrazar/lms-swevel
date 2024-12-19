@@ -16,6 +16,16 @@
                             Tambah Data
                         </x-button.primary-button>
                     </a>
+					
+					<x-form id="import-form" action="{{ route('dashboard.question.import') }}"
+                        enctype="multipart/form-data">
+                        @csrf
+                        <x-input.input-file type="file" id="file" name="file" required />
+                        <x-button.info-button id="import-button" type="submit">
+                            <i class="fa-regular fa-file-excel"></i>
+                            Import
+                        </x-button.info-button>
+                    </x-form>
 
                 </div>
 

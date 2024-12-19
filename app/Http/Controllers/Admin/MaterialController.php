@@ -5,6 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Topic;
 use App\Models\Course;
 use App\Models\Material;
+use App\Models\Option;
+use App\Models\Result;
+use App\Models\Quiz;
+use App\Models\Question;
+use App\Models\Assignment;
+use App\Models\QuizAttempt;
+use App\Models\QuestionAnswer;
 use App\Models\Instructor;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -186,6 +193,38 @@ class MaterialController extends Controller
     {
         Material::destroy($material->id);
         Topic::destroy($material->topic->id);
+        if ($material->quiz) {
+            if ($material->quiz->results) {
+                foreach ($material->quiz->results as $result) {
+                    Result::destroy($result->id);
+                }
+            }
+            if ($material->quiz->questions) {
+                foreach ($material->quiz->questions as $question) {
+                    Question::destroy($question->id);
+                    if ($question->options) {
+                        foreach ($question->options as $option) {
+                            Option::destroy($option->id);
+                        }
+                    }
+                }
+                if ($material->quiz->quizAttempts) {
+                    foreach ($material->quiz->attempts as $attempt) {
+                        QuizAttempt::destroy($attempt->id);
+                        QuestionAnswer::where('quiz_attempt_id', $attempt->id)->delete();
+                    }
+                }
+            }
+            Quiz::destroy($material->quiz->id);
+        }
+        if ($material->assignment) {
+            if ($material->assignment->results) {
+                foreach ($material->assignment->results as $result) {
+                    Result::destroy($result->id);
+                }
+            }
+            Assignment::destroy($material->assignment->id);
+        }
 
         return response()->json([
             'success' => true,
