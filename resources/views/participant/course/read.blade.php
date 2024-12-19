@@ -155,9 +155,9 @@
                                     $currentTopic->material->assignment?->results
                                         ?->where('assignment_id', $currentTopic->material->assignment->id)->where('participant_id', auth()->user()->participant->id)->first()->id,
                                 ) }}">
-                                <x-button.secondary-button type="button" class="btn-sm text-white">
+                                <x-button.parimary-button type="button" class="btn-sm text-white">
                                     <i class="fa-solid fa-eye"></i> Lihat Hasil
-                                </x-button.secondary-button>
+                                </x-button.parimary-button>
                             </a>
                             <x-form
                                 action="{{ route('course.destroyAssignment', ['course' => $course->slug, 'topic' => $currentTopic->slug]) }}"

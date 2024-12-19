@@ -87,7 +87,7 @@
                             searchable: false,
                             render: function(data, type, full, meta) {
                                 return `
-                                    <div class="flex flex-wrap justify-start">
+                                    <div class="flex flex-wrap justify-start gap-4">
                                         <a href="{{ url('/dashboard/participant/quiz/${full.id}/result') }}">
                                             <x-button.secondary-button type="button" class="btn-sm text-white">
                                                 <i class="fa-solid fa-eye"></i> Lihat Nilai
