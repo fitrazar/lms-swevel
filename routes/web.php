@@ -52,7 +52,7 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
 
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 	Route::get('/notification', [NotificationController::class, 'index'])->name('notification.index');
-	
+
     Route::name('participant.')->prefix('/participant')->middleware(['role:participant'])->group(function () {
         // Route::get('/my', [DashboardController::class, 'participant'])->name('index');
         Route::get('/quiz', [ParticipantQuizController::class, 'index'])->name('quiz.index');

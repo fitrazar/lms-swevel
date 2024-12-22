@@ -258,34 +258,35 @@
                                     </h2>
                                     <p>{!! $currentTopic->material->quiz->description !!}</p>
                                     <div class="mt-4">
-                                        <div class="grid auto-cols-min grid-flow-col gap-5 text-center w-full">
-                                            <div class="bg-neutral rounded-box text-neutral-content flex flex-col p-2">
-                                                <span class="countdown font-mono text-5xl">
+                                        <div
+                                            class="grid grid-cols-4 gap-5 text-center w-full md:grid-cols-4 sm:grid-cols-2">
+                                            <div class="bg-base-200 rounded-lg flex flex-col items-center p-4 sm:p-2">
+                                                <span class="countdown font-mono text-5xl sm:text-3xl">
                                                     <span id="days" style="--value:0;"></span>
                                                 </span>
-                                                hari
+                                                <span class="text-base sm:text-sm">hari</span>
                                             </div>
-                                            <div class="bg-neutral rounded-box text-neutral-content flex flex-col p-2">
-                                                <span class="countdown font-mono text-5xl">
+                                            <div class="bg-base-200 rounded-lg flex flex-col items-center p-4 sm:p-2">
+                                                <span class="countdown font-mono text-5xl sm:text-3xl">
                                                     <span id="hours" style="--value:0;"></span>
                                                 </span>
-                                                jam
+                                                <span class="text-base sm:text-sm">jam</span>
                                             </div>
-                                            <div class="bg-neutral rounded-box text-neutral-content flex flex-col p-2">
-                                                <span class="countdown font-mono text-5xl">
+                                            <div class="bg-base-200 rounded-lg flex flex-col items-center p-4 sm:p-2">
+                                                <span class="countdown font-mono text-5xl sm:text-3xl">
                                                     <span id="minutes" style="--value:0;"></span>
                                                 </span>
-                                                menit
+                                                <span class="text-base sm:text-sm">menit</span>
                                             </div>
-                                            <div class="bg-neutral rounded-box text-neutral-content flex flex-col p-2">
-                                                <span class="countdown font-mono text-5xl">
+                                            <div class="bg-base-200 rounded-lg flex flex-col items-center p-4 sm:p-2">
+                                                <span class="countdown font-mono text-5xl sm:text-3xl">
                                                     <span id="seconds" style="--value:0;"></span>
                                                 </span>
-                                                detik
+                                                <span class="text-base sm:text-sm">detik</span>
                                             </div>
                                         </div>
-
                                     </div>
+
 
                                     @if ($nextTopic)
                                         <input type="hidden" name="nextTopic" id="nextTopic"
@@ -295,7 +296,7 @@
 
                                     <div class="mt-4">
                                         <div class="divider">
-                                            Soal
+                                            Soal ({{ $currentTopic->material->quiz->questions->count() }})
                                         </div>
                                     </div>
                                     <ol class="list-decimal pl-5 mt-3">
@@ -654,10 +655,10 @@
                             }
                         });
 
-                        if (unansweredQuestions.length >= 10) {
-                            $('dropdownContainer').classList.remove('hidden');
+                        if (unansweredQuestions.length > 0 && unansweredQuestions.length <= 10) {
+                            dropdownContainer.classList.remove('hidden');
 
-                            const topUnanswered = unansweredQuestions.slice(0, 10);
+                            const topUnanswered = unansweredQuestions.slice(0, unansweredQuestions.length);
 
                             topUnanswered.forEach((number) => {
                                 const listItem = document.createElement('li');
